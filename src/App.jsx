@@ -45,7 +45,7 @@ const ISOTIPO = (p) => {
 
 /* ─── Logo Marquee ─── */
 const LOGOS = [
-  { src: "/logos/epm.png", alt: "EPM" },
+  { src: "/logos/epm.webp", alt: "EPM" },
   { src: "/logos/movistar.png", alt: "Movistar" },
   { src: "/logos/gdo2.png", alt: "GdO" },
   { src: "/logos/surtigas.png", alt: "Surtigas" },
@@ -57,16 +57,17 @@ const LOGOS = [
 const marqueeCSS = `@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`;
 
 function LogoMarquee() {
+  const logoGap = 48;
   const all = [...LOGOS, ...LOGOS];
   return (
     <div style={{ marginTop: 40 }}>
-      <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>Confían en nosotros</span>
+      <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>Corporativos que confían en Onepay</span>
       <style>{marqueeCSS}</style>
-      <div style={{ overflow: "hidden", maskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 32, width: "max-content", animation: "marquee 30s linear infinite" }}>
+      <div style={{ overflow: "hidden", maskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)" }}>
+        <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee 25s linear infinite" }}>
           {all.map((l, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: 10, padding: "8px 18px", display: "flex", alignItems: "center", justifyContent: "center", height: 44, flexShrink: 0 }}>
-              <img src={l.src} alt={l.alt} style={{ height: 26, width: "auto", maxWidth: 120, objectFit: "contain" }} />
+            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 32, flexShrink: 0, marginRight: logoGap }}>
+              <img src={l.src} alt={l.alt} style={{ height: 22, width: "auto", maxWidth: 110, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.5 }} />
             </div>
           ))}
         </div>
