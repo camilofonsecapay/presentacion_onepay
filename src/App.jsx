@@ -49,9 +49,8 @@ const LOGOS = [
   { src: "/logos/movistar.png", alt: "Movistar" },
   { src: "/logos/gdo2.png", alt: "GdO" },
   { src: "/logos/surtigas.png", alt: "Surtigas" },
-  { src: "/logos/promigas.png", alt: "Promigas" },
-  { src: "/logos/efigas.png", alt: "Efigas" },
-  { src: "/logos/telefonica.png", alt: "Telefónica" },
+  { src: "/logos/cobelen.png", alt: "Cobelen" },
+  { src: "/logos/ceo.png", alt: "CEO" },
 ];
 
 const marqueeCSS = `@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`;
