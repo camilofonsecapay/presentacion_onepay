@@ -53,7 +53,50 @@ const LOGOS = [
   { src: "/logos/ceo.png", alt: "CEO" },
 ];
 
+const ISP_LOGOS = [
+  { src: "/logos/isp/linage.png", alt: "Linage Comunicaciones" },
+  { src: "/logos/isp/tunortetv.jpg", alt: "Tu Norte TV" },
+  { src: "/logos/isp/velonet.svg", alt: "Velonet" },
+  { src: "/logos/isp/wifimax.jpg", alt: "Wifimax" },
+  { src: "/logos/isp/supercable.png", alt: "Supercable" },
+  { src: "/logos/isp/legon.png", alt: "Legon Telecomunicaciones" },
+  { src: "/logos/isp/fiesta.svg", alt: "Conéctate - Fiesta Telecomunicaciones" },
+  { src: "/logos/isp/cableexito.png", alt: "Cable Éxito" },
+  { src: "/logos/isp/ultranet.png", alt: "Ultranet Colombia" },
+  { src: "/logos/isp/wisp.webp", alt: "WISP Telecomunicaciones" },
+  { src: "/logos/isp/asonet.png", alt: "Asonet Colombia" },
+  { src: "/logos/isp/holainternet.svg", alt: "Hola Internet" },
+  { src: "/logos/isp/clickhd.png", alt: "Click HD" },
+  { src: "/logos/isp/puntored.png", alt: "Puntored Telecomunicaciones" },
+  { src: "/logos/isp/intv.webp", alt: "INTV Internet y Televisión" },
+  { src: "/logos/isp/conectic.png", alt: "Conectic" },
+  { src: "/logos/isp/one.png", alt: "One Telecomunicaciones" },
+  { src: "/logos/isp/siinternet.png", alt: "Siinternet" },
+  { src: "/logos/isp/vivetel.svg", alt: "Vivetel" },
+];
+
 const marqueeCSS = `@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`;
+const ispHoverCSS = `.isp-logo{filter:brightness(0) invert(1);opacity:0.4;transition:filter .3s,opacity .3s}.isp-logo:hover{filter:none;opacity:1}`;
+
+function ISPLogoMarquee() {
+  const logoGap = 56;
+  const all = [...ISP_LOGOS, ...ISP_LOGOS];
+  return (
+    <div style={{ marginTop: 64, marginBottom: 32 }}>
+      <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>ISPs que confían en OnePay</span>
+      <style>{marqueeCSS}{ispHoverCSS}</style>
+      <div style={{ overflow: "hidden", maskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)" }}>
+        <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee 35s linear infinite" }}>
+          {all.map((l, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 40, flexShrink: 0, marginRight: logoGap }}>
+              <img className="isp-logo" src={l.src} alt={l.alt} title={l.alt} style={{ height: 28, width: "auto", maxWidth: 120, objectFit: "contain" }} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function LogoMarquee() {
   const logoGap = 48;
@@ -328,6 +371,10 @@ function Hero() {
 
         <div style={a(1.05)}>
           <LogoMarquee />
+        </div>
+
+        <div style={a(1.15)}>
+          <ISPLogoMarquee />
         </div>
       </div>
     </section>
