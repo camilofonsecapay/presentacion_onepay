@@ -5,6 +5,85 @@ import { useState, useEffect, useRef } from "react";
    Pure React, no external deps beyond what artifact supports
    ═════════════════════════════════════════════════════════════ */
 
+/* ─── Heroicon-style SVG Icons ─── */
+const I = ({ d, size = 20, color = "currentColor", sw = 1.5 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">{d}</svg>
+);
+const If = ({ d, size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>{d}</svg>
+);
+
+const Icon = {
+  // Business / Building
+  building: (p) => <I {...p} d={<><path d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" /></>} />,
+  // User
+  user: (p) => <I {...p} d={<><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></>} />,
+  // Credit card
+  creditCard: (p) => <I {...p} d={<><path d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" /></>} />,
+  // Desktop / Monitor
+  monitor: (p) => <I {...p} d={<><path d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" /></>} />,
+  // Phone / Mobile
+  phone: (p) => <I {...p} d={<><path d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></>} />,
+  // Brain / Intelligence
+  brain: (p) => <I {...p} d={<><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" /></>} />,
+  // Phone call
+  phoneCall: (p) => <I {...p} d={<><path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></>} />,
+  // Clipboard / Document
+  clipboard: (p) => <I {...p} d={<><path d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" /></>} />,
+  // Bell / Notification
+  bell: (p) => <I {...p} d={<><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></>} />,
+  // Bolt / Lightning
+  bolt: (p) => <I {...p} d={<><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></>} />,
+  // Target / Bullseye
+  target: (p) => <I {...p} d={<><path d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /><circle cx="12" cy="12" r="3" /><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="1" fill="currentColor" /></>} />,
+  // Banknotes / Money
+  banknotes: (p) => <I {...p} d={<><path d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></>} />,
+  // Chart bar
+  chartBar: (p) => <I {...p} d={<><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></>} />,
+  // Trophy
+  trophy: (p) => <I {...p} d={<><path d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-2.77.852m0 0a18.15 18.15 0 01-1.5.058 18.15 18.15 0 01-1.5-.058m0 0a6.022 6.022 0 01-2.77-.852" /></>} />,
+  // Check circle
+  checkCircle: (p) => <I {...p} d={<><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></>} />,
+  // Lock
+  lock: (p) => <I {...p} d={<><path d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></>} />,
+  // Shield
+  shield: (p) => <I {...p} d={<><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></>} />,
+  // Inbox / Download
+  inbox: (p) => <I {...p} d={<><path d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" /></>} />,
+  // Arrow send / Paper airplane
+  paperAirplane: (p) => <I {...p} d={<><path d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></>} />,
+  // Home
+  home: (p) => <I {...p} d={<><path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></>} />,
+  // Calendar
+  calendar: (p) => <I {...p} d={<><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></>} />,
+  // Clock
+  clock: (p) => <I {...p} d={<><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></>} />,
+  // Warning / Exclamation
+  warning: (p) => <I {...p} d={<><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></>} />,
+  // No symbol / Ban
+  noSymbol: (p) => <I {...p} d={<><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></>} />,
+  // Heart
+  heart: (p) => <I {...p} d={<><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></>} />,
+  // Document text
+  docText: (p) => <I {...p} d={<><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></>} />,
+  // Envelope
+  envelope: (p) => <I {...p} d={<><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></>} />,
+  // Chat bubble
+  chatBubble: (p) => <I {...p} d={<><path d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></>} />,
+  // Search / Magnifying glass
+  search: (p) => <I {...p} d={<><path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></>} />,
+  // Eye
+  eye: (p) => <I {...p} d={<><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></>} />,
+  // Arrow up / Hand pointer
+  cursorClick: (p) => <I {...p} d={<><path d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" /></>} />,
+  // Arrow path / Cycle
+  arrowPath: (p) => <I {...p} d={<><path d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" /></>} />,
+  // Bank / Institution
+  bank: (p) => <I {...p} d={<><path d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></>} />,
+  // Wifi / Signal
+  signal: (p) => <I {...p} d={<><path d="M9.348 14.651a3.75 3.75 0 015.304 0m-7.425-2.121a6.75 6.75 0 019.546 0m-12.427-2.83a10.5 10.5 0 0114.854 0M1.5 7.5a14.25 14.25 0 0120.168-.012M12 18.75h.008v.008H12v-.008z" /></>} />,
+};
+
 const C = {
   p950: "#090C1C", p900: "#0D122C", p800: "#141C43",
   a500: "#6366F1", a400: "#A78BFA", a300: "#C4B5FD", a200: "#DDD6FE", a50: "#F5F3FF",
@@ -75,23 +154,39 @@ const ISP_LOGOS = [
   { src: "/logos/isp/vivetel.svg", alt: "Vivetel" },
 ];
 
-const marqueeCSS = `@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`;
-const ispHoverCSS = `.isp-logo{filter:brightness(0) invert(1);opacity:0.4;transition:filter .3s,opacity .3s}.isp-logo:hover{filter:none;opacity:1}`;
+const marqueeCSS = `@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}@keyframes marquee-rev{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}`;
+const ispHoverCSS = `.isp-logo{filter:grayscale(1) brightness(1.8);mix-blend-mode:screen;opacity:0.5;transition:filter .3s,opacity .3s}.isp-logo:hover{filter:grayscale(0) brightness(1.2);opacity:0.9}`;
 
 function ISPLogoMarquee() {
-  const logoGap = 56;
-  const all = [...ISP_LOGOS, ...ISP_LOGOS];
+  const logoGap = 48;
+  const half = Math.ceil(ISP_LOGOS.length / 2);
+  const row1 = ISP_LOGOS.slice(0, half);
+  const row2 = ISP_LOGOS.slice(half);
+  const all1 = [...row1, ...row1, ...row1];
+  const all2 = [...row2, ...row2, ...row2];
+  const mask = "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)";
   return (
     <div style={{ marginTop: 64, marginBottom: 32 }}>
       <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>ISPs que confían en OnePay</span>
       <style>{marqueeCSS}{ispHoverCSS}</style>
-      <div style={{ overflow: "hidden", maskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)" }}>
-        <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee 35s linear infinite" }}>
-          {all.map((l, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 40, flexShrink: 0, marginRight: logoGap }}>
-              <img className="isp-logo" src={l.src} alt={l.alt} title={l.alt} style={{ height: 28, width: "auto", maxWidth: 120, objectFit: "contain" }} />
-            </div>
-          ))}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ overflow: "hidden", maskImage: mask, WebkitMaskImage: mask }}>
+          <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee 30s linear infinite" }}>
+            {all1.map((l, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 36, flexShrink: 0, marginRight: logoGap }}>
+                <img className="isp-logo" src={l.src} alt={l.alt} title={l.alt} style={{ height: 26, width: "auto", maxWidth: 110, objectFit: "contain" }} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ overflow: "hidden", maskImage: mask, WebkitMaskImage: mask }}>
+          <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee-rev 35s linear infinite" }}>
+            {all2.map((l, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 36, flexShrink: 0, marginRight: logoGap }}>
+                <img className="isp-logo" src={l.src} alt={l.alt} title={l.alt} style={{ height: 26, width: "auto", maxWidth: 110, objectFit: "contain" }} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -100,13 +195,13 @@ function ISPLogoMarquee() {
 
 function LogoMarquee() {
   const logoGap = 48;
-  const all = [...LOGOS, ...LOGOS];
+  const all = [...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS];
   return (
     <div style={{ marginTop: 40 }}>
       <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>Corporativos que confían en Onepay</span>
       <style>{marqueeCSS}</style>
       <div style={{ overflow: "hidden", maskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)" }}>
-        <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee 25s linear infinite" }}>
+        <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee 40s linear infinite" }}>
           {all.map((l, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 32, flexShrink: 0, marginRight: logoGap }}>
               <img src={l.src} alt={l.alt} style={{ height: 22, width: "auto", maxWidth: 110, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.5 }} />
@@ -383,8 +478,8 @@ function Hero() {
 
 function Problema() {
   const cards = [
-    { t: "Lado empresa", ic: "\u{1F3E2}", c: C.e500, its: [["25-35%", "cartera vencida >30 días"], ["2-3", "personas dedicadas a cobrar"], ["$8-12M", "COP/mes en cobranza"], ["Día 18", "promedio para recibir pago"], ["500+", "llamadas manuales al mes"]], q: "\u201CLa plata está, pero no llega a tiempo.\u201D" },
-    { t: "Lado usuario", ic: "\u{1F464}", c: C.b500, its: [["40%", "abandono en PSE"], ["17", "pasos para pagar por PSE"], ["20%", "apertura emails de cobro"], ["0", "apps quiere descargar"], ["3+", "intentos para pagar"]], q: "\u201CDoña Carmen no es morosa \u2014 pagar es difícil.\u201D" }
+    { t: "Lado empresa", ic: <Icon.building size={22} color={C.e500} />, c: C.e500, its: [["25-35%", "cartera vencida >30 días"], ["2-3", "personas dedicadas a cobrar"], ["$8-12M", "COP/mes en cobranza"], ["Día 18", "promedio para recibir pago"], ["500+", "llamadas manuales al mes"]], q: "\u201CLa plata está, pero no llega a tiempo.\u201D" },
+    { t: "Lado usuario", ic: <Icon.user size={22} color={C.b500} />, c: C.b500, its: [["40%", "abandono en PSE"], ["17", "pasos para pagar por PSE"], ["20%", "apertura emails de cobro"], ["0", "apps quiere descargar"], ["3+", "intentos para pagar"]], q: "\u201CDoña Carmen no es morosa \u2014 pagar es difícil.\u201D" }
   ];
   return (
     <Box>
@@ -397,7 +492,7 @@ function Problema() {
         {cards.map((cd, ci) => (
           <Fade key={ci} delay={ci * .12}>
             <div style={{ background: "#fff", borderRadius: 18, padding: 28, border: "1px solid " + C.g200, height: "100%" }}>
-              <span style={{ fontSize: 22 }}>{cd.ic}</span>
+              <span>{cd.ic}</span>
               <h3 style={{ fontSize: 19, fontWeight: 700, margin: "10px 0 14px" }}>{cd.t}</h3>
               {cd.its.map(([m, t], i) => (
                 <div key={i} style={{ display: "flex", gap: 9, alignItems: "baseline", marginBottom: 9 }}>
@@ -419,10 +514,10 @@ function Insight() {
   const [r, v] = useVis();
   useEffect(() => { if (!v) return; const t = [0, 1, 2, 3].map(i => setTimeout(() => saq(i), 500 + i * 450)); return () => t.forEach(clearTimeout); }, [v]);
   const qs = [
-    { q: "\u00BFCon qué pagar?", w: "Pasarelas", i: "\u{1F4B3}", d: "Visa, MC, Nequi, Daviplata, PSE, Bre-B" },
-    { q: "\u00BFCómo pagar?", w: "Checkouts", i: "\u{1F5A5}\uFE0F", d: "4 clicks, sin fricción, sin apps" },
-    { q: "\u00BFDónde pagar?", w: "OnePay", i: "\u{1F4F1}", d: "WhatsApp \u2014 donde ya está el 98%" },
-    { q: "\u00BFCómo hacer que pague?", w: "OnePay", i: "\u{1F9E0}", d: "Behavioral intelligence + timing" }
+    { q: "\u00BFCon qué pagar?", w: "Pasarelas", i: "cc", d: "Visa, MC, Nequi, Daviplata, PSE, Bre-B" },
+    { q: "\u00BFCómo pagar?", w: "Checkouts", i: "mon", d: "4 clicks, sin fricción, sin apps" },
+    { q: "\u00BFDónde pagar?", w: "OnePay", i: "ph", d: "WhatsApp \u2014 donde ya está el 98%" },
+    { q: "\u00BFCómo hacer que pague?", w: "OnePay", i: "br", d: "Behavioral intelligence + timing" }
   ];
   return (
     <Box dark>
@@ -445,7 +540,7 @@ function Insight() {
                 border: "1px solid " + (act && op ? "rgba(99,102,241,.2)" : "rgba(255,255,255,.04)"),
                 transition: "all .5s cubic-bezier(.16,1,.3,1)", opacity: act ? 1 : .3
               }}>
-                <span style={{ fontSize: 22 }}>{q.i}</span>
+                <span>{{ cc: <Icon.creditCard size={22} color={op ? C.a300 : C.g300} />, mon: <Icon.monitor size={22} color={op ? C.a300 : C.g300} />, ph: <Icon.phone size={22} color={op ? C.a300 : C.g300} />, br: <Icon.brain size={22} color={op ? C.a300 : C.g300} /> }[q.i]}</span>
                 <div style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".05em", marginTop: 8 }}>Pregunta {i + 1}</div>
                 <h3 style={{ fontSize: 16, fontWeight: 700, margin: "3px 0 5px", color: op ? C.a300 : "#fff" }}>{q.q}</h3>
                 <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, marginBottom: 8 }}>{q.d}</p>
@@ -525,7 +620,8 @@ function Producto() {
   }, [callStep]);
 
   const fT = (s) => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
-  const tabs = ["\u{1F4F1} WhatsApp", "\u{1F5A5}\uFE0F Portal", "\u{1F4DE} Llamada IA"];
+  const tabs = ["WhatsApp", "Portal", "Llamada IA"];
+  const tabIcons = [<Icon.phone size={14} />, <Icon.monitor size={14} />, <Icon.phoneCall size={14} />];
   const payMethodsReal = [
     { icon: "\u{1F4B3}", name: "Visa \u00B70193", sub: "Los pagos con tarjeta se aprueban inmediatamente." },
     { icon: "\u{1F3E6}", name: "PSE Bancolombia", sub: "Pagaste previamente con este método." },
@@ -633,7 +729,7 @@ function Producto() {
       <Fade delay={.1}>
         <div style={{ display: "flex", gap: 5, marginBottom: 32, flexWrap: "wrap" }}>
           {tabs.map((t, i) => (
-            <button key={i} onClick={() => sTab(i)} style={{ padding: "9px 18px", borderRadius: 100, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, transition: "all .3s", background: tab === i ? C.p950 : "#fff", color: tab === i ? "#fff" : C.g600, boxShadow: tab === i ? "0 6px 20px rgba(9,12,28,.14)" : "0 1px 3px rgba(0,0,0,.04)" }}>{t}</button>
+            <button key={i} onClick={() => sTab(i)} style={{ padding: "9px 18px", borderRadius: 100, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, transition: "all .3s", background: tab === i ? C.p950 : "#fff", color: tab === i ? "#fff" : C.g600, boxShadow: tab === i ? "0 6px 20px rgba(9,12,28,.14)" : "0 1px 3px rgba(0,0,0,.04)", display: "flex", alignItems: "center", gap: 5 }}>{tabIcons[i]}{t}</button>
           ))}
         </div>
       </Fade>
@@ -933,9 +1029,9 @@ function Producto() {
               {tab === 1 && "Portal web donde el usuario consulta su deuda por referencia, selecciona las facturas que quiere pagar y completa el pago en un solo lugar."}
               {tab === 2 && "Para cartera vencida. Cada empresa crea su propio agente de voz IA que llama como si fuera parte de su equipo. Contextualiza la deuda, maneja objeciones y envía link de pago por WhatsApp."}
             </p>
-            {tab === 0 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12 }}>{"\u{1F446}"} Haz click en {"\u201C"}Iniciar pago{"\u201D"} para ver el WhatsApp Flow</p>}
-            {tab === 1 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12 }}>{"\u{1F446}"} Haz click en {"\u201C"}Consultar{"\u201D"} para ver el flujo completo</p>}
-            {tab === 2 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12 }}>{"\u{1F440}"} Mira la conversación desarrollarse en tiempo real</p>}
+            {tab === 0 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12, display: "flex", alignItems: "center", gap: 5 }}><Icon.cursorClick size={16} color={C.a500} /> Haz click en {"\u201C"}Iniciar pago{"\u201D"} para ver el WhatsApp Flow</p>}
+            {tab === 1 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12, display: "flex", alignItems: "center", gap: 5 }}><Icon.cursorClick size={16} color={C.a500} /> Haz click en {"\u201C"}Consultar{"\u201D"} para ver el flujo completo</p>}
+            {tab === 2 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12, display: "flex", alignItems: "center", gap: 5 }}><Icon.eye size={16} color={C.a500} /> Mira la conversación desarrollarse en tiempo real</p>}
             {checks[tab].map((t, i) => (
               <div key={i} style={{ display: "flex", gap: 7, alignItems: "center", fontSize: 13, color: C.g600, marginBottom: 7 }}>
                 <span style={{ color: C.s500 }}>{"\u2713"}</span>{t}
@@ -955,12 +1051,12 @@ function Timeline() {
   useEffect(() => { if (!v) return; const t = [0, 1, 2, 3, 4, 5].map(i => setTimeout(() => sAs(i), 250 + i * 350)); return () => t.forEach(clearTimeout); }, [v]);
 
   const steps = [
-    { lb: "Día facturación", ic: "\u{1F4CB}", tt: "Creación automática de cobros", c: C.b500, dt: "Tu sistema de gestión genera la factura \u2192 OnePay la recibe al instante vía API. Se crean links de pago únicos y se prepara la secuencia de cobro personalizada." },
-    { lb: "Cobro inicial", ic: "\u{1F4F1}", tt: "WhatsApp + Email + Portal", c: C.a500, dt: "El usuario recibe su factura por WhatsApp con link directo (98% apertura). Simultáneamente email y portal. Botón de pago en un click." },
-    { lb: "Día 3", ic: "\u{1F514}", tt: "Recordatorio inteligente", c: C.s500, dt: "Solo a quienes no han pagado. El sistema analiza hora, día y canal donde cada usuario tiene mayor probabilidad de responder." },
-    { lb: "Día 6-9", ic: "\u{1F9E0}", tt: "Escalamiento adaptativo", c: C.w500, dt: "Behavioral intelligence cambia canal, hora y mensaje automáticamente. Si no abrió WhatsApp \u2192 email. Cada interacción mejora el siguiente intento." },
-    { lb: "Día 12-15", ic: "\u{1F4DE}", tt: "Llamada con IA", c: C.e500, dt: "Agente de voz IA para quienes no respondieron a digital. Voz natural, contexto de factura, envía link durante la llamada." },
-    { lb: "Pago exitoso", ic: "\u2705", tt: "Conciliación instantánea", c: C.s500, dt: "El pago se aplica automáticamente en tu sistema de gestión. Sin reconciliar manualmente. Dashboard predice el flujo de la semana." }
+    { lb: "Día facturación", ic: <Icon.clipboard size={18} color="#fff" />, tt: "Creación automática de cobros", c: C.b500, dt: "Tu sistema de gestión genera la factura \u2192 OnePay la recibe al instante vía API. Se crean links de pago únicos y se prepara la secuencia de cobro personalizada." },
+    { lb: "Cobro inicial", ic: <Icon.phone size={18} color="#fff" />, tt: "WhatsApp + Email + Portal", c: C.a500, dt: "El usuario recibe su factura por WhatsApp con link directo (98% apertura). Simultáneamente email y portal. Botón de pago en un click." },
+    { lb: "Día 3", ic: <Icon.bell size={18} color="#fff" />, tt: "Recordatorio inteligente", c: C.s500, dt: "Solo a quienes no han pagado. El sistema analiza hora, día y canal donde cada usuario tiene mayor probabilidad de responder." },
+    { lb: "Día 6-9", ic: <Icon.brain size={18} color="#fff" />, tt: "Escalamiento adaptativo", c: C.w500, dt: "Behavioral intelligence cambia canal, hora y mensaje automáticamente. Si no abrió WhatsApp \u2192 email. Cada interacción mejora el siguiente intento." },
+    { lb: "Día 12-15", ic: <Icon.phoneCall size={18} color="#fff" />, tt: "Llamada con IA", c: C.e500, dt: "Agente de voz IA para quienes no respondieron a digital. Voz natural, contexto de factura, envía link durante la llamada." },
+    { lb: "Pago exitoso", ic: <Icon.checkCircle size={18} color="#fff" />, tt: "Conciliación instantánea", c: C.s500, dt: "El pago se aplica automáticamente en tu sistema de gestión. Sin reconciliar manualmente. Dashboard predice el flujo de la semana." }
   ];
 
   return (
@@ -971,7 +1067,7 @@ function Timeline() {
         <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 40 }}>Secuencias inteligentes que se adaptan al comportamiento de cada pagador.</p>
       </Fade>
       <div ref={r} style={{ position: "relative" }}>
-        <div style={{ position: "absolute", left: 21, top: 22, bottom: 22, width: 2, background: "rgba(255,255,255,.04)", borderRadius: 2 }}>
+        <div style={{ position: "absolute", left: 21, top: 22, bottom: 22, width: 2, background: "rgba(255,255,255,.04)", borderRadius: 2, zIndex: 0 }}>
           <div style={{ width: "100%", borderRadius: 2, background: "linear-gradient(180deg," + C.a500 + "," + C.s500 + ")", height: as >= 0 ? (Math.min(100, ((as + 1) / steps.length) * 100) + "%") : "0%", transition: "height .9s cubic-bezier(.16,1,.3,1)" }} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
@@ -980,7 +1076,7 @@ function Timeline() {
             const open = exp === i;
             return (
               <div key={i} onClick={() => sExp(open ? null : i)} style={{ display: "flex", gap: 16, alignItems: "flex-start", opacity: act ? 1 : .2, transition: "all .5s cubic-bezier(.16,1,.3,1)", cursor: "pointer" }}>
-                <div style={{ width: 42, height: 42, borderRadius: "50%", flexShrink: 0, background: act ? s.c : "rgba(255,255,255,.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, transition: "all .4s", boxShadow: act ? "0 0 20px " + s.c + "20" : "none" }}>{s.ic}</div>
+                <div style={{ width: 42, height: 42, borderRadius: "50%", flexShrink: 0, background: act ? s.c : "rgba(255,255,255,.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, transition: "all .4s", boxShadow: act ? "0 0 20px " + s.c + "20" : "none", position: "relative", zIndex: 1 }}>{s.ic}</div>
                 <div style={{ background: open ? "rgba(255,255,255,.07)" : "rgba(255,255,255,.03)", borderRadius: 12, padding: "16px 20px", flex: 1, border: "1px solid " + (open ? "rgba(255,255,255,.1)" : "rgba(255,255,255,.03)"), transition: "all .4s" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
@@ -1050,8 +1146,8 @@ function Data() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>% facturas cobradas acumulado</h3>
             <div style={{ display: "flex", gap: 3, padding: 3, background: C.g200, borderRadius: 9 }}>
-              {[{ k: "top", l: "\u{1F3C6} Top Performers" }, { k: "avg", l: "\u{1F4CA} Promedio" }].map(({ k, l }) => (
-                <button key={k} onClick={() => sMode(k)} style={{ padding: "6px 14px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, transition: "all .3s", background: mode === k ? "#fff" : "transparent", color: mode === k ? C.p950 : C.g500, boxShadow: mode === k ? "0 2px 6px rgba(0,0,0,.06)" : "none" }}>{l}</button>
+              {[{ k: "top", l: "Top Performers", icon: <Icon.trophy size={14} /> }, { k: "avg", l: "Promedio", icon: <Icon.chartBar size={14} /> }].map(({ k, l, icon }) => (
+                <button key={k} onClick={() => sMode(k)} style={{ padding: "6px 14px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, transition: "all .3s", background: mode === k ? "#fff" : "transparent", color: mode === k ? C.p950 : C.g500, boxShadow: mode === k ? "0 2px 6px rgba(0,0,0,.06)" : "none", display: "flex", alignItems: "center", gap: 4 }}>{icon}{l}</button>
               ))}
             </div>
           </div>
@@ -1122,11 +1218,12 @@ function Integraciones() {
       <Fade delay={.25}>
         <div style={{ marginTop: 36 }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: C.g300 }}>Medios de pago</h3>
-          <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
-            {[{ n: "PSE" }, { n: "Nequi" }, { n: "Daviplata" }, { n: "Bre-B" }, { n: "VISA" }, { n: "Mastercard" }, { n: "AMEX" }, { n: "Efecty", s: true }].map((m, i) => (
-              <span key={i} style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, background: m.s ? "rgba(251,191,36,.06)" : "rgba(255,255,255,.03)", border: "1px solid " + (m.s ? "rgba(251,191,36,.14)" : "rgba(255,255,255,.04)"), color: m.s ? C.w400 : C.g300 }}>
-                {m.n}{m.s && <span style={{ fontSize: 8, fontWeight: 700, color: C.w500, display: "block", marginTop: 1 }}>PRONTO</span>}
-              </span>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(100px,1fr))", gap: 10 }}>
+            {[{ n: "PSE", src: "/logos/payment/pse.svg" }, { n: "Nequi", src: "/logos/payment/nequi.svg" }, { n: "Daviplata", src: "/logos/payment/daviplata.svg", h: 44 }, { n: "Bre-B", src: "/logos/payment/breb.svg" }, { n: "VISA", src: "/logos/payment/visa.svg" }, { n: "Mastercard", src: "/logos/payment/mastercard.svg", h: 40 }, { n: "AMEX", src: "/logos/payment/amex.svg" }, { n: "Efecty", src: "/logos/payment/efecty.svg", s: true }].map((m, i) => (
+              <div key={i} style={{ position: "relative", padding: "10px 16px", borderRadius: 10, background: "rgba(255,255,255,.04)", border: "1px solid " + (m.s ? "rgba(251,191,36,.14)" : "rgba(255,255,255,.06)"), display: "flex", alignItems: "center", justifyContent: "center", height: 56 }}>
+                <img src={m.src} alt={m.n} style={{ height: m.h || 30, maxWidth: 100, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: .85 }} />
+                {m.s && <span style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", fontSize: 7, fontWeight: 700, color: C.w500, background: C.g950, padding: "1px 5px", borderRadius: 3, whiteSpace: "nowrap" }}>PRONTO</span>}
+              </div>
             ))}
           </div>
         </div>
@@ -1137,10 +1234,10 @@ function Integraciones() {
 
 function Resultados() {
   const cards = [
-    { ic: "\u26A1", t: "Cobra 3x más rápido", bf: "Día 18", af: "Día 5.8", m: "+15-25pp", d: "pagos antes de día 10", c: C.a500 },
-    { ic: "\u{1F4F1}", t: "50% por WhatsApp", bf: "0% digital", af: "30-50%", m: "del total", d: "cobrado por canal digital", c: C.b500 },
-    { ic: "\u{1F3AF}", t: "Menos tickets", bf: "500+ llamadas", af: "Automático", m: "-20-30%", d: "en tickets operativos", c: C.s500 },
-    { ic: "\u{1F4B0}", t: "Flujo predecible", bf: "No sé cuánto", af: "Dashboard", m: "Tiempo real", d: "conciliación y predicción", c: C.w500 }
+    { ic: <Icon.bolt size={24} />, t: "Cobra 3x más rápido", bf: "Día 18", af: "Día 5.8", m: "+15-25pp", d: "pagos antes de día 10", c: C.a500 },
+    { ic: <Icon.phone size={24} />, t: "50% por WhatsApp", bf: "0% digital", af: "30-50%", m: "del total", d: "cobrado por canal digital", c: C.b500 },
+    { ic: <Icon.checkCircle size={24} />, t: "Menos tickets", bf: "500+ llamadas", af: "Automático", m: "-20-30%", d: "en tickets operativos", c: C.s500 },
+    { ic: <Icon.chartBar size={24} />, t: "Flujo predecible", bf: "No sé cuánto", af: "Dashboard", m: "Tiempo real", d: "conciliación y predicción", c: C.w500 }
   ];
   return (
     <Box>
@@ -1152,7 +1249,7 @@ function Resultados() {
         {cards.map((r, i) => (
           <Fade key={i} delay={.05 * i}>
             <div style={{ background: "#fff", borderRadius: 16, padding: 24, border: "1px solid " + C.g200, height: "100%" }}>
-              <span style={{ fontSize: 24 }}>{r.ic}</span>
+              <span style={{ color: r.c }}>{r.ic}</span>
               <h3 style={{ fontSize: 17, fontWeight: 700, margin: "8px 0" }}>{r.t}</h3>
               <div style={{ display: "flex", gap: 5, alignItems: "center", marginBottom: 8, fontSize: 12 }}>
                 <span style={{ padding: "2px 7px", borderRadius: 5, background: C.g100, color: C.g500, textDecoration: "line-through" }}>{r.bf}</span>
@@ -1172,11 +1269,11 @@ function Resultados() {
 function CicloFinanciero() {
   const [ac, sAc] = useState(null);
   const items = [
-    { ic: "\u{1F4E5}", t: "Recaudo inteligente", st: "Activo", c: C.a500, ds: "Cobro automatizado multicanal con behavioral intelligence.", dt: "WhatsApp, email, portal y llamada IA. Secuencias adaptativas por pagador. Conciliación automática." },
-    { ic: "\u{1F4CA}", t: "Tesorería en tiempo real", st: "Activo", c: C.b500, ds: "Dashboard de conciliación, predicción y reportes.", dt: "Todos tus cobros en un solo lugar. Predice flujo semanal. Reportes por canal, fecha y estado. Sin cruzar archivos de bancos." },
-    { ic: "\u{1F4B8}", t: "Dispersiones", st: "Activo", c: C.s500, ds: "Pago a terceros y desembolsos automáticos.", dt: "Turbo ACH (intrabancario H2H), Bre-B (instantáneo vía Banco de la República) y ACH estándar. Elige según urgencia y costo." },
-    { ic: "\u{1F4B3}", t: "Tarjetas corporativas", st: "Próximamente", c: C.w500, ds: "Control de gastos empresariales integrado.", dt: "Tarjetas físicas y virtuales con límites por persona y categoría. Todo visible en un dashboard." },
-    { ic: "\u{1F3E0}", t: "Servicios públicos", st: "Activo", c: "#0EA5E9", ds: "Recaudo de utilities con la misma infraestructura.", dt: "Gas, energía, agua, telecomunicaciones. Ya operamos con EPM Gas, Surtigas, Movistar y Grupo Promigas." }
+    { ic: <Icon.inbox size={22} />, t: "Recaudo inteligente", st: "Activo", c: C.a500, ds: "Cobro automatizado multicanal con behavioral intelligence.", dt: "WhatsApp, email, portal y llamada IA. Secuencias adaptativas por pagador. Conciliación automática." },
+    { ic: <Icon.chartBar size={22} />, t: "Tesorería en tiempo real", st: "Activo", c: C.b500, ds: "Dashboard de conciliación, predicción y reportes.", dt: "Todos tus cobros en un solo lugar. Predice flujo semanal. Reportes por canal, fecha y estado. Sin cruzar archivos de bancos." },
+    { ic: <Icon.paperAirplane size={22} />, t: "Dispersiones", st: "Activo", c: C.s500, ds: "Pago a terceros y desembolsos automáticos.", dt: "Turbo ACH (intrabancario H2H), Bre-B (instantáneo vía Banco de la República) y ACH estándar. Elige según urgencia y costo." },
+    { ic: <Icon.creditCard size={22} />, t: "Tarjetas corporativas", st: "Próximamente", c: C.w500, ds: "Control de gastos empresariales integrado.", dt: "Tarjetas físicas y virtuales con límites por persona y categoría. Todo visible en un dashboard." },
+    { ic: <Icon.home size={22} />, t: "Servicios públicos", st: "Activo", c: "#0EA5E9", ds: "Recaudo de utilities con la misma infraestructura.", dt: "Gas, energía, agua, telecomunicaciones. Ya operamos con EPM Gas, Surtigas, Movistar y Grupo Promigas." }
   ];
 
   return (
@@ -1193,7 +1290,7 @@ function CicloFinanciero() {
             <Fade key={i} delay={.04 * i}>
               <div onClick={() => sAc(open ? null : i)} style={{ background: open ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)", borderRadius: 14, padding: 20, border: "1px solid " + (open ? "rgba(255,255,255,.08)" : "rgba(255,255,255,.03)"), cursor: "pointer", transition: "all .4s" }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 22 }}>{it.ic}</span>
+                  <span style={{ color: it.c }}>{it.ic}</span>
                   <span style={{ padding: "2px 7px", borderRadius: 100, fontSize: 9, fontWeight: 600, background: it.st === "Activo" ? "rgba(34,197,94,.1)" : "rgba(251,191,36,.1)", color: it.st === "Activo" ? C.s400 : C.w400 }}>{it.st === "Activo" ? "\u25CF" : "\u25D0"} {it.st}</span>
                 </div>
                 <h3 style={{ fontSize: 15, fontWeight: 700, margin: "10px 0 4px" }}>{it.t}</h3>
@@ -1209,7 +1306,7 @@ function CicloFinanciero() {
 
       <Fade delay={.25}>
         <div style={{ marginTop: 32, padding: 24, borderRadius: 16, background: "rgba(34,197,94,.04)", border: "1px solid rgba(34,197,94,.08)" }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 14 }}>{"\u{1F4B8}"} Dispersiones {"\u2014"} Tres canales</h3>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}><Icon.paperAirplane size={18} /> Dispersiones {"\u2014"} Tres canales</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10 }}>
             {[
               { n: "Turbo ACH", t: "5 min – 2 horas", co: "Intrabancario Host-to-Host", d: "Transferencias directas con bancos principales. Bancolombia <30 min, Davivienda <20 min, Nequi <5 min. 24/7 en principales bancos." },
@@ -1219,8 +1316,8 @@ function CicloFinanciero() {
               <div key={i} style={{ background: "rgba(255,255,255,.03)", borderRadius: 10, padding: 16, border: "1px solid rgba(255,255,255,.04)" }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{ch.n}</div>
                 <div style={{ display: "flex", gap: 10, marginBottom: 6, fontSize: 11 }}>
-                  <span style={{ color: C.s400 }}>{"\u26A1"} {ch.t}</span>
-                  <span style={{ color: C.b400 }}>{"\u{1F4B0}"} {ch.co}</span>
+                  <span style={{ color: C.s400, display: "flex", alignItems: "center", gap: 3 }}><Icon.bolt size={12} color={C.s400} /> {ch.t}</span>
+                  <span style={{ color: C.b400, display: "flex", alignItems: "center", gap: 3 }}><Icon.banknotes size={12} color={C.b400} /> {ch.co}</span>
                 </div>
                 <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, margin: 0 }}>{ch.d}</p>
               </div>
@@ -1333,7 +1430,7 @@ function DashboardCobranza() {
       {/* Table */}
       <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 14, border: "1px solid rgba(255,255,255,.06)", overflowX: "auto" }}>
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10, gap: 8 }}>
-          <div style={{ padding: "5px 12px", borderRadius: 6, background: "rgba(255,255,255,.05)", fontSize: 10, color: C.g400, display: "flex", alignItems: "center", gap: 4 }}>{"\u{1F50D}"} Buscar</div>
+          <div style={{ padding: "5px 12px", borderRadius: 6, background: "rgba(255,255,255,.05)", fontSize: 10, color: C.g400, display: "flex", alignItems: "center", gap: 4 }}><Icon.search size={12} color={C.g400} /> Buscar</div>
         </div>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
           <thead>
@@ -1369,13 +1466,13 @@ function InvoiceLifecycle() {
   useEffect(() => { if (!v) return; const t = [0,1,2,3,4,5,6].map(i => setTimeout(() => setStep(i), 300 + i * 300)); return () => t.forEach(clearTimeout); }, [v]);
 
   const nodes = [
-    { id: 0, label: "Recordatorio", icon: "\u{1F514}", day: "Antes de vencer", color: C.b500, desc: "Aviso previo para que el usuario se prepare y pague a tiempo.", detail: "Reduce la cartera vencida desde el inicio. Los usuarios que reciben recordatorio previo pagan 2.3x más rápido que los que no." },
-    { id: 1, label: "Vence hoy", icon: "\u{1F4C5}", day: "Día 0", color: C.a500, desc: "Mensaje con link de pago directo + PDF adjunto de la factura.", detail: "El momento de mayor urgencia. El usuario ve su factura, el monto y paga en 4 clicks sin salir de WhatsApp. 60%+ de los pagos ocurren aquí." },
-    { id: 2, label: "Vencido", icon: "\u{1F551}", day: "Día 1-5", color: C.w500, desc: "Recordatorio inteligente: hora y canal óptimo según comportamiento del usuario.", detail: "Recupera usuarios que olvidaron o no pudieron pagar. La IA elige el mejor momento: Juan paga viernes 6pm → mensaje viernes 5pm. María paga día de quincena → mensaje día 15." },
-    { id: 3, label: "Pre-corte", icon: "\u26A0\uFE0F", day: "Día 6-9", color: "#F97316", desc: "Escalamiento: cambia canal, tono del mensaje. Urgencia alta.", detail: "Activar la urgencia antes del corte para evitar la desconexión. El usuario entiende que el corte es inminente y tiene una última ventana para pagar sin perder el servicio." },
-    { id: 4, label: "Llamada IA", icon: "\u{1F4DE}", day: "Día 10-15", color: C.e500, desc: "Agente de voz IA llama, contextualiza la deuda, envía link en la llamada.", detail: "Llegar a usuarios que no responden a canales digitales. Personas mayores o que no leen mensajes reciben una llamada con voz natural que les guía al pago." },
-    { id: 5, label: "Cortado", icon: "\u{1F6AB}", day: "Post-corte", color: C.g600, desc: "Notificación de corte + última oportunidad de pago para reconexión.", detail: "Convertir el corte en oportunidad de recuperación inmediata. El usuario puede pagar y reactivar su servicio automáticamente sin llamar al ISP." },
-    { id: 6, label: "Recuperación", icon: "\u{2764}\uFE0F", day: "Re-activación", color: C.s500, desc: "Secuencia de re-activación para usuarios que cancelaron o fueron cortados.", detail: "Recuperar ingresos de usuarios perdidos. Campañas programadas con ofertas o facilidades de pago para re-enganchar suscriptores inactivos." }
+    { id: 0, label: "Recordatorio", icon: <Icon.bell size={16} color="#fff" />, day: "Antes de vencer", color: C.b500, desc: "Aviso previo para que el usuario se prepare y pague a tiempo.", detail: "Reduce la cartera vencida desde el inicio. Los usuarios que reciben recordatorio previo pagan 2.3x más rápido que los que no." },
+    { id: 1, label: "Vence hoy", icon: <Icon.calendar size={16} color="#fff" />, day: "Día 0", color: C.a500, desc: "Mensaje con link de pago directo + PDF adjunto de la factura.", detail: "El momento de mayor urgencia. El usuario ve su factura, el monto y paga en 4 clicks sin salir de WhatsApp. 60%+ de los pagos ocurren aquí." },
+    { id: 2, label: "Vencido", icon: <Icon.clock size={16} color="#fff" />, day: "Día 1-5", color: C.w500, desc: "Recordatorio inteligente: hora y canal óptimo según comportamiento del usuario.", detail: "Recupera usuarios que olvidaron o no pudieron pagar. La IA elige el mejor momento: Juan paga viernes 6pm → mensaje viernes 5pm. María paga día de quincena → mensaje día 15." },
+    { id: 3, label: "Pre-corte", icon: <Icon.warning size={16} color="#fff" />, day: "Día 6-9", color: "#F97316", desc: "Escalamiento: cambia canal, tono del mensaje. Urgencia alta.", detail: "Activar la urgencia antes del corte para evitar la desconexión. El usuario entiende que el corte es inminente y tiene una última ventana para pagar sin perder el servicio." },
+    { id: 4, label: "Llamada IA", icon: <Icon.phoneCall size={16} color="#fff" />, day: "Día 10-15", color: C.e500, desc: "Agente de voz IA llama, contextualiza la deuda, envía link en la llamada.", detail: "Llegar a usuarios que no responden a canales digitales. Personas mayores o que no leen mensajes reciben una llamada con voz natural que les guía al pago." },
+    { id: 5, label: "Cortado", icon: <Icon.noSymbol size={16} color="#fff" />, day: "Post-corte", color: C.g600, desc: "Notificación de corte + última oportunidad de pago para reconexión.", detail: "Convertir el corte en oportunidad de recuperación inmediata. El usuario puede pagar y reactivar su servicio automáticamente sin llamar al ISP." },
+    { id: 6, label: "Recuperación", icon: <Icon.heart size={16} color="#fff" />, day: "Re-activación", color: C.s500, desc: "Secuencia de re-activación para usuarios que cancelaron o fueron cortados.", detail: "Recuperar ingresos de usuarios perdidos. Campañas programadas con ofertas o facilidades de pago para re-enganchar suscriptores inactivos." }
   ];
 
   return (
@@ -1461,8 +1558,8 @@ function Reconciliation() {
 
       <Fade delay={.1}>
         <div style={{ display: "flex", gap: 5, marginBottom: 28 }}>
-          {["\u{1F4CB} Operativa", "\u{1F4CA} Contable"].map((t, i) => (
-            <button key={i} onClick={() => sTab(i)} style={{ padding: "9px 18px", borderRadius: 100, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, transition: "all .3s", background: tab === i ? C.p950 : "#fff", color: tab === i ? "#fff" : C.g600, boxShadow: tab === i ? "0 6px 20px rgba(9,12,28,.14)" : "0 1px 3px rgba(0,0,0,.04)" }}>{t}</button>
+          {[{ l: "Operativa", ic: <Icon.clipboard size={14} /> }, { l: "Contable", ic: <Icon.chartBar size={14} /> }].map(({ l: t, ic: ric }, i) => (
+            <button key={i} onClick={() => sTab(i)} style={{ padding: "9px 18px", borderRadius: 100, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, transition: "all .3s", background: tab === i ? C.p950 : "#fff", color: tab === i ? "#fff" : C.g600, boxShadow: tab === i ? "0 6px 20px rgba(9,12,28,.14)" : "0 1px 3px rgba(0,0,0,.04)", display: "flex", alignItems: "center", gap: 5 }}>{ric}{t}</button>
           ))}
         </div>
       </Fade>
@@ -1471,9 +1568,9 @@ function Reconciliation() {
         <div style={{ background: C.g50, borderRadius: 18, padding: 24, border: "1px solid " + C.g200 }}>
           {/* Status flow */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 24, flexWrap: "wrap" }}>
-            {[{ l: "Factura", ic: "\u{1F4C4}", c: C.b500 }, { l: "Cobro", ic: "\u{1F4E8}", c: C.a500 }, { l: "Pago", ic: "\u2705", c: C.s500 }].map((s, i) => (
+            {[{ l: "Factura", ic: <Icon.docText size={18} />, c: C.b500 }, { l: "Cobro", ic: <Icon.envelope size={18} />, c: C.a500 }, { l: "Pago", ic: <Icon.checkCircle size={18} />, c: C.s500 }].map((s, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <div style={{ width: 42, height: 42, borderRadius: "50%", background: s.c + "12", border: "2px solid " + s.c, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>{s.ic}</div>
+                <div style={{ width: 42, height: 42, borderRadius: "50%", background: s.c + "12", border: "2px solid " + s.c, display: "flex", alignItems: "center", justifyContent: "center", color: s.c }}>{s.ic}</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: C.g700 }}>{s.l}</span>
                 {i < 2 && <div style={{ width: 40, height: 2, background: C.g300, borderRadius: 1 }} />}
               </div>
@@ -1693,7 +1790,7 @@ function Pricing() {
       <Fade delay={.2}>
         <div style={{ background: C.p950, borderRadius: 20, padding: "clamp(24px,4vw,36px)", color: "#fff" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
-            <span style={{ fontSize: 22 }}>{"\u{1F4B0}"}</span>
+            <Icon.banknotes size={22} color={C.a400} />
             <h3 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Calculadora de ROI</h3>
           </div>
           <p style={{ fontSize: 13, color: C.g400, marginBottom: 24, lineHeight: 1.5 }}>Ajusta los parámetros de tu ISP y ve el impacto estimado de OnePay en tu negocio.</p>
@@ -1806,10 +1903,10 @@ function Seguridad() {
         <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>Cumplimos los estándares más exigentes de la industria de pagos. Cada transacción está protegida de extremo a extremo.</p>
       </Fade>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 9 }}>
-        {[{ l: "PCI DSS Level 1", d: "Máximo estándar en pagos", i: "\u{1F512}" }, { l: "ISO 27001", d: "Seguridad de información", i: "\u{1F6E1}\uFE0F" }, { l: "Adquirente directo", d: "Visa & Mastercard", i: "\u{1F4B3}" }, { l: "Póliza cyber", d: "Cobertura integral", i: "\u{1F4CB}" }].map((s, i) => (
+        {[{ l: "PCI DSS Level 1", d: "Máximo estándar en pagos", i: <Icon.lock size={22} color={C.a500} /> }, { l: "ISO 27001", d: "Seguridad de información", i: <Icon.shield size={22} color={C.s500} /> }, { l: "Adquirente directo", d: "Visa & Mastercard", i: <Icon.creditCard size={22} color={C.b500} /> }, { l: "Póliza cyber", d: "Cobertura integral", i: <Icon.docText size={22} color={C.w500} /> }].map((s, i) => (
           <Fade key={i} delay={.04 * i}>
             <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid " + C.g200, textAlign: "center" }}>
-              <span style={{ fontSize: 22 }}>{s.i}</span>
+              <span>{s.i}</span>
               <div style={{ fontSize: 13, fontWeight: 700, margin: "7px 0 2px" }}>{s.l}</div>
               <div style={{ fontSize: 11, color: C.g500 }}>{s.d}</div>
             </div>
