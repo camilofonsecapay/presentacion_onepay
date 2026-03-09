@@ -117,7 +117,7 @@ const ISOTIPO = (p) => {
   const s = p.size || 24;
   return (
     <svg width={s} height={s} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fillRule="evenodd" clipRule="evenodd" d="M33.64 76.47c4.78 2.7 10.12 4.05 16.04 4.05 5.99 0 11.38-1.35 16.15-4.05 4.66-2.59 8.55-6.36 11.26-10.92 2.81-4.58 4.21-9.73 4.21-15.43 0-5.71-1.4-10.85-4.21-15.43-2.73-4.65-6.52-8.33-11.37-11.04-4.78-2.7-10.12-4.05-16.04-4.05s-11.3 1.35-16.15 4.05c-4.7 2.63-8.62 6.43-11.37 11.04-2.73 4.58-4.1 9.73-4.1 15.43s1.4 10.86 4.21 15.43c2.78 4.55 6.7 8.31 11.37 10.92zm9.3-46.31a3.88 3.88 0 00-3.55 2.17c-.18.43-.27.89-.27 1.35v31.68c0 .93.37 1.81 1.04 2.49a3.88 3.88 0 002.51 1.03h14.22a3.88 3.88 0 002.51-1.03 3.51 3.51 0 001.04-2.49V83.68c0-.93-.37-1.81-1.04-2.49a3.88 3.88 0 00-2.51-1.03H71.94z" fill={fill} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M33.6412 76.468C38.4171 79.172 43.7628 80.524 49.678 80.524C55.6706 80.524 61.0542 79.172 65.8289 76.468C70.4887 73.881 74.374 70.112 77.089 65.546C79.896 60.964 81.299 55.82 81.297 50.113C81.296 44.406 79.893 39.2617 77.089 34.68C74.36 30.0267 70.5688 26.3481 65.7168 23.6444C60.9382 20.9472 55.5919 19.5986 49.678 19.5986C43.7641 19.5986 38.3804 20.9498 33.5271 23.6522C28.8296 26.2788 24.9082 30.0841 22.1548 34.6878C19.4227 39.2682 18.0573 44.4126 18.0586 50.121C18.0599 55.829 19.4627 60.973 22.2669 65.554C25.0478 70.105 28.966 73.865 33.6412 76.468ZM42.9388 30.1556C42.4728 30.1538 42.011 30.2434 41.58 30.4193C41.1489 30.5952 40.7571 30.854 40.4269 31.1807C40.0968 31.5074 39.8348 31.8956 39.6561 32.3231C39.4773 32.7507 39.3853 33.209 39.3853 33.672V65.349C39.3853 65.812 39.4773 66.27 39.6561 66.698C39.8348 67.125 40.0968 67.513 40.4269 67.84C40.7571 68.167 41.1489 68.425 41.58 68.601C42.011 68.777 42.4728 68.867 42.9388 68.865H57.1566C57.6228 68.867 58.0848 68.778 58.516 68.602C58.9473 68.426 59.3394 68.167 59.6697 67.841C60.0001 67.514 60.2622 67.126 60.4411 66.698C60.62 66.27 60.7121 65.812 60.7121 65.349V33.6759C60.7121 33.2128 60.62 32.7542 60.4411 32.3266C60.2622 31.8989 60.0001 31.5106 59.6697 31.1839C59.3394 30.8571 58.9473 30.5985 58.516 30.4227C58.0848 30.2469 57.6228 30.1574 57.1566 30.1595L42.9388 30.1556Z" fill={fill} />
     </svg>
   );
 };
@@ -1694,6 +1694,7 @@ function Pricing() {
   const [tasa, setTasa] = useState(70);
   const [personas, setPersonas] = useState(2);
   const [planIdx, setPlanIdx] = useState(-1); // -1 = auto-sugerido
+  const [dispersiones, setDispersiones] = useState(200000000);
 
   // Plan: auto-sugerido o manual
   const planSugerido = subs <= 3000 ? 0 : subs <= 12000 ? 1 : 2;
@@ -1711,6 +1712,9 @@ function Pricing() {
 
   // Capacidad liberada: equipo de cobranza se dedica a tareas de mayor valor
   const capacidadLiberada = personas * 2900000 * 0.8;
+
+  // Ahorro GMF: módulo de tesorería ahorra la mitad del 4x1000 (= 2x1000 = 0.2%)
+  const ahorroGMF = dispersiones * 0.002;
 
   // Velocidad de cobro (dato complementario)
   const diasOnePay = 5.5;
@@ -1735,7 +1739,7 @@ function Pricing() {
   const costoMensajeria = subs * 5 * 8;
 
   // ROI
-  const beneficioTotal = plataNueva + capacidadLiberada;
+  const beneficioTotal = plataNueva + capacidadLiberada + ahorroGMF;
   const roiNeto = beneficioTotal - costoTotal;
   const roiPct = costoTotal > 0 ? Math.round((roiNeto / costoTotal) * 100) : 0;
 
@@ -1813,6 +1817,10 @@ function Pricing() {
               <input type="range" min={0} max={10} step={1} value={personas} onChange={e => setPersonas(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
             </div>
             <div>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Dispersiones mensuales (proveedores + nomina): <strong style={{ color: "#fff" }}>${dot(dispersiones)}</strong></label>
+              <input type="range" min={0} max={2000000000} step={10000000} value={dispersiones} onChange={e => setDispersiones(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+            </div>
+            <div>
               <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Plan: <strong style={{ color: "#fff" }}>{planIdx === -1 ? planNames[planSugerido] + " (sugerido)" : planNames[plan]}</strong></label>
               <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
                 <button onClick={() => setPlanIdx(-1)} style={{
@@ -1852,6 +1860,11 @@ function Pricing() {
               <div style={{ fontSize: 20, fontWeight: 800, color: "#60A5FA", marginTop: 4 }}>${dot(Math.round(capacidadLiberada))}</div>
               <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{personas} persona{personas !== 1 ? "s" : ""} → tareas de mayor valor</div>
             </div>
+            {dispersiones > 0 && <div style={{ background: "rgba(251,191,36,.06)", borderRadius: 14, padding: 18, border: "1px solid rgba(251,191,36,.1)" }}>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>Ahorro GMF (2x1000)</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: "#FBBF24", marginTop: 4 }}>${dot(Math.round(ahorroGMF))}</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>Modulo tesoreria ahorra 50% del 4x1000</div>
+            </div>}
             <div style={{ background: "rgba(255,255,255,.04)", borderRadius: 14, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
               <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>Inversión OnePay</div>
               <div style={{ fontSize: 20, fontWeight: 800, marginTop: 4, color: "#fff" }}>${dot(Math.round(costoTotal))}</div>
@@ -1885,7 +1898,7 @@ function Pricing() {
           {/* Disclaimer */}
           <div style={{ marginTop: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.04)" }}>
             <p style={{ fontSize: 11, color: "rgba(255,255,255,.4)", margin: 0, lineHeight: 1.5 }}>
-              Estimación basada en data real de +60 ISPs activas en OnePay (Feb 2026). Mejora de +12pp en tasa de recaudo. Mix de pago: 95% PSE/billeteras, 5% tarjetas. Capacidad liberada basada en salario mínimo integral ($2.9M/mes) × 80% automatización. Resultados varían según adopción y base de suscriptores.
+              Estimación basada en data real de +60 ISPs activas en OnePay (Feb 2026). Mejora de +12pp en tasa de recaudo. Mix de pago: 95% PSE/billeteras, 5% tarjetas. Capacidad liberada basada en salario mínimo integral ($2.9M/mes) × 80% automatización. Ahorro GMF: el módulo de tesorería permite pagar a proveedores y nómina ahorrando la mitad del 4x1000 (2x1000 = 0.2% sobre el monto dispersado). Resultados varían según adopción y base de suscriptores.
             </p>
           </div>
         </div>
