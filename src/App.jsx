@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+import { i18n, LangCtx } from './i18n';
 
 /* ═════════════════════════════════════════════════════════════
    OnePay ISP Sales Presentation — Feb 2026
@@ -158,6 +159,8 @@ const marqueeCSS = `@keyframes marquee{0%{transform:translateX(0)}100%{transform
 const ispHoverCSS = `.isp-logo{filter:grayscale(1) brightness(1.8);mix-blend-mode:screen;opacity:0.5;transition:filter .3s,opacity .3s}.isp-logo:hover{filter:grayscale(0) brightness(1.2);opacity:0.9}`;
 
 function ISPLogoMarquee() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].hero;
   const logoGap = 48;
   const half = Math.ceil(ISP_LOGOS.length / 2);
   const row1 = ISP_LOGOS.slice(0, half);
@@ -167,7 +170,7 @@ function ISPLogoMarquee() {
   const mask = "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)";
   return (
     <div style={{ marginTop: 64, marginBottom: 32 }}>
-      <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>ISPs que confían en OnePay</span>
+      <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>{t.marqueeISPLabel}</span>
       <style>{marqueeCSS}{ispHoverCSS}</style>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <div style={{ overflow: "hidden", maskImage: mask, WebkitMaskImage: mask }}>
@@ -194,11 +197,13 @@ function ISPLogoMarquee() {
 }
 
 function LogoMarquee() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].hero;
   const logoGap = 48;
   const all = [...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS];
   return (
     <div style={{ marginTop: 40 }}>
-      <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>Corporativos que confían en Onepay</span>
+      <span style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".06em", display: "block", marginBottom: 16 }}>{t.marqueeCorpLabel}</span>
       <style>{marqueeCSS}</style>
       <div style={{ overflow: "hidden", maskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)" }}>
         <div style={{ display: "flex", alignItems: "center", width: "max-content", animation: "marquee 40s linear infinite" }}>
@@ -329,7 +334,9 @@ function Msg(p) {
    SECTIONS
    ════════════════════════════════════════════ */
 
-function NavBar() {
+function NavBar({ setLang }) {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].nav;
   const [s, ss] = useState(false);
   useEffect(() => {
     const h = () => ss(window.scrollY > 50);
@@ -348,14 +355,23 @@ function NavBar() {
     }}>
       <LOGO h={30} />
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: 10, color: C.g400, letterSpacing: ".06em", textTransform: "uppercase" }}>Recaudo Inteligente</span>
-        <span style={{ padding: "3px 8px", borderRadius: 5, fontSize: 10, fontWeight: 700, background: "rgba(34,197,94,.1)", color: C.s400 }}>PCI DSS L1</span>
+        <span style={{ fontSize: 10, color: C.g400, letterSpacing: ".06em", textTransform: "uppercase" }}>{t.recaudo}</span>
+        <span style={{ padding: "3px 8px", borderRadius: 5, fontSize: 10, fontWeight: 700, background: "rgba(34,197,94,.1)", color: C.s400 }}>{t.pciLabel}</span>
+        <button onClick={() => setLang(lang === 'es' ? 'pt' : 'es')} style={{
+          padding: "3px 8px", borderRadius: 5, fontSize: 10, fontWeight: 700,
+          background: "rgba(99,102,241,.15)", color: C.a400,
+          border: "none", cursor: "pointer", letterSpacing: ".04em"
+        }}>
+          {lang === 'es' ? '\u{1F1E7}\u{1F1F7} PT' : '\u{1F1E8}\u{1F1F4} ES'}
+        </button>
       </div>
     </nav>
   );
 }
 
 function Hero() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].hero;
   const [m, sm] = useState(false);
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -425,12 +441,7 @@ function Hero() {
     transform: m ? "translateY(0)" : "translateY(26px)",
     transition: "all 1s cubic-bezier(.16,1,.3,1) " + d + "s"
   });
-  const stats = [
-    { v: 60, s: "+", l: "ISPs activas", sb: "con recaudo inteligente" },
-    { v: 5.8, s: "d", l: "Días promedio", sb: "vs. 18 del mercado", d: 1 },
-    { v: 93, s: "%", l: "Pagos exitosos", sb: "sin fricción" },
-    { v: 15, s: "s", l: "Para pagar", sb: "4 clicks", p: "~" }
-  ];
+  const stats = t.stats;
   return (
     <section
       onMouseMove={e => { const r = e.currentTarget.getBoundingClientRect(); mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top }; }}
@@ -443,13 +454,13 @@ function Hero() {
       <div style={{ position: "absolute", bottom: "-8%", left: "-4%", width: "35vw", height: "35vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(59,130,246,.05) 0%,transparent 60%)", filter: "blur(35px)" }} />
 
       <div style={{ position: "relative", maxWidth: 1160, margin: "0 auto", width: "100%", paddingTop: 76, zIndex: 1 }}>
-        <div style={a(.25)}><Tag dark>ISPs</Tag></div>
+        <div style={a(.25)}><Tag dark>{t.tag}</Tag></div>
         <h1 style={{ fontSize: "clamp(38px,7vw,76px)", fontWeight: 800, lineHeight: 1.03, letterSpacing: "-.04em", margin: "22px 0", maxWidth: 860, ...a(.45) }}>
-          Tus usuarios te pagan en{" "}
-          <span style={{ background: "linear-gradient(135deg," + C.a400 + "," + C.b400 + ")", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>5 días</span>, no en 25.
+          {t.h1[0]}
+          <span style={{ background: "linear-gradient(135deg," + C.a400 + "," + C.b400 + ")", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t.h1[1]}</span>{t.h1[2]}
         </h1>
         <p style={{ fontSize: "clamp(16px,1.8vw,20px)", lineHeight: 1.6, color: C.g400, maxWidth: 580, margin: "0 0 44px", ...a(.65) }}>
-          OnePay cobra por WhatsApp, concilia en tiempo real y te muestra cuánta plata te va a entrar esta semana.
+          {t.sub}
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(136px,1fr))", gap: 1, background: "rgba(99,102,241,.05)", borderRadius: 16, overflow: "hidden", ...a(.85) }}>
@@ -477,30 +488,30 @@ function Hero() {
 }
 
 function Problema() {
-  const cards = [
-    { t: "Lado empresa", ic: <Icon.building size={22} color={C.e500} />, c: C.e500, its: [["25-35%", "cartera vencida >30 días"], ["2-3", "personas dedicadas a cobrar"], ["$8-12M", "COP/mes en cobranza"], ["Día 18", "promedio para recibir pago"], ["500+", "llamadas manuales al mes"]], q: "\u201CLa plata está, pero no llega a tiempo.\u201D" },
-    { t: "Lado usuario", ic: <Icon.user size={22} color={C.b500} />, c: C.b500, its: [["40%", "abandono en PSE"], ["17", "pasos para pagar por PSE"], ["20%", "apertura emails de cobro"], ["0", "apps quiere descargar"], ["3+", "intentos para pagar"]], q: "\u201CDoña Carmen no es morosa \u2014 pagar es difícil.\u201D" }
-  ];
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].problema;
+  const cardIcons = [<Icon.building size={22} color={C.e500} />, <Icon.user size={22} color={C.b500} />];
+  const cardColors = [C.e500, C.b500];
   return (
     <Box>
       <Fade>
-        <Tag>El problema</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>Tu equipo persigue pagos.<br />Tus usuarios quieren pagar fácil.</h2>
-        <p style={{ fontSize: 16, color: C.g500, maxWidth: 540, lineHeight: 1.6, marginBottom: 40 }}>Nadie es moroso a propósito. Pagar es difícil, cobrar es lento, y el flujo de caja se asfixia.</p>
+        <Tag>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08, whiteSpace: "pre-line" }}>{t.h2}</h2>
+        <p style={{ fontSize: 16, color: C.g500, maxWidth: 540, lineHeight: 1.6, marginBottom: 40 }}>{t.sub}</p>
       </Fade>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
-        {cards.map((cd, ci) => (
+        {t.cards.map((cd, ci) => (
           <Fade key={ci} delay={ci * .12}>
             <div style={{ background: "#fff", borderRadius: 18, padding: 28, border: "1px solid " + C.g200, height: "100%" }}>
-              <span>{cd.ic}</span>
+              <span>{cardIcons[ci]}</span>
               <h3 style={{ fontSize: 19, fontWeight: 700, margin: "10px 0 14px" }}>{cd.t}</h3>
-              {cd.its.map(([m, t], i) => (
+              {cd.its.map(([m, tx], i) => (
                 <div key={i} style={{ display: "flex", gap: 9, alignItems: "baseline", marginBottom: 9 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: cd.c, minWidth: 56, flexShrink: 0 }}>{m}</span>
-                  <span style={{ fontSize: 13, color: C.g600, lineHeight: 1.4 }}>{t}</span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: cardColors[ci], minWidth: 56, flexShrink: 0 }}>{m}</span>
+                  <span style={{ fontSize: 13, color: C.g600, lineHeight: 1.4 }}>{tx}</span>
                 </div>
               ))}
-              <div style={{ marginTop: 16, padding: 12, borderRadius: 10, background: C.g50, fontStyle: "italic", fontSize: 13, color: C.g600, lineHeight: 1.5, borderLeft: "3px solid " + cd.c }}>{cd.q}</div>
+              <div style={{ marginTop: 16, padding: 12, borderRadius: 10, background: C.g50, fontStyle: "italic", fontSize: 13, color: C.g600, lineHeight: 1.5, borderLeft: "3px solid " + cardColors[ci] }}>{cd.q}</div>
             </div>
           </Fade>
         ))}
@@ -510,23 +521,21 @@ function Problema() {
 }
 
 function Insight() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].insight;
   const [aq, saq] = useState(null);
   const [r, v] = useVis();
-  useEffect(() => { if (!v) return; const t = [0, 1, 2, 3].map(i => setTimeout(() => saq(i), 500 + i * 450)); return () => t.forEach(clearTimeout); }, [v]);
-  const qs = [
-    { q: "\u00BFCon qué pagar?", w: "Pasarelas", i: "cc", d: "Visa, MC, Nequi, Daviplata, PSE, Bre-B" },
-    { q: "\u00BFCómo pagar?", w: "Checkouts", i: "mon", d: "4 clicks, sin fricción, sin apps" },
-    { q: "\u00BFDónde pagar?", w: "OnePay", i: "ph", d: "WhatsApp \u2014 donde ya está el 98%" },
-    { q: "\u00BFCómo hacer que pague?", w: "OnePay", i: "br", d: "Behavioral intelligence + timing" }
-  ];
+  useEffect(() => { if (!v) return; const ti = [0, 1, 2, 3].map(i => setTimeout(() => saq(i), 500 + i * 450)); return () => ti.forEach(clearTimeout); }, [v]);
+  const qIcons = ["cc", "mon", "ph", "br"];
+  const qs = t.questions.map((q, i) => ({ ...q, i: qIcons[i] }));
   return (
     <Box dark>
       <Fade>
-        <Tag dark>El insight</Tag>
+        <Tag dark>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
-          Para cobrar hay que resolver<br /><span style={{ color: C.a400 }}>cómo paga la gente</span>
+          {t.h2[0]}<br /><span style={{ color: C.a400 }}>{t.h2[1]}</span>
         </h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 580, lineHeight: 1.6, marginBottom: 40 }}>La industria optimiza el cobro. Nadie optimiza el pago. OnePay hace las dos.</p>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 580, lineHeight: 1.6, marginBottom: 40 }}>{t.sub}</p>
       </Fade>
       <div ref={r} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 11 }}>
         {qs.map((q, i) => {
@@ -541,7 +550,7 @@ function Insight() {
                 transition: "all .5s cubic-bezier(.16,1,.3,1)", opacity: act ? 1 : .3
               }}>
                 <span>{{ cc: <Icon.creditCard size={22} color={op ? C.a300 : C.g300} />, mon: <Icon.monitor size={22} color={op ? C.a300 : C.g300} />, ph: <Icon.phone size={22} color={op ? C.a300 : C.g300} />, br: <Icon.brain size={22} color={op ? C.a300 : C.g300} /> }[q.i]}</span>
-                <div style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".05em", marginTop: 8 }}>Pregunta {i + 1}</div>
+                <div style={{ fontSize: 10, color: C.g500, textTransform: "uppercase", letterSpacing: ".05em", marginTop: 8 }}>{t.questionLabel} {i + 1}</div>
                 <h3 style={{ fontSize: 16, fontWeight: 700, margin: "3px 0 5px", color: op ? C.a300 : "#fff" }}>{q.q}</h3>
                 <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, marginBottom: 8 }}>{q.d}</p>
                 <span style={{ display: "inline-flex", padding: "2px 9px", borderRadius: 100, fontSize: 10, fontWeight: 600, background: op ? "rgba(99,102,241,.12)" : "rgba(255,255,255,.06)", color: op ? C.a300 : C.g400 }}>
@@ -557,6 +566,8 @@ function Insight() {
 }
 
 function Producto() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].producto;
   const [tab, sTab] = useState(0);
   // WhatsApp state
   const [wa, sWa] = useState(0); // 0=initial, 1=flow-detail, 2=flow-methods, 3=flow-done, 4=confirmed
@@ -573,27 +584,11 @@ function Producto() {
   const [ct, sCt] = useState(0);
   const callRef = useRef(null);
 
-  const deudas = [
-    { desc: "Internet Hogar 100Mbps - Febrero", monto: 85000, ref: "FAC-2026-0218", fCreacion: "18 feb 2026", fVence: "5 mar 2026" },
-    { desc: "Internet Hogar 100Mbps - Marzo", monto: 85000, ref: "FAC-2026-0305", fCreacion: "5 mar 2026", fVence: "20 mar 2026" },
-    { desc: "Cargo reconexión", monto: 15000, ref: "", fCreacion: "1 mar 2026", fVence: "15 mar 2026" },
-    { desc: "Upgrade velocidad Dic", monto: 25000, ref: "FAC-2025-1201", fCreacion: "1 dic 2025", fVence: "20 dic 2025" }
-  ];
+  const deudasMontos = [85000, 85000, 15000, 25000];
+  const deudas = t.deudas.map((d, i) => ({ ...d, monto: deudasMontos[i] }));
   const pdTotal = deudas.reduce((s, d, i) => s + (pdSel[i] ? d.monto : 0), 0);
 
-  const callLines = [
-    { who: "ai", text: "Hola, buenas tardes. Soy Ana, de FibraNet. ¿Hablo con el señor Carlos Martínez?" },
-    { who: "user", text: "Sí, con él. ¿Qué necesita?" },
-    { who: "ai", text: "Don Carlos, lo llamo porque tiene una factura de $85.000 de su plan de Internet Hogar que está vencida desde el 18 de febrero. Queríamos ayudarle a ponerse al día antes de que se genere algún inconveniente con el servicio." },
-    { who: "user", text: "Ay sí, ya sé... es que este mes ha estado muy duro. La verdad no he podido pagar." },
-    { who: "ai", text: "Lo entiendo, don Carlos, y por eso lo llamo. ¿Sabía que puede hacer un abono parcial para evitar el corte? Así no pierde la conexión y completa el resto cuando pueda." },
-    { who: "user", text: "¿Y cuánto sería lo mínimo? Porque de verdad ando muy justo..." },
-    { who: "ai", text: "Con que abone al menos la mitad, que serían $42.500, ya le cubriría para que no le corten. Y lo más fácil es que le mando un link a su WhatsApp ahora mismo y paga desde ahí, sin filas ni nada." },
-    { who: "user", text: "¿Pero me queda debiendo el resto? ¿No me van a cobrar más?" },
-    { who: "ai", text: "No señor, el saldo queda registrado y lo puede pagar cuando quiera. No se genera ningún cobro adicional. ¿Le envío el link entonces?" },
-    { who: "user", text: "Bueno, mándelo. Voy a ver si pago ahorita por Nequi." },
-    { who: "ai", text: "Perfecto don Carlos, ya le envié el link al WhatsApp. Ahí puede elegir Nequi o el medio que prefiera. Cualquier cosa me puede escribir por ahí mismo. ¡Que esté muy bien!" }
-  ];
+  const callLines = t.call.lines;
 
   useEffect(() => { sWa(0); setWaPay(0); setPdStep(0); setPdSel([true, true, false, true]); setPdPay(0); setPdRef(""); setPdErr(false); setCallStep(0); sCt(0); }, [tab]);
 
@@ -620,19 +615,10 @@ function Producto() {
   }, [callStep]);
 
   const fT = (s) => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
-  const tabs = ["WhatsApp", "Portal", "Llamada IA"];
+  const tabs = t.tabs;
   const tabIcons = [<Icon.phone size={14} />, <Icon.monitor size={14} />, <Icon.phoneCall size={14} />];
-  const payMethodsReal = [
-    { icon: "\u{1F4B3}", name: "Visa \u00B70193", sub: "Los pagos con tarjeta se aprueban inmediatamente." },
-    { icon: "\u{1F3E6}", name: "PSE Bancolombia", sub: "Pagaste previamente con este método." },
-    { icon: "\u{1F4F1}", name: "Nequi \u00B76819", sub: "Los pagos se aprueban inmediatamente." },
-    { icon: "\u{1F4F1}", name: "Daviplata", sub: "Billetera digital" }
-  ];
-  const checks = {
-    0: ["WhatsApp Flows nativo \u2014 sin salir de la app", "98% apertura vs 20% email", "~15 segundos para completar", "Todos los métodos de pago", "Recordatorios por comportamiento"],
-    1: ["Consulta por referencia de pago", "Selecciona una, varias o todas las deudas", "Múltiples métodos de pago", "Historial completo sin contraseña"],
-    2: ["Gestión de cartera vencida", "Cada empresa crea su propio agente IA", "Voz natural \u2014 indistinguible de una persona", "Manejo de objeciones en tiempo real", "Env\u00EDa link de pago durante la llamada", "Par\u00E1metros de entrenamiento autom\u00E1ticos"]
-  };
+  const payMethodsReal = t.payMethods;
+  const checks = t.checks;
 
   // WhatsApp Flow overlay component
   const FlowOverlay = () => {
@@ -645,9 +631,9 @@ function Producto() {
         {/* Flow header */}
         <div style={{ padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,.06)", flexShrink: 0 }}>
           {flowPage > 1 && <span onClick={() => sWa(wa - 1)} style={{ fontSize: 16, color: "#fff", cursor: "pointer" }}>{"\u2190"}</span>}
-          {flowPage === 1 && <span style={{ fontSize: 12, color: "#aaa" }}>Cancel</span>}
+          {flowPage === 1 && <span style={{ fontSize: 12, color: "#aaa" }}>{t.flow.cancel}</span>}
           <span style={{ fontSize: 13, fontWeight: 600, color: "#fff", flex: 1, textAlign: "center" }}>
-            {flowPage === 1 ? "Detalle de tu pago" : flowPage === 2 ? "Tus método de pago" : "Completado"}
+            {flowPage === 1 ? t.flow.page1Title : flowPage === 2 ? t.flow.page2Title : t.flow.page3Title}
           </span>
           <span style={{ fontSize: 16, color: "#aaa" }}>{"\u22EF"}</span>
         </div>
@@ -661,21 +647,21 @@ function Producto() {
             <div>
               {/* Banner */}
               <div style={{ borderRadius: 10, padding: "14px 12px", background: "linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%)", marginBottom: 16, position: "relative", overflow: "hidden" }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#2e7d32" }}>Paga en <span style={{ color: "#00a884" }}>segundos</span> sin</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#2e7d32" }}>preocupaciones</div>
-                <div style={{ fontSize: 9, color: "#666", marginTop: 4 }}>Creado por <strong>onepay</strong></div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#2e7d32" }}>{t.flow.bannerLine1}<span style={{ color: "#00a884" }}>{t.flow.bannerLine1b}</span>{t.flow.bannerLine1c}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#2e7d32" }}>{t.flow.bannerLine2}</div>
+                <div style={{ fontSize: 9, color: "#666", marginTop: 4 }}>{t.flow.bannerCredit}<strong>{t.flow.bannerCreditBold}</strong></div>
               </div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>T{"\u00ED"}tulo</div>
-              <div style={{ fontSize: 13, color: "#adb5bd", marginBottom: 14 }}>Factura Internet - Marzo</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>Total</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{t.flow.labelTitulo}</div>
+              <div style={{ fontSize: 13, color: "#adb5bd", marginBottom: 14 }}>{t.flow.valueTitulo}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{t.flow.labelTotal}</div>
               <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 16 }}>$ 85.000</div>
-              <div style={{ fontSize: 10, color: "#adb5bd", lineHeight: 1.5 }}>Al hacer clic en {"\u2018"}Iniciar pago{"\u2019"}, acepta los <span style={{ color: "#53bdeb" }}>términos y condiciones</span></div>
+              <div style={{ fontSize: 10, color: "#adb5bd", lineHeight: 1.5 }}>{t.flow.termsText[0]}<span style={{ color: "#53bdeb" }}>{t.flow.termsText[1]}</span></div>
             </div>
           )}
           {flowPage === 2 && (
             <div>
-              <div style={{ fontSize: 12, color: "#adb5bd", marginBottom: 12, lineHeight: 1.4 }}>Selecciona una de tus cuentas o tarjetas inscritas</div>
-              <div style={{ fontSize: 10, color: "#adb5bd", marginBottom: 8 }}>Pagos seguros con OnePay</div>
+              <div style={{ fontSize: 12, color: "#adb5bd", marginBottom: 12, lineHeight: 1.4 }}>{t.flow.selectAccountText}</div>
+              <div style={{ fontSize: 10, color: "#adb5bd", marginBottom: 8 }}>{t.flow.safePay}</div>
               {payMethodsReal.map((m, i) => (
                 <div key={i} onClick={() => setWaPay(i)} style={{
                   padding: "10px 12px", borderRadius: 10, margin: "4px 0", cursor: "pointer",
@@ -695,10 +681,10 @@ function Producto() {
           )}
           {flowPage === 3 && (
             <div style={{ textAlign: "center", paddingTop: 20 }}>
-              <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Transacción en progreso</div>
-              <div style={{ fontSize: 13, color: "#adb5bd", lineHeight: 1.5, marginBottom: 6 }}>Has utilizado tu cuenta {payMethodsReal[waPay].name} como método de pago.</div>
-              <div style={{ fontSize: 13, color: "#adb5bd", lineHeight: 1.5, marginBottom: 12 }}>Esta transacción se procesará inmediatamente.</div>
-              <div style={{ fontSize: 12, color: "#00a884" }}>Gracias por usar OnePay.</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>{t.flow.txInProgress}</div>
+              <div style={{ fontSize: 13, color: "#adb5bd", lineHeight: 1.5, marginBottom: 6 }}>{t.flow.txUsed.replace('{method}', payMethodsReal[waPay].name)}</div>
+              <div style={{ fontSize: 13, color: "#adb5bd", lineHeight: 1.5, marginBottom: 12 }}>{t.flow.txProcess}</div>
+              <div style={{ fontSize: 12, color: "#00a884" }}>{t.flow.txThanks}</div>
             </div>
           )}
         </div>
@@ -708,11 +694,11 @@ function Producto() {
             padding: "12px", borderRadius: 10, background: "#00a884", textAlign: "center",
             fontSize: 14, fontWeight: 700, color: "#fff", cursor: "pointer"
           }}>
-            {flowPage === 1 ? "Iniciar pago" : flowPage === 2 ? "Continuar" : "Finalizar"}
+            {flowPage === 1 ? t.flow.btnPay : flowPage === 2 ? t.flow.btnContinue : t.flow.btnFinish}
           </div>
           <div style={{ textAlign: "center", marginTop: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-            <span style={{ fontSize: 9, color: "#adb5bd" }}>Managed by OnePay.</span>
-            <span style={{ fontSize: 9, color: "#53bdeb" }}>Learn more</span>
+            <span style={{ fontSize: 9, color: "#adb5bd" }}>{t.flow.managedBy}</span>
+            <span style={{ fontSize: 9, color: "#53bdeb" }}>{t.flow.learnMore}</span>
           </div>
         </div>
       </div>
@@ -722,9 +708,9 @@ function Producto() {
   return (
     <Box white>
       <Fade>
-        <Tag>La experiencia</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>De la factura al dinero en tu cuenta</h2>
-        <p style={{ fontSize: 16, color: C.g500, maxWidth: 540, lineHeight: 1.6, marginBottom: 32 }}>Tres canales, una plataforma. El usuario elige. Tú no tocas nada.</p>
+        <Tag>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2}</h2>
+        <p style={{ fontSize: 16, color: C.g500, maxWidth: 540, lineHeight: 1.6, marginBottom: 32 }}>{t.sub}</p>
       </Fade>
       <Fade delay={.1}>
         <div style={{ display: "flex", gap: 5, marginBottom: 32, flexWrap: "wrap" }}>
@@ -766,21 +752,21 @@ function Producto() {
                       <div style={{ padding: "8px 10px", background: "rgba(0,0,0,.15)", display: "flex", alignItems: "center", gap: 8 }}>
                         <div style={{ width: 26, height: 26, borderRadius: 4, background: "#e74c3c", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, color: "#fff", flexShrink: 0 }}>PDF</div>
                         <div>
-                          <div style={{ fontSize: 10, fontWeight: 600, color: "#fff" }}>Cobro.pdf</div>
-                          <div style={{ fontSize: 8, color: "rgba(255,255,255,.4)" }}>912 KB {"\u00B7"} pdf</div>
+                          <div style={{ fontSize: 10, fontWeight: 600, color: "#fff" }}>{t.wa.cobroPdf}</div>
+                          <div style={{ fontSize: 8, color: "rgba(255,255,255,.4)" }}>{t.wa.cobroSize}</div>
                         </div>
                       </div>
                       <div style={{ padding: "8px 10px 4px" }}>
                         <div style={{ fontSize: 11.5, color: "#e9edef", lineHeight: 1.4 }}>
-                          {"\u{1F44B}"} <strong>OnePay</strong> ha solicitado <strong>$85.000</strong> para el pago de tu <strong style={{ color: "#53bdeb" }}>Factura Internet - Marzo</strong>.
+                          {t.wa.cobroMsg[0]}<strong>{t.wa.cobroMsg[1]}</strong>{t.wa.cobroMsg[2]}<strong>{t.wa.cobroMsg[3]}</strong>{t.wa.cobroMsg[4]}<strong style={{ color: "#53bdeb" }}>{t.wa.cobroMsg[5]}</strong>{t.wa.cobroMsg[6]}
                         </div>
-                        <div style={{ fontSize: 9, color: "rgba(255,255,255,.35)", marginTop: 3 }}>Pagos seguros con OnePay</div>
+                        <div style={{ fontSize: 9, color: "rgba(255,255,255,.35)", marginTop: 3 }}>{t.wa.cobroSafe}</div>
                         <div style={{ textAlign: "right", fontSize: 8, color: "rgba(255,255,255,.25)", marginTop: 2 }}>7:29 PM</div>
                       </div>
                       {wa === 0 && (
                         <div onClick={() => sWa(1)} style={{ padding: "9px", borderTop: "1px solid rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center", gap: 5, cursor: "pointer" }}>
                           <span style={{ fontSize: 12 }}>{"\u{1F4CB}"}</span>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: "#00a884" }}>Iniciar pago</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: "#00a884" }}>{t.wa.iniciarPago}</span>
                         </div>
                       )}
                     </div>
@@ -793,23 +779,23 @@ function Producto() {
                           <div style={{ padding: "8px 10px", background: "rgba(0,0,0,.15)", display: "flex", alignItems: "center", gap: 8 }}>
                             <div style={{ width: 26, height: 26, borderRadius: 4, background: "#e74c3c", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, color: "#fff", flexShrink: 0 }}>PDF</div>
                             <div>
-                              <div style={{ fontSize: 10, fontWeight: 600, color: "#fff" }}>Documento</div>
-                              <div style={{ fontSize: 8, color: "rgba(255,255,255,.4)" }}>912 KB {"\u00B7"} pdf</div>
+                              <div style={{ fontSize: 10, fontWeight: 600, color: "#fff" }}>{t.wa.documento}</div>
+                              <div style={{ fontSize: 8, color: "rgba(255,255,255,.4)" }}>{t.wa.cobroSize}</div>
                             </div>
                           </div>
                           <div style={{ padding: "8px 10px 4px" }}>
                             <div style={{ fontSize: 11.5, color: "#e9edef", lineHeight: 1.4 }}>
-                              Tu pago de <strong style={{ color: "#53bdeb" }}>Factura Internet - Marzo</strong> ha sido acreditado exitosamente {"\u2705"}
+                              {t.wa.confirmMsg[0]}<strong style={{ color: "#53bdeb" }}>{t.wa.confirmMsg[1]}</strong>{t.wa.confirmMsg[2]}
                             </div>
                             <div style={{ fontSize: 11.5, color: "#e9edef", lineHeight: 1.4, marginTop: 5 }}>
-                              {"\u{1F3E6}"} <strong>OnePay</strong> ha recibido el dinero satisfactoriamente.
+                              {t.wa.confirmReceipt[0]}<strong>{t.wa.confirmReceipt[1]}</strong>{t.wa.confirmReceipt[2]}
                             </div>
-                            <div style={{ fontSize: 9, color: "rgba(255,255,255,.35)", marginTop: 3 }}>Pagos seguros con OnePay</div>
+                            <div style={{ fontSize: 9, color: "rgba(255,255,255,.35)", marginTop: 3 }}>{t.wa.cobroSafe}</div>
                             <div style={{ textAlign: "right", fontSize: 8, color: "rgba(255,255,255,.25)", marginTop: 2 }}>7:30 PM</div>
                           </div>
                           <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
                             <span style={{ fontSize: 11 }}>{"\u21A9\uFE0F"}</span>
-                            <span style={{ fontSize: 11, fontWeight: 600, color: "#00a884" }}>{"\u00A1"}Gracias! {"\u2B50"}</span>
+                            <span style={{ fontSize: 11, fontWeight: 600, color: "#00a884" }}>{t.wa.confirmThanks}</span>
                           </div>
                         </div>
                       </div>
@@ -846,32 +832,32 @@ function Producto() {
                     <div style={{ width: 24, height: 24, borderRadius: "50%", background: C.p950, display: "flex", alignItems: "center", justifyContent: "center" }}><ISOTIPO size={16} fill="#fff" /></div>
                     <span style={{ fontSize: 13, fontWeight: 700, color: C.p950 }}>OnePay</span>
                   </div>
-                  {pdStep > 0 && <span onClick={() => setPdStep(pdStep - 1)} style={{ fontSize: 12, color: C.a500, cursor: "pointer", fontWeight: 600 }}>{"\u2190"} Volver</span>}
+                  {pdStep > 0 && <span onClick={() => setPdStep(pdStep - 1)} style={{ fontSize: 12, color: C.a500, cursor: "pointer", fontWeight: 600 }}>{t.portal.back}</span>}
                 </div>
                 {/* Scrollable content */}
                 <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden", padding: "16px", scrollbarWidth: "none" }}>
                   {/* Step 0: Consultar */}
                   {pdStep === 0 && (
                     <div>
-                      <h3 style={{ fontSize: 18, fontWeight: 800, color: C.p950, marginBottom: 4 }}>Consulta y paga en segundos</h3>
-                      <p style={{ fontSize: 12, color: C.g500, marginBottom: 18 }}>Ingresa la referencia de pago</p>
+                      <h3 style={{ fontSize: 18, fontWeight: 800, color: C.p950, marginBottom: 4 }}>{t.portal.consultaH}</h3>
+                      <p style={{ fontSize: 12, color: C.g500, marginBottom: 18 }}>{t.portal.consultaSub}</p>
                       <input
                         type="text"
                         value={pdRef}
                         onChange={(e) => { setPdRef(e.target.value); setPdErr(false); }}
-                        placeholder="Ej: ABCD1234"
+                        placeholder={t.portal.placeholder}
                         style={{ width: "100%", boxSizing: "border-box", border: "1.5px solid " + (pdErr ? C.e500 : C.g300), borderRadius: 10, padding: "10px 14px", marginBottom: 4, fontSize: 13, color: C.g700, outline: "none", background: "#fff" }}
                       />
-                      {pdErr && <div style={{ fontSize: 11, color: C.e500, marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>{"\u26A0\uFE0F"} Por favor completa este campo.</div>}
+                      {pdErr && <div style={{ fontSize: 11, color: C.e500, marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>{t.portal.errorField}</div>}
                       {!pdErr && <div style={{ height: 20, marginBottom: 8 }} />}
-                      <div onClick={() => { if (!pdRef.trim()) { setPdErr(true); return; } setPdStep(1); }} style={{ padding: "12px", borderRadius: 10, background: C.p950, textAlign: "center", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Consultar</div>
+                      <div onClick={() => { if (!pdRef.trim()) { setPdErr(true); return; } setPdStep(1); }} style={{ padding: "12px", borderRadius: 10, background: C.p950, textAlign: "center", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>{t.portal.btnConsultar}</div>
                     </div>
                   )}
                   {/* Step 1: Selección de deudas */}
                   {pdStep === 1 && (
                     <div>
-                      <h3 style={{ fontSize: 16, fontWeight: 800, color: C.p950, marginBottom: 4 }}>Tu consulta</h3>
-                      <p style={{ fontSize: 11, color: C.g500, marginBottom: 12 }}>Selecciona las deudas que deseas pagar.</p>
+                      <h3 style={{ fontSize: 16, fontWeight: 800, color: C.p950, marginBottom: 4 }}>{t.portal.tuConsulta}</h3>
+                      <p style={{ fontSize: 11, color: C.g500, marginBottom: 12 }}>{t.portal.selectDeudas}</p>
                       <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
                         {deudas.map((d, i) => (
                           <div key={i} onClick={() => { const n = [...pdSel]; n[i] = !n[i]; setPdSel(n); }} style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid " + C.g200, background: "#fff", cursor: "pointer", display: "flex", gap: 8, alignItems: "flex-start" }}>
@@ -880,12 +866,12 @@ function Producto() {
                             </div>
                             <div style={{ flex: 1 }}>
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                                <span style={{ fontSize: 10, color: C.g500 }}>Valor a pagar:</span>
-                                <span style={{ fontSize: 9, color: C.g400 }}>{d.ref ? "Ref. " + d.ref : ""}</span>
+                                <span style={{ fontSize: 10, color: C.g500 }}>{t.portal.valorPagar}</span>
+                                <span style={{ fontSize: 9, color: C.g400 }}>{d.ref ? t.portal.refLabel + d.ref : ""}</span>
                               </div>
                               <div style={{ fontSize: 14, fontWeight: 800, color: C.p950, margin: "1px 0" }}>COP ${dot(d.monto)}</div>
                               {d.desc && <div style={{ fontSize: 9, color: C.g500 }}>{d.desc}</div>}
-                              <div style={{ fontSize: 9, color: C.g400, marginTop: 1 }}>Creación: {d.fCreacion} | Vence: {d.fVence}</div>
+                              <div style={{ fontSize: 9, color: C.g400, marginTop: 1 }}>{t.portal.creacionLabel}{d.fCreacion}{t.portal.venceLabel}{d.fVence}</div>
                             </div>
                           </div>
                         ))}
@@ -893,10 +879,10 @@ function Producto() {
                       {pdTotal > 0 && (
                         <div style={{ padding: "10px 14px", borderRadius: 10, background: C.g50, border: "1px solid " + C.g200, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div>
-                            <div style={{ fontSize: 10, color: C.g500 }}>Total seleccionado</div>
+                            <div style={{ fontSize: 10, color: C.g500 }}>{t.portal.totalSeleccionado}</div>
                             <div style={{ fontSize: 15, fontWeight: 800, color: C.p950 }}>$ {dot(pdTotal)} COP</div>
                           </div>
-                          <div onClick={() => setPdStep(2)} style={{ padding: "7px 16px", borderRadius: 8, background: C.p950, color: "#fff", fontWeight: 700, fontSize: 11, cursor: "pointer" }}>Pagar</div>
+                          <div onClick={() => setPdStep(2)} style={{ padding: "7px 16px", borderRadius: 8, background: C.p950, color: "#fff", fontWeight: 700, fontSize: 11, cursor: "pointer" }}>{t.portal.btnPagar}</div>
                         </div>
                       )}
                     </div>
@@ -905,12 +891,12 @@ function Producto() {
                   {pdStep === 2 && (
                     <div>
                       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
-                        <span style={{ fontSize: 11, color: C.g500 }}>Total a pagar</span>
-                        <span style={{ fontSize: 9, color: C.g400, marginLeft: "auto" }}>Pago de {pdSel.filter(Boolean).length} deudas</span>
+                        <span style={{ fontSize: 11, color: C.g500 }}>{t.portal.totalAPagar}</span>
+                        <span style={{ fontSize: 9, color: C.g400, marginLeft: "auto" }}>{t.portal.pagoDe.replace('{n}', pdSel.filter(Boolean).length)}</span>
                       </div>
                       <div style={{ fontSize: 24, fontWeight: 800, color: C.p950, marginBottom: 14 }}>$ {dot(pdTotal)} <span style={{ fontSize: 13, fontWeight: 400, color: C.g500 }}>COP</span></div>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: C.g600, marginBottom: 8 }}>Método de pago</div>
-                      {[{ name: "Mastercard \u00B78594", sub: "Cargo extra de 3.15%" }, { name: "Visa \u00B72029", sub: "Cargo extra de 3.15%" }, { name: "Nequi \u00B76819", sub: "Sin cargo extra" }, { name: "PSE", sub: "Sin cargo extra" }].map((m, i) => (
+                      <div style={{ fontSize: 11, fontWeight: 600, color: C.g600, marginBottom: 8 }}>{t.portal.metodoPago}</div>
+                      {t.portal.portalPayMethods.map((m, i) => (
                         <div key={i} onClick={() => setPdPay(i)} style={{
                           padding: "9px 10px", borderRadius: 10, margin: "4px 0", cursor: "pointer",
                           border: pdPay === i ? "2px solid " + C.p950 : "1px solid " + C.g200,
@@ -923,23 +909,23 @@ function Producto() {
                           </div>
                         </div>
                       ))}
-                      <div onClick={() => setPdStep(3)} style={{ marginTop: 12, padding: "11px", borderRadius: 10, background: C.p950, textAlign: "center", color: "#fff", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>Pagar ${dot(pdTotal)}</div>
+                      <div onClick={() => setPdStep(3)} style={{ marginTop: 12, padding: "11px", borderRadius: 10, background: C.p950, textAlign: "center", color: "#fff", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>{t.portal.btnPagar} ${dot(pdTotal)}</div>
                     </div>
                   )}
                   {/* Step 3: Éxito */}
                   {pdStep === 3 && (
                     <div style={{ textAlign: "center", paddingTop: 40 }}>
                       <div style={{ fontSize: 40 }}>{"\u2705"}</div>
-                      <div style={{ fontSize: 18, fontWeight: 800, color: C.p950, margin: "10px 0" }}>Pago exitoso</div>
+                      <div style={{ fontSize: 18, fontWeight: 800, color: C.p950, margin: "10px 0" }}>{t.portal.pagoExitoso}</div>
                       <div style={{ fontSize: 14, color: C.g600 }}>${dot(pdTotal)} COP</div>
-                      <div style={{ padding: "6px 14px", borderRadius: 8, background: C.s50, fontSize: 11, color: C.s500, fontWeight: 600, display: "inline-block", marginTop: 10 }}>{"\u2713"} Conciliado automáticamente</div>
+                      <div style={{ padding: "6px 14px", borderRadius: 8, background: C.s50, fontSize: 11, color: C.s500, fontWeight: 600, display: "inline-block", marginTop: 10 }}>{t.portal.conciliadoAuto}</div>
                     </div>
                   )}
                 </div>
                 {/* Footer */}
                 <div style={{ padding: "6px 16px", background: C.g50, borderTop: "1px solid " + C.g200, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 9, color: C.g500 }}>Pagos seguros con <strong style={{ color: C.p950 }}>onepay</strong></div>
-                  <span style={{ fontSize: 9, color: C.g400 }}>Español</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 9, color: C.g500 }}>{t.portal.footerSafe}<strong style={{ color: C.p950 }}>onepay</strong></div>
+                  <span style={{ fontSize: 9, color: C.g400 }}>{t.portal.footerLang}</span>
                 </div>
               </div>
             </div>
@@ -958,13 +944,13 @@ function Producto() {
                 {/* Call header */}
                 <div style={{ padding: "10px 16px 12px", background: "linear-gradient(135deg," + C.a500 + "," + C.b500 + ")", color: "#fff", textAlign: "center", flexShrink: 0 }}>
                   <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,.15)", margin: "0 auto 6px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{"\u{1F4DE}"}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700 }}>Ana {"\u00B7"} Agente IA</div>
-                  <div style={{ fontSize: 9, opacity: .7 }}>FibraNet {"\u00B7"} Gestión de cartera</div>
+                  <div style={{ fontSize: 13, fontWeight: 700 }}>Ana {"\u00B7"} {t.call.agenteIA}</div>
+                  <div style={{ fontSize: 9, opacity: .7 }}>FibraNet {"\u00B7"} {t.call.gestionCartera}</div>
                   <div style={{ fontFamily: "monospace", fontSize: 16, fontWeight: 700, letterSpacing: 2, marginTop: 3 }}>{fT(ct)}</div>
                 </div>
                 {/* Transcription - scrollable */}
                 <div ref={callRef} style={{ flex: 1, padding: "10px 12px", overflowY: "auto", overflowX: "hidden", scrollBehavior: "smooth", scrollbarWidth: "none", background: "#fafafa" }}>
-                  <div style={{ fontSize: 9, color: C.g400, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".05em" }}>{"\u{1F4AC}"} Transcripción en tiempo real</div>
+                  <div style={{ fontSize: 9, color: C.g400, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".05em" }}>{t.call.transcripcion}</div>
                   {callLines.slice(0, callStep).map((line, i) => (
                     <div key={i} style={{ display: "flex", gap: 6, marginBottom: 8, justifyContent: line.who === "user" ? "flex-end" : "flex-start" }}>
                       {line.who === "ai" && <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.a500, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: "#fff", flexShrink: 0, marginTop: 2 }}>{"\u{1F916}"}</div>}
@@ -993,19 +979,13 @@ function Producto() {
                   {callStep >= callLines.length && (
                     <>
                     <div style={{ padding: "10px 12px", background: C.s50, borderRadius: 10, marginTop: 8, marginBottom: 6 }}>
-                      <div style={{ fontSize: 9, fontWeight: 600, color: C.s500, marginBottom: 3 }}>{"\u{1F916}"} Resumen IA</div>
-                      <div style={{ fontSize: 10, color: C.g600, lineHeight: 1.45 }}>El usuario aceptó recibir link de pago por WhatsApp. Pagará parcialmente hoy ($42.500) y el saldo cuando pueda. Sentimiento: cooperativo después de objeciones por liquidez. Método preferido: Nequi.</div>
+                      <div style={{ fontSize: 9, fontWeight: 600, color: C.s500, marginBottom: 3 }}>{t.call.resumenIA}</div>
+                      <div style={{ fontSize: 10, color: C.g600, lineHeight: 1.45 }}>{t.call.resumenText}</div>
                     </div>
                     <div style={{ padding: "10px 12px", background: C.a50, borderRadius: 10 }}>
-                      <div style={{ fontSize: 9, fontWeight: 600, color: C.a500, marginBottom: 5 }}>{"\u{1F9E0}"} Parámetros aprendidos</div>
+                      <div style={{ fontSize: 9, fontWeight: 600, color: C.a500, marginBottom: 5 }}>{t.call.parametrosLabel}</div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                        {[
-                          { k: "Objeción principal", v: "Falta de liquidez" },
-                          { k: "Detonante", v: "Pago parcial" },
-                          { k: "Canal preferido", v: "WhatsApp + Nequi" },
-                          { k: "Horario", v: "Tarde (1er intento)" },
-                          { k: "Tono efectivo", v: "Empático, sin presión" }
-                        ].map((p, i) => (
+                        {t.call.parametros.map((p, i) => (
                           <div key={i} style={{ display: "flex", gap: 4, fontSize: 9, lineHeight: 1.3 }}>
                             <span style={{ color: C.a500, fontWeight: 600, minWidth: 90, flexShrink: 0 }}>{p.k}:</span>
                             <span style={{ color: C.g600 }}>{p.v}</span>
@@ -1023,18 +1003,16 @@ function Producto() {
 
         <Fade delay={.2}>
           <div>
-            <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>{["Pago por WhatsApp", "Portal de Pagos", "Llamada con IA"][tab]}</h3>
+            <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>{t.tabTitles[tab]}</h3>
             <p style={{ fontSize: 14, color: C.g500, lineHeight: 1.65, marginBottom: 14 }}>
-              {tab === 0 && "El usuario recibe su factura en WhatsApp. Toca \u201CIniciar pago\u201D y se abre un WhatsApp Flow nativo \u2014 sin salir de la app. Elige método, paga, listo."}
-              {tab === 1 && "Portal web donde el usuario consulta su deuda por referencia, selecciona las facturas que quiere pagar y completa el pago en un solo lugar."}
-              {tab === 2 && "Para cartera vencida. Cada empresa crea su propio agente de voz IA que llama como si fuera parte de su equipo. Contextualiza la deuda, maneja objeciones y envía link de pago por WhatsApp."}
+              {t.tabDescriptions[tab]}
             </p>
-            {tab === 0 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12, display: "flex", alignItems: "center", gap: 5 }}><Icon.cursorClick size={16} color={C.a500} /> Haz click en {"\u201C"}Iniciar pago{"\u201D"} para ver el WhatsApp Flow</p>}
-            {tab === 1 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12, display: "flex", alignItems: "center", gap: 5 }}><Icon.cursorClick size={16} color={C.a500} /> Haz click en {"\u201C"}Consultar{"\u201D"} para ver el flujo completo</p>}
-            {tab === 2 && <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12, display: "flex", alignItems: "center", gap: 5 }}><Icon.eye size={16} color={C.a500} /> Mira la conversación desarrollarse en tiempo real</p>}
-            {checks[tab].map((t, i) => (
+            <p style={{ fontSize: 13, color: C.a500, fontWeight: 600, marginBottom: 12, display: "flex", alignItems: "center", gap: 5 }}>
+              {tab === 2 ? <Icon.eye size={16} color={C.a500} /> : <Icon.cursorClick size={16} color={C.a500} />} {t.tabCtas[tab]}
+            </p>
+            {checks[tab].map((chk, i) => (
               <div key={i} style={{ display: "flex", gap: 7, alignItems: "center", fontSize: 13, color: C.g600, marginBottom: 7 }}>
-                <span style={{ color: C.s500 }}>{"\u2713"}</span>{t}
+                <span style={{ color: C.s500 }}>{"\u2713"}</span>{chk}
               </div>
             ))}
           </div>
@@ -1045,26 +1023,23 @@ function Producto() {
 }
 
 function Timeline() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].timeline;
   const [as, sAs] = useState(-1);
   const [exp, sExp] = useState(null);
   const [r, v] = useVis();
-  useEffect(() => { if (!v) return; const t = [0, 1, 2, 3, 4, 5].map(i => setTimeout(() => sAs(i), 250 + i * 350)); return () => t.forEach(clearTimeout); }, [v]);
+  useEffect(() => { if (!v) return; const ti = [0, 1, 2, 3, 4, 5].map(i => setTimeout(() => sAs(i), 250 + i * 350)); return () => ti.forEach(clearTimeout); }, [v]);
 
-  const steps = [
-    { lb: "Día facturación", ic: <Icon.clipboard size={18} color="#fff" />, tt: "Creación automática de cobros", c: C.b500, dt: "Tu sistema de gestión genera la factura \u2192 OnePay la recibe al instante vía API. Se crean links de pago únicos y se prepara la secuencia de cobro personalizada." },
-    { lb: "Cobro inicial", ic: <Icon.phone size={18} color="#fff" />, tt: "WhatsApp + Email + Portal", c: C.a500, dt: "El usuario recibe su factura por WhatsApp con link directo (98% apertura). Simultáneamente email y portal. Botón de pago en un click." },
-    { lb: "Día 3", ic: <Icon.bell size={18} color="#fff" />, tt: "Recordatorio inteligente", c: C.s500, dt: "Solo a quienes no han pagado. El sistema analiza hora, día y canal donde cada usuario tiene mayor probabilidad de responder." },
-    { lb: "Día 6-9", ic: <Icon.brain size={18} color="#fff" />, tt: "Escalamiento adaptativo", c: C.w500, dt: "Behavioral intelligence cambia canal, hora y mensaje automáticamente. Si no abrió WhatsApp \u2192 email. Cada interacción mejora el siguiente intento." },
-    { lb: "Día 12-15", ic: <Icon.phoneCall size={18} color="#fff" />, tt: "Llamada con IA", c: C.e500, dt: "Agente de voz IA para quienes no respondieron a digital. Voz natural, contexto de factura, envía link durante la llamada." },
-    { lb: "Pago exitoso", ic: <Icon.checkCircle size={18} color="#fff" />, tt: "Conciliación instantánea", c: C.s500, dt: "El pago se aplica automáticamente en tu sistema de gestión. Sin reconciliar manualmente. Dashboard predice el flujo de la semana." }
-  ];
+  const stepIcons = [<Icon.clipboard size={18} color="#fff" />, <Icon.phone size={18} color="#fff" />, <Icon.bell size={18} color="#fff" />, <Icon.brain size={18} color="#fff" />, <Icon.phoneCall size={18} color="#fff" />, <Icon.checkCircle size={18} color="#fff" />];
+  const stepColors = [C.b500, C.a500, C.s500, C.w500, C.e500, C.s500];
+  const steps = t.steps.map((s, i) => ({ ...s, ic: stepIcons[i], c: stepColors[i] }));
 
   return (
     <Box dark>
       <Fade>
-        <Tag dark>Cómo funciona</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>Recaudo en piloto automático</h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 40 }}>Secuencias inteligentes que se adaptan al comportamiento de cada pagador.</p>
+        <Tag dark>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2}</h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 40 }}>{t.sub}</p>
       </Fade>
       <div ref={r} style={{ position: "relative" }}>
         <div style={{ position: "absolute", left: 21, top: 22, bottom: 22, width: 2, background: "rgba(255,255,255,.04)", borderRadius: 2, zIndex: 0 }}>
@@ -1096,7 +1071,7 @@ function Timeline() {
       </div>
       <Fade delay={.3}>
         <div style={{ marginTop: 36, padding: "18px 24px", borderRadius: 12, background: "rgba(34,197,94,.06)", border: "1px solid rgba(34,197,94,.1)", textAlign: "center" }}>
-          <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>61.3% de los pagos se completan en las primeras <span style={{ color: C.s400 }}>53 horas</span></p>
+          <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>{t.callout[0]}<span style={{ color: C.s400 }}>{t.callout[1]}</span></p>
         </div>
       </Fade>
     </Box>
@@ -1104,32 +1079,31 @@ function Timeline() {
 }
 
 function Data() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].data;
   const [mode, sMode] = useState("top");
   const [r, v] = useVis();
 
+  const bkData = {
+    top: [{ l: "\u22641d", op: 23.4, ot: 8.7 }, { l: "\u22643d", op: 43.5, ot: 28.8 }, { l: "\u22645d", op: 64.6, ot: 55.3 }, { l: "\u22647d", op: 81.9, ot: 77.0 }, { l: "\u226410d", op: 96.1, ot: 93.7 }, { l: "\u226415d", op: 100, ot: 98.8 }],
+    avg: [{ l: "\u22641d", op: 17.9, ot: 4.4 }, { l: "\u22643d", op: 33.7, ot: 16.7 }, { l: "\u22645d", op: 51.6, ot: 33.1 }, { l: "\u22647d", op: 66.1, ot: 47.5 }, { l: "\u226410d", op: 88.0, ot: 73.8 }, { l: "\u226415d", op: 98.6, ot: 93.5 }]
+  };
+  const avgData = { top: "4.4", avg: "5.5" };
   const sets = {
-    top: {
-      label: "Top Performers", sub: "Mejores ISPs (top 25%)", avg: "4.4",
-      bk: [{ l: "\u22641d", op: 23.4, ot: 8.7 }, { l: "\u22643d", op: 43.5, ot: 28.8 }, { l: "\u22645d", op: 64.6, ot: 55.3 }, { l: "\u22647d", op: 81.9, ot: 77.0 }, { l: "\u226410d", op: 96.1, ot: 93.7 }, { l: "\u226415d", op: 100, ot: 98.8 }],
-      otLabel: "Otros canales de las mismas ISPs"
-    },
-    avg: {
-      label: "OnePay Promedio", sub: "ISPs promedio", avg: "5.5",
-      bk: [{ l: "\u22641d", op: 17.9, ot: 4.4 }, { l: "\u22643d", op: 33.7, ot: 16.7 }, { l: "\u22645d", op: 51.6, ot: 33.1 }, { l: "\u22647d", op: 66.1, ot: 47.5 }, { l: "\u226410d", op: 88.0, ot: 73.8 }, { l: "\u226415d", op: 98.6, ot: 93.5 }],
-      otLabel: "Otros canales de las mismas ISPs"
-    }
+    top: { ...t.sets.top, avg: avgData.top, bk: bkData.top },
+    avg: { ...t.sets.avg, avg: avgData.avg, bk: bkData.avg }
   };
   const d = sets[mode];
 
   return (
     <Box white>
       <Fade>
-        <Tag>Datos reales {"\u00B7"} Febrero 2026</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>OnePay cobra más rápido.<br /><span style={{ color: C.g400 }}>Los números lo prueban.</span></h2>
-        <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 14 }}>255.487 facturas procesadas. Comparamos velocidad de cobro OnePay vs. canales tradicionales.</p>
+        <Tag>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2[0]}<br /><span style={{ color: C.g400 }}>{t.h2[1]}</span></h2>
+        <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 14 }}>{t.sub}</p>
       </Fade>
       <div ref={r} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))", gap: 12, margin: "28px 0" }}>
-        {[{ v: 255487, l: "Facturas procesadas", sb: "febrero 2026", f: true }, { v: parseFloat(d.avg), l: "Días promedio", sb: d.sub, d: 1 }, { v: d.bk[2].op, l: "Cobrado en <5 días", sb: d.label, s: "%" }].map((m, i) => (
+        {[{ v: 255487, l: t.metricLabels[0], sb: t.metricSubs[0], f: true }, { v: parseFloat(d.avg), l: t.metricLabels[1], sb: d.sub, d: 1 }, { v: d.bk[2].op, l: t.metricLabels[2], sb: d.label, s: "%" }].map((m, i) => (
           <Fade key={i + mode} delay={.05 * i}>
             <div style={{ background: C.p950, borderRadius: 16, padding: 24, color: "#fff" }}>
               <div style={{ fontSize: "clamp(24px,3.2vw,34px)", fontWeight: 800, letterSpacing: "-.02em" }}>
@@ -1144,9 +1118,9 @@ function Data() {
       <Fade delay={.15}>
         <div style={{ background: C.g50, borderRadius: 20, padding: 24, border: "1px solid " + C.g200 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>% facturas cobradas acumulado</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>{t.chartTitle}</h3>
             <div style={{ display: "flex", gap: 3, padding: 3, background: C.g200, borderRadius: 9 }}>
-              {[{ k: "top", l: "Top Performers", icon: <Icon.trophy size={14} /> }, { k: "avg", l: "Promedio", icon: <Icon.chartBar size={14} /> }].map(({ k, l, icon }) => (
+              {t.toggles.map(({ k, l }, ti) => ({ k, l, icon: ti === 0 ? <Icon.trophy size={14} /> : <Icon.chartBar size={14} /> })).map(({ k, l, icon }) => (
                 <button key={k} onClick={() => sMode(k)} style={{ padding: "6px 14px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, transition: "all .3s", background: mode === k ? "#fff" : "transparent", color: mode === k ? C.p950 : C.g500, boxShadow: mode === k ? "0 2px 6px rgba(0,0,0,.06)" : "none", display: "flex", alignItems: "center", gap: 4 }}>{icon}{l}</button>
               ))}
             </div>
@@ -1178,10 +1152,7 @@ function Data() {
           </div>
           <div style={{ marginTop: 18, padding: "14px 18px", borderRadius: 10, background: C.a50, border: "1px solid " + C.a200 }}>
             <p style={{ fontSize: 13, color: C.g600, margin: 0, lineHeight: 1.55 }}>
-              {mode === "top"
-                ? <><strong style={{ color: C.a500 }}>Los mejores ISPs cobran 65% antes de día 5 con OnePay</strong> {"\u2014"} vs. 55% por otros canales de las mismas empresas. La diferencia se amplía desde el día 1.</>
-                : <><strong style={{ color: C.a500 }}>Incluso las ISPs promedio superan a sus propios canales tradicionales</strong> {"\u2014"} 4x más rápido en primeras 24h (18% vs. 4.4%). Día 5: 52% vs. 33%.</>
-              }
+              <><strong style={{ color: C.a500 }}>{d.insightText[0]}</strong>{d.insightText[1]}</>
             </p>
           </div>
         </div>
@@ -1191,12 +1162,14 @@ function Data() {
 }
 
 function Integraciones() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].integraciones;
   return (
     <Box dark>
       <Fade>
-        <Tag dark>Integraciones</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>Se conecta con tu sistema.<br /><span style={{ color: C.a400 }}>Sin cambiar nada.</span></h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>Integración directa con los principales sistemas de gestión ISP. API abierta para cualquier otro.</p>
+        <Tag dark>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2[0]}<br /><span style={{ color: C.a400 }}>{t.h2[1]}</span></h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>{t.sub}</p>
       </Fade>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14 }}>
         {["Wispro", "Wisphub", "MikroWISP", "Integra", "WispControl", "SAEplus", null].map((n, i) => (
@@ -1204,12 +1177,12 @@ function Integraciones() {
             {n ? (
               <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 16, padding: 24, border: "1px solid rgba(255,255,255,.04)" }}>
                 <div style={{ fontSize: 15, fontWeight: 700 }}>{n}</div>
-                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>Integración directa</div>
+                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>{t.directa}</div>
               </div>
             ) : (
               <div style={{ background: "rgba(99,102,241,.06)", borderRadius: 16, padding: 24, border: "1px dashed rgba(99,102,241,.18)" }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: C.a400 }}>+ Tu CRM</div>
-                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>API abierta — nos integramos</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.a400 }}>{t.tuCRM}</div>
+                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>{t.tuCRMsub}</div>
               </div>
             )}
           </Fade>
@@ -1217,12 +1190,12 @@ function Integraciones() {
       </div>
       <Fade delay={.25}>
         <div style={{ marginTop: 36 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: C.g300 }}>Medios de pago</h3>
+          <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: C.g300 }}>{t.mediosPago}</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(100px,1fr))", gap: 10 }}>
             {[{ n: "PSE", src: "/logos/payment/pse.svg" }, { n: "Nequi", src: "/logos/payment/nequi.svg" }, { n: "Daviplata", src: "/logos/payment/daviplata.svg", h: 44 }, { n: "Bre-B", src: "/logos/payment/breb.svg" }, { n: "VISA", src: "/logos/payment/visa.svg" }, { n: "Mastercard", src: "/logos/payment/mastercard.svg", h: 40 }, { n: "AMEX", src: "/logos/payment/amex.svg" }, { n: "Efecty", src: "/logos/payment/efecty.svg", s: true }].map((m, i) => (
               <div key={i} style={{ position: "relative", padding: "10px 16px", borderRadius: 10, background: "rgba(255,255,255,.04)", border: "1px solid " + (m.s ? "rgba(251,191,36,.14)" : "rgba(255,255,255,.06)"), display: "flex", alignItems: "center", justifyContent: "center", height: 56 }}>
                 <img src={m.src} alt={m.n} style={{ height: m.h || 30, maxWidth: 100, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: .85 }} />
-                {m.s && <span style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", fontSize: 7, fontWeight: 700, color: C.w500, background: C.g950, padding: "1px 5px", borderRadius: 3, whiteSpace: "nowrap" }}>PRONTO</span>}
+                {m.s && <span style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", fontSize: 7, fontWeight: 700, color: C.w500, background: C.g950, padding: "1px 5px", borderRadius: 3, whiteSpace: "nowrap" }}>{t.pronto}</span>}
               </div>
             ))}
           </div>
@@ -1233,17 +1206,16 @@ function Integraciones() {
 }
 
 function Resultados() {
-  const cards = [
-    { ic: <Icon.bolt size={24} />, t: "Cobra 3x más rápido", bf: "Día 18", af: "Día 5.8", m: "+15-25pp", d: "pagos antes de día 10", c: C.a500 },
-    { ic: <Icon.phone size={24} />, t: "50% por WhatsApp", bf: "0% digital", af: "30-50%", m: "del total", d: "cobrado por canal digital", c: C.b500 },
-    { ic: <Icon.checkCircle size={24} />, t: "Menos tickets", bf: "500+ llamadas", af: "Automático", m: "-20-30%", d: "en tickets operativos", c: C.s500 },
-    { ic: <Icon.chartBar size={24} />, t: "Flujo predecible", bf: "No sé cuánto", af: "Dashboard", m: "Tiempo real", d: "conciliación y predicción", c: C.w500 }
-  ];
+  const lang = useContext(LangCtx);
+  const tr = i18n[lang].resultados;
+  const cardIcons = [<Icon.bolt size={24} />, <Icon.phone size={24} />, <Icon.checkCircle size={24} />, <Icon.chartBar size={24} />];
+  const cardColors = [C.a500, C.b500, C.s500, C.w500];
+  const cards = tr.cards.map((cd, i) => ({ ...cd, ic: cardIcons[i], c: cardColors[i] }));
   return (
     <Box>
       <Fade>
-        <Tag>Resultados en 90 días</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0", lineHeight: 1.08 }}>Lo que obtienes con OnePay</h2>
+        <Tag>{tr.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0", lineHeight: 1.08 }}>{tr.h2}</h2>
       </Fade>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14, marginTop: 28 }}>
         {cards.map((r, i) => (
@@ -1267,21 +1239,19 @@ function Resultados() {
 }
 
 function CicloFinanciero() {
+  const lang = useContext(LangCtx);
+  const tc = i18n[lang].ciclo;
   const [ac, sAc] = useState(null);
-  const items = [
-    { ic: <Icon.inbox size={22} />, t: "Recaudo inteligente", st: "Activo", c: C.a500, ds: "Cobro automatizado multicanal con behavioral intelligence.", dt: "WhatsApp, email, portal y llamada IA. Secuencias adaptativas por pagador. Conciliación automática." },
-    { ic: <Icon.chartBar size={22} />, t: "Tesorería en tiempo real", st: "Activo", c: C.b500, ds: "Dashboard de conciliación, predicción y reportes.", dt: "Todos tus cobros en un solo lugar. Predice flujo semanal. Reportes por canal, fecha y estado. Sin cruzar archivos de bancos." },
-    { ic: <Icon.paperAirplane size={22} />, t: "Dispersiones", st: "Activo", c: C.s500, ds: "Pago a terceros y desembolsos automáticos.", dt: "Turbo ACH (intrabancario H2H), Bre-B (instantáneo vía Banco de la República) y ACH estándar. Elige según urgencia y costo." },
-    { ic: <Icon.creditCard size={22} />, t: "Tarjetas corporativas", st: "Próximamente", c: C.w500, ds: "Control de gastos empresariales integrado.", dt: "Tarjetas físicas y virtuales con límites por persona y categoría. Todo visible en un dashboard." },
-    { ic: <Icon.home size={22} />, t: "Servicios públicos", st: "Activo", c: "#0EA5E9", ds: "Recaudo de utilities con la misma infraestructura.", dt: "Gas, energía, agua, telecomunicaciones. Ya operamos con EPM Gas, Surtigas, Movistar y Grupo Promigas." }
-  ];
+  const itemIcons = [<Icon.inbox size={22} />, <Icon.chartBar size={22} />, <Icon.paperAirplane size={22} />, <Icon.creditCard size={22} />, <Icon.home size={22} />];
+  const itemColors = [C.a500, C.b500, C.s500, C.w500, "#0EA5E9"];
+  const items = tc.items.map((it, i) => ({ ...it, ic: itemIcons[i], c: itemColors[i] }));
 
   return (
     <Box dark>
       <Fade>
-        <Tag dark>El ciclo completo</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>No solo cobramos.<br /><span style={{ color: C.a400 }}>Cerramos todo el ciclo financiero.</span></h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 36 }}>Desde que entra la plata hasta que se dispersa.</p>
+        <Tag dark>{tc.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{tc.h2[0]}<br /><span style={{ color: C.a400 }}>{tc.h2[1]}</span></h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 36 }}>{tc.sub}</p>
       </Fade>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 10 }}>
         {items.map((it, i) => {
@@ -1291,7 +1261,7 @@ function CicloFinanciero() {
               <div onClick={() => sAc(open ? null : i)} style={{ background: open ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)", borderRadius: 14, padding: 20, border: "1px solid " + (open ? "rgba(255,255,255,.08)" : "rgba(255,255,255,.03)"), cursor: "pointer", transition: "all .4s" }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: it.c }}>{it.ic}</span>
-                  <span style={{ padding: "2px 7px", borderRadius: 100, fontSize: 9, fontWeight: 600, background: it.st === "Activo" ? "rgba(34,197,94,.1)" : "rgba(251,191,36,.1)", color: it.st === "Activo" ? C.s400 : C.w400 }}>{it.st === "Activo" ? "\u25CF" : "\u25D0"} {it.st}</span>
+                  <span style={{ padding: "2px 7px", borderRadius: 100, fontSize: 9, fontWeight: 600, background: it.st === tc.statusActive ? "rgba(34,197,94,.1)" : "rgba(251,191,36,.1)", color: it.st === tc.statusActive ? C.s400 : C.w400 }}>{it.st === tc.statusActive ? "\u25CF" : "\u25D0"} {it.st}</span>
                 </div>
                 <h3 style={{ fontSize: 15, fontWeight: 700, margin: "10px 0 4px" }}>{it.t}</h3>
                 <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, margin: 0 }}>{it.ds}</p>
@@ -1306,13 +1276,9 @@ function CicloFinanciero() {
 
       <Fade delay={.25}>
         <div style={{ marginTop: 32, padding: 24, borderRadius: 16, background: "rgba(34,197,94,.04)", border: "1px solid rgba(34,197,94,.08)" }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}><Icon.paperAirplane size={18} /> Dispersiones {"\u2014"} Tres canales</h3>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}><Icon.paperAirplane size={18} /> {tc.dispersionesTitle}</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10 }}>
-            {[
-              { n: "Turbo ACH", t: "5 min – 2 horas", co: "Intrabancario Host-to-Host", d: "Transferencias directas con bancos principales. Bancolombia <30 min, Davivienda <20 min, Nequi <5 min. 24/7 en principales bancos." },
-              { n: "Bre-B", t: "< 5 minutos", co: "Banco de la República", d: "Pagos instantáneos vía Bre-B. Personas naturales y jurídicas. Todos los bancos con llave registrada, 24/7." },
-              { n: "ACH estándar", t: "6 – 30 horas", co: "Menor costo", d: "Rieles ACH bancarios. Hasta 36h hábiles o 72h en fines de semana. Menor costo por transacción." }
-            ].map((ch, i) => (
+            {tc.channels.map((ch, i) => (
               <div key={i} style={{ background: "rgba(255,255,255,.03)", borderRadius: 10, padding: 16, border: "1px solid rgba(255,255,255,.04)" }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{ch.n}</div>
                 <div style={{ display: "flex", gap: 10, marginBottom: 6, fontSize: 11 }}>
@@ -1330,46 +1296,24 @@ function CicloFinanciero() {
 }
 
 function DashboardCobranza() {
+  const lang = useContext(LangCtx);
+  const td = i18n[lang].dashboard;
   const [size, setSize] = useState(0); // 0 = 2K, 1 = 40K
-  const data = [
-    {
-      label: "ISP peque\u00F1a (~2.000 suscriptores)",
-      total: "19.608", tasa: "78.1%", tasaSub: "15.320 enviados, 4.288 fallidos",
-      llamadas: "500/500", llamadasSub: "Uso vs cuota mensual",
-      tabla: [
-        { id: "8fb7b1", cobro: "Factura #111342 - Plan 400MBT CALI", canal: "Llamada", cobranza: "Ultranet cobranza", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 32 min" },
-        { id: "12d508", cobro: "Factura #111341 - Plan 400MBT CALI", canal: "Llamada", cobranza: "Ultranet cobranza", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 32 min" },
-        { id: "4c9c0c", cobro: "Factura #111339 - Plan 400MBT CALI", canal: "Llamada", cobranza: "Ultranet cobranza", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 32 min" },
-        { id: "48d2af", cobro: "Factura #111337 - Plan 400MBT CALI", canal: "Llamada", cobranza: "Ultranet cobranza", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 32 min" }
-      ],
-      barData: [1800, 400, 200, 80, 40, 20]
-    },
-    {
-      label: "ISP grande (~40.000 suscriptores)",
-      total: "89.290", tasa: "100%", tasaSub: "89.290 enviados, 0 fallidos",
-      llamadas: "1.250/1.250", llamadasSub: "Uso vs cuota mensual",
-      tabla: [
-        { id: "97a3f4", cobro: "VALOR A PAGAR - 1110593893", canal: "WhatsApp", cobranza: "Fiesta - Reminders", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 28 min" },
-        { id: "14fc35", cobro: "VALOR A PAGAR - 15206888", canal: "WhatsApp", cobranza: "Fiesta - Reminders", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 28 min" },
-        { id: "9ac968", cobro: "VALOR A PAGAR - 16431588", canal: "WhatsApp", cobranza: "Fiesta - Reminders", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 28 min" },
-        { id: "caa952", cobro: "VALOR A PAGAR - 1030580684", canal: "WhatsApp", cobranza: "Fiesta - Reminders", regla: "Cuando se crea un cobro", estado: "Enviado", creado: "hace 28 min" }
-      ],
-      barData: [18000, 1200, 800, 300, 120, 60]
-    }
-  ];
+  const barDataSets = [[1800, 400, 200, 80, 40, 20], [18000, 1200, 800, 300, 120, 60]];
+  const data = td.data.map((dd, i) => ({ ...dd, barData: barDataSets[i] }));
   const d = data[size];
-  const barLabels = ["Sin recordatorio", "1", "2", "3", "4", "5+"];
+  const barLabels = td.barLabels;
   const barMax = Math.max(...d.barData);
 
   return (
     <div style={{ marginTop: 36 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
         <div>
-          <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Recordatorios de cobranza</h3>
-          <p style={{ fontSize: 11, color: C.g400, margin: "2px 0 0" }}>Historial de notificaciones y llamadas enviadas por reglas de cobranza.</p>
+          <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>{td.title}</h3>
+          <p style={{ fontSize: 11, color: C.g400, margin: "2px 0 0" }}>{td.sub}</p>
         </div>
         <div style={{ display: "flex", gap: 3, padding: 3, background: "rgba(255,255,255,.06)", borderRadius: 9 }}>
-          {["~2.000 suscriptores", "~40.000 suscriptores"].map((l, i) => (
+          {td.toggles.map((l, i) => (
             <button key={i} onClick={() => setSize(i)} style={{
               padding: "6px 14px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 600, transition: "all .3s",
               background: size === i ? "rgba(99,102,241,.15)" : "transparent",
@@ -1382,20 +1326,20 @@ function DashboardCobranza() {
       {/* Stats cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 10, marginBottom: 16 }}>
         <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>Total de recordatorios</div>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.totalLabel}</div>
           <div style={{ fontSize: 26, fontWeight: 800 }}>{d.total}</div>
-          <div style={{ fontSize: 10, color: C.g500 }}>Notificaciones enviadas</div>
+          <div style={{ fontSize: 10, color: C.g500 }}>{td.totalSub}</div>
         </div>
         <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>Tasa de entrega</div>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.tasaLabel}</div>
           <div style={{ fontSize: 26, fontWeight: 800 }}>{d.tasa}</div>
           <div style={{ fontSize: 10, color: C.s400 }}>{d.tasaSub}</div>
         </div>
         {size === 0 && (
           <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
-            <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>Llamadas AI este mes</div>
+            <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.llamadasLabel}</div>
             <div style={{ fontSize: 26, fontWeight: 800 }}>{d.llamadas}</div>
-            <div style={{ fontSize: 10, color: C.b400 }}>{d.llamadasSub}</div>
+            <div style={{ fontSize: 10, color: C.b400 }}>{td.llamadasSub}</div>
           </div>
         )}
       </div>
@@ -1404,8 +1348,8 @@ function DashboardCobranza() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
         {/* Tendencia semanal - simplified */}
         <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>Tendencia semanal</div>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>Recordatorios por semana ({"\u00FA"}ltimos 3 meses)</div>
+          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{td.tendencia}</div>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>{td.tendenciaSub}</div>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 60 }}>
             {(size === 0 ? [20, 35, 50, 40, 60, 75, 55, 80, 70, 90, 85, 95] : [10, 15, 20, 25, 30, 40, 45, 55, 70, 85, 95, 100]).map((h, i) => (
               <div key={i} style={{ flex: 1, height: h + "%", background: "linear-gradient(180deg," + C.a500 + "," + C.b500 + ")", borderRadius: "3px 3px 0 0", opacity: .7 + (i / 24) }} />
@@ -1414,8 +1358,8 @@ function DashboardCobranza() {
         </div>
         {/* Recordatorios hasta el pago */}
         <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>Recordatorios hasta el pago</div>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>Cobros pagados seg{"\u00FA"}n cantidad de recordatorios</div>
+          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{td.recordatoriosHastaPago}</div>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>{td.recordatoriosHastaPagoSub}</div>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 60 }}>
             {d.barData.map((v, i) => (
               <div key={i} style={{ flex: 1, textAlign: "center" }}>
@@ -1430,12 +1374,12 @@ function DashboardCobranza() {
       {/* Table */}
       <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 14, border: "1px solid rgba(255,255,255,.06)", overflowX: "auto" }}>
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10, gap: 8 }}>
-          <div style={{ padding: "5px 12px", borderRadius: 6, background: "rgba(255,255,255,.05)", fontSize: 10, color: C.g400, display: "flex", alignItems: "center", gap: 4 }}><Icon.search size={12} color={C.g400} /> Buscar</div>
+          <div style={{ padding: "5px 12px", borderRadius: 6, background: "rgba(255,255,255,.05)", fontSize: 10, color: C.g400, display: "flex", alignItems: "center", gap: 4 }}><Icon.search size={12} color={C.g400} /> {td.buscar}</div>
         </div>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
           <thead>
             <tr style={{ borderBottom: "1px solid rgba(255,255,255,.06)" }}>
-              {["ID", "Cobro", "Canal", "Cobranza", "Regla", "Estado", "Creado"].map((h, i) => (
+              {td.tableHeaders.map((h, i) => (
                 <th key={i} style={{ padding: "6px 8px", textAlign: "left", color: C.g500, fontWeight: 600, fontSize: 10, whiteSpace: "nowrap" }}>{h}</th>
               ))}
             </tr>
@@ -1460,33 +1404,29 @@ function DashboardCobranza() {
 }
 
 function InvoiceLifecycle() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].invoiceLifecycle;
   const [activeNode, setAN] = useState(null);
   const [r, v] = useVis();
   const [step, setStep] = useState(-1);
-  useEffect(() => { if (!v) return; const t = [0,1,2,3,4,5,6].map(i => setTimeout(() => setStep(i), 300 + i * 300)); return () => t.forEach(clearTimeout); }, [v]);
+  useEffect(() => { if (!v) return; const ti = [0,1,2,3,4,5,6].map(i => setTimeout(() => setStep(i), 300 + i * 300)); return () => ti.forEach(clearTimeout); }, [v]);
 
-  const nodes = [
-    { id: 0, label: "Recordatorio", icon: <Icon.bell size={16} color="#fff" />, day: "Antes de vencer", color: C.b500, desc: "Aviso previo para que el usuario se prepare y pague a tiempo.", detail: "Reduce la cartera vencida desde el inicio. Los usuarios que reciben recordatorio previo pagan 2.3x más rápido que los que no." },
-    { id: 1, label: "Vence hoy", icon: <Icon.calendar size={16} color="#fff" />, day: "Día 0", color: C.a500, desc: "Mensaje con link de pago directo + PDF adjunto de la factura.", detail: "El momento de mayor urgencia. El usuario ve su factura, el monto y paga en 4 clicks sin salir de WhatsApp. 60%+ de los pagos ocurren aquí." },
-    { id: 2, label: "Vencido", icon: <Icon.clock size={16} color="#fff" />, day: "Día 1-5", color: C.w500, desc: "Recordatorio inteligente: hora y canal óptimo según comportamiento del usuario.", detail: "Recupera usuarios que olvidaron o no pudieron pagar. La IA elige el mejor momento: Juan paga viernes 6pm → mensaje viernes 5pm. María paga día de quincena → mensaje día 15." },
-    { id: 3, label: "Pre-corte", icon: <Icon.warning size={16} color="#fff" />, day: "Día 6-9", color: "#F97316", desc: "Escalamiento: cambia canal, tono del mensaje. Urgencia alta.", detail: "Activar la urgencia antes del corte para evitar la desconexión. El usuario entiende que el corte es inminente y tiene una última ventana para pagar sin perder el servicio." },
-    { id: 4, label: "Llamada IA", icon: <Icon.phoneCall size={16} color="#fff" />, day: "Día 10-15", color: C.e500, desc: "Agente de voz IA llama, contextualiza la deuda, envía link en la llamada.", detail: "Llegar a usuarios que no responden a canales digitales. Personas mayores o que no leen mensajes reciben una llamada con voz natural que les guía al pago." },
-    { id: 5, label: "Cortado", icon: <Icon.noSymbol size={16} color="#fff" />, day: "Post-corte", color: C.g600, desc: "Notificación de corte + última oportunidad de pago para reconexión.", detail: "Convertir el corte en oportunidad de recuperación inmediata. El usuario puede pagar y reactivar su servicio automáticamente sin llamar al ISP." },
-    { id: 6, label: "Recuperación", icon: <Icon.heart size={16} color="#fff" />, day: "Re-activación", color: C.s500, desc: "Secuencia de re-activación para usuarios que cancelaron o fueron cortados.", detail: "Recuperar ingresos de usuarios perdidos. Campañas programadas con ofertas o facilidades de pago para re-enganchar suscriptores inactivos." }
-  ];
+  const nodeIcons = [<Icon.bell size={16} color="#fff" />, <Icon.calendar size={16} color="#fff" />, <Icon.clock size={16} color="#fff" />, <Icon.warning size={16} color="#fff" />, <Icon.phoneCall size={16} color="#fff" />, <Icon.noSymbol size={16} color="#fff" />, <Icon.heart size={16} color="#fff" />];
+  const nodeColors = [C.b500, C.a500, C.w500, "#F97316", C.e500, C.g600, C.s500];
+  const nodes = t.nodes.map((n, i) => ({ ...n, id: i, icon: nodeIcons[i], color: nodeColors[i] }));
 
   return (
     <Box dark id="cobranza">
       <Fade>
-        <Tag dark>Motor de cobranza</Tag>
+        <Tag dark>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
-          El ciclo de vida completo<br /><span style={{ color: C.a400 }}>de cada factura</span>
+          {t.h2[0]}<br /><span style={{ color: C.a400 }}>{t.h2[1]}</span>
         </h2>
         <p style={{ fontSize: 16, color: C.g400, maxWidth: 600, lineHeight: 1.6, marginBottom: 12 }}>
-          Tú pones las reglas de negocio. OnePay ejecuta con IA.
+          {t.sub}
         </p>
         <p style={{ fontSize: 13, color: C.g500, maxWidth: 560, lineHeight: 1.5, marginBottom: 36 }}>
-          Configura una vez: fecha de vencimiento, etapas, canales y plantillas. La IA decide cuándo, por dónde y qué mensaje enviar según el comportamiento de cada usuario.
+          {t.subDetail}
         </p>
       </Fade>
 
@@ -1528,7 +1468,7 @@ function InvoiceLifecycle() {
       <Fade delay={.3}>
         <div style={{ marginTop: 28, padding: "16px 20px", borderRadius: 12, background: "rgba(99,102,241,.06)", border: "1px solid rgba(99,102,241,.08)" }}>
           <p style={{ fontSize: 13, color: C.g300, margin: 0, lineHeight: 1.5 }}>
-            <strong style={{ color: "#fff" }}>En cada etapa:</strong> si el usuario paga, se concilia automáticamente y la secuencia se detiene. <strong style={{ color: C.a400 }}>Sin intervención manual.</strong> La mayoría paga sin necesitar más de 1 recordatorio.
+            <strong style={{ color: "#fff" }}>{t.callout[0]}</strong>{t.callout[1]}<strong style={{ color: C.a400 }}>{t.callout[2]}</strong>{t.callout[3]}
           </p>
         </div>
       </Fade>
@@ -1542,24 +1482,26 @@ function InvoiceLifecycle() {
 }
 
 function Reconciliation() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].reconciliation;
   const [tab, sTab] = useState(0);
   const [balFilter, setBalFilter] = useState(0);
   return (
     <Box white id="conciliacion">
       <Fade>
-        <Tag>Conciliación</Tag>
+        <Tag>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
-          Cada peso rastreado.<br /><span style={{ color: C.g400 }}>Cada movimiento conciliado.</span>
+          {t.h2[0]}<br /><span style={{ color: C.g400 }}>{t.h2[1]}</span>
         </h2>
         <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>
-          Conciliación operativa para el día a día. Contable para tu equipo financiero. Descargable en Excel y PDF.
+          {t.sub}
         </p>
       </Fade>
 
       <Fade delay={.1}>
         <div style={{ display: "flex", gap: 5, marginBottom: 28 }}>
-          {[{ l: "Operativa", ic: <Icon.clipboard size={14} /> }, { l: "Contable", ic: <Icon.chartBar size={14} /> }].map(({ l: t, ic: ric }, i) => (
-            <button key={i} onClick={() => sTab(i)} style={{ padding: "9px 18px", borderRadius: 100, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, transition: "all .3s", background: tab === i ? C.p950 : "#fff", color: tab === i ? "#fff" : C.g600, boxShadow: tab === i ? "0 6px 20px rgba(9,12,28,.14)" : "0 1px 3px rgba(0,0,0,.04)", display: "flex", alignItems: "center", gap: 5 }}>{ric}{t}</button>
+          {t.tabs.map(({ l: tl }, i) => ({ tl, ic: i === 0 ? <Icon.clipboard size={14} /> : <Icon.chartBar size={14} /> })).map(({ tl, ic: ric }, i) => (
+            <button key={i} onClick={() => sTab(i)} style={{ padding: "9px 18px", borderRadius: 100, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, transition: "all .3s", background: tab === i ? C.p950 : "#fff", color: tab === i ? "#fff" : C.g600, boxShadow: tab === i ? "0 6px 20px rgba(9,12,28,.14)" : "0 1px 3px rgba(0,0,0,.04)", display: "flex", alignItems: "center", gap: 5 }}>{ric}{tl}</button>
           ))}
         </div>
       </Fade>
@@ -1568,7 +1510,7 @@ function Reconciliation() {
         <div style={{ background: C.g50, borderRadius: 18, padding: 24, border: "1px solid " + C.g200 }}>
           {/* Status flow */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 24, flexWrap: "wrap" }}>
-            {[{ l: "Factura", ic: <Icon.docText size={18} />, c: C.b500 }, { l: "Cobro", ic: <Icon.envelope size={18} />, c: C.a500 }, { l: "Pago", ic: <Icon.checkCircle size={18} />, c: C.s500 }].map((s, i) => (
+            {t.flowSteps.map((l, i) => ({ l, ic: [<Icon.docText size={18} />, <Icon.envelope size={18} />, <Icon.checkCircle size={18} />][i], c: [C.b500, C.a500, C.s500][i] })).map((s, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <div style={{ width: 42, height: 42, borderRadius: "50%", background: s.c + "12", border: "2px solid " + s.c, display: "flex", alignItems: "center", justifyContent: "center", color: s.c }}>{s.ic}</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: C.g700 }}>{s.l}</span>
@@ -1577,24 +1519,24 @@ function Reconciliation() {
             ))}
           </div>
 
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Detalle por factura</h3>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>{t.detallePorFactura}</h3>
           {/* Factura mockup */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 12 }}>
             <div style={{ background: "#fff", borderRadius: 12, padding: 16, border: "1px solid " + C.g200 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: C.g500, marginBottom: 8 }}>Información de la factura</div>
-              {[["Nombre", "Factura - 101207"], ["Proveedor", "wisphub"], ["Monto", "$65.000"], ["Estado", "Conciliada"]].map(([k, v], i) => (
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.g500, marginBottom: 8 }}>{t.infoFactura}</div>
+              {t.infoFacturaRows.map(([k, v], i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, padding: "4px 0", borderBottom: "1px solid " + C.g100 }}>
                   <span style={{ color: C.g500 }}>{k}</span>
-                  <span style={{ fontWeight: 600, color: v === "Conciliada" ? C.s500 : C.g700 }}>{v}</span>
+                  <span style={{ fontWeight: 600, color: i === 3 ? C.s500 : C.g700 }}>{v}</span>
                 </div>
               ))}
             </div>
             <div style={{ background: "#fff", borderRadius: 12, padding: 16, border: "1px solid " + C.g200 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: C.g500, marginBottom: 8 }}>Intento de pago</div>
-              {[["Estado", "Pagado"], ["Monto", "$65.000"], ["Método", "NEQUI ****0005"], ["Tipo", "Depósito electrónico"]].map(([k, v], i) => (
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.g500, marginBottom: 8 }}>{t.intentoPago}</div>
+              {t.intentoPagoRows.map(([k, v], i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, padding: "4px 0", borderBottom: "1px solid " + C.g100 }}>
                   <span style={{ color: C.g500 }}>{k}</span>
-                  <span style={{ fontWeight: 600, color: v === "Pagado" ? C.s500 : C.g700 }}>{v}</span>
+                  <span style={{ fontWeight: 600, color: i === 0 ? C.s500 : C.g700 }}>{v}</span>
                 </div>
               ))}
             </div>
@@ -1602,7 +1544,7 @@ function Reconciliation() {
 
           <div style={{ marginTop: 16, padding: "12px 16px", borderRadius: 10, background: C.a50, border: "1px solid " + C.a200 }}>
             <p style={{ fontSize: 12, color: C.g600, margin: 0, lineHeight: 1.5 }}>
-              <strong style={{ color: C.a500 }}>Cada factura tiene trazabilidad completa:</strong> con qué pagó, si abrió el mensaje, si abandonó el pago, cuántos recordatorios recibió, por qué canal, y cuándo se concilió.
+              <strong style={{ color: C.a500 }}>{t.operativaCallout[0]}</strong>{t.operativaCallout[1]}
             </p>
           </div>
         </div>
@@ -1610,8 +1552,8 @@ function Reconciliation() {
 
       {tab === 1 && <Fade delay={.15}>
         <div style={{ background: C.g50, borderRadius: 18, padding: 24, border: "1px solid " + C.g200 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>Conciliación por nodos</h3>
-          <p style={{ fontSize: 13, color: C.g500, lineHeight: 1.5, marginBottom: 16 }}>Cada nodo agrupa créditos y débitos relacionados. Tu equipo financiero ve todo cuadrado. Exportable a Excel y PDF.</p>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{t.conciliacionNodos}</h3>
+          <p style={{ fontSize: 13, color: C.g500, lineHeight: 1.5, marginBottom: 16 }}>{t.conciliacionNodosSub}</p>
 
           {/* Node visualization */}
           <div style={{ background: "#fff", borderRadius: 14, padding: 18, border: "1px solid " + C.g200, marginBottom: 16 }}>
@@ -1619,11 +1561,7 @@ function Reconciliation() {
               <div style={{ width: 10, height: 10, borderRadius: "50%", background: C.a500 }} />
               <span style={{ fontSize: 13, fontWeight: 700, fontFamily: "monospace", color: C.p950 }}>Nodo a78a4d73</span>
             </div>
-            {[
-              { concept: "Retención en la fuente", val: "-$1.315,16", neg: true },
-              { concept: "Descuento por cargo extra ($85.000)", val: "-$2.677,50", neg: true },
-              { concept: "Pago aprobado", val: "+$87.677,50", neg: false }
-            ].map((m, i) => (
+            {t.nodeMovements.map((m, i) => ({ ...m, neg: m.val.startsWith('-') })).map((m, i) => (
               <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", borderRadius: 8, background: i % 2 === 0 ? C.g50 : "#fff", marginBottom: 3 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ width: 16, height: 2, background: C.a500 + "40", borderRadius: 1 }} />
@@ -1636,7 +1574,7 @@ function Reconciliation() {
 
           {/* Balance history mockup */}
           <div style={{ background: "#fff", borderRadius: 14, padding: 18, border: "1px solid " + C.g200 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>Histórico de saldos</div>
+            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>{t.historicoSaldos}</div>
             <div style={{ display: "flex", gap: 12, fontSize: 11, color: C.g500, marginBottom: 12 }}>
               <span>{"\u2191"} $53.518.532</span><span>{"\u2193"} $34.639.458</span>
             </div>
@@ -1648,37 +1586,37 @@ function Reconciliation() {
               </svg>
             </div>
             <div style={{ display: "flex", gap: 6, fontSize: 11 }}>
-              {["Todos", "Entradas", "Salidas", "Reservas"].map((f, i) => (
+              {t.balanceFilters.map((f, i) => (
                 <span key={i} onClick={() => setBalFilter(i)} style={{ padding: "3px 10px", borderRadius: 6, background: balFilter === i ? C.p950 : C.g100, color: balFilter === i ? "#fff" : C.g500, fontWeight: 600, cursor: "pointer", transition: "all .2s" }}>{f}</span>
               ))}
             </div>
             {balFilter === 0 && <div style={{ marginTop: 10, fontSize: 11, color: C.g500 }}>
-              {[{ c: "Pago aprobado", v: "+$85.000", g: true }, { c: "Procesamiento OnePay", v: "-$952", g: false }, { c: "Pago aprobado", v: "+$65.000", g: true }].map((r, i) => (
+              {t.balanceAll.map((r) => ({ ...r, g: r.v.startsWith('+') })).map((r, i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid " + C.g100 }}>
                   <span>{r.c}</span><span style={{ fontWeight: 700, color: r.g ? C.s500 : C.e500 }}>{r.v}</span>
                 </div>
               ))}
             </div>}
             {balFilter === 1 && <div style={{ marginTop: 10, fontSize: 11, color: C.g500 }}>
-              {[{ c: "Pago aprobado", v: "+$85.000" }, { c: "Pago aprobado", v: "+$65.000" }, { c: "Pago aprobado", v: "+$60.000" }].map((r, i) => (
+              {t.balanceEntradas.map((r, i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid " + C.g100 }}>
                   <span>{r.c}</span><span style={{ fontWeight: 700, color: C.s500 }}>{r.v}</span>
                 </div>
               ))}
             </div>}
             {balFilter === 2 && <div style={{ marginTop: 10, fontSize: 11, color: C.g500 }}>
-              {[{ c: "Procesamiento OnePay", v: "-$952" }, { c: "Retención en la fuente", v: "-$1.315" }, { c: "Descuento cargo extra", v: "-$2.678" }].map((r, i) => (
+              {t.balanceSalidas.map((r, i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid " + C.g100 }}>
                   <span>{r.c}</span><span style={{ fontWeight: 700, color: C.e500 }}>{r.v}</span>
                 </div>
               ))}
             </div>}
-            {balFilter === 3 && <div style={{ marginTop: 10, fontSize: 11, color: C.g400, fontStyle: "italic" }}>Sin reservas activas</div>}
+            {balFilter === 3 && <div style={{ marginTop: 10, fontSize: 11, color: C.g400, fontStyle: "italic" }}>{t.balanceReservas}</div>}
           </div>
 
           <div style={{ marginTop: 16, padding: "12px 16px", borderRadius: 10, background: C.a50, border: "1px solid " + C.a200 }}>
             <p style={{ fontSize: 12, color: C.g600, margin: 0, lineHeight: 1.5 }}>
-              <strong style={{ color: C.a500 }}>Descarga en Excel y PDF cuando quieras.</strong> Cada movimiento ya está categorizado y agrupado por nodo. Tu equipo financiero cuadra en minutos, no en días.
+              <strong style={{ color: C.a500 }}>{t.contableCallout[0]}</strong>{t.contableCallout[1]}
             </p>
           </div>
         </div>
@@ -1688,6 +1626,8 @@ function Reconciliation() {
 }
 
 function Pricing() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].pricing;
   // === ROI Calculator ===
   const [subs, setSubs] = useState(5000);
   const [ticket, setTicket] = useState(65000);
@@ -1743,18 +1683,14 @@ function Pricing() {
   const roiNeto = beneficioTotal - costoTotal;
   const roiPct = costoTotal > 0 ? Math.round((roiNeto / costoTotal) * 100) : 0;
 
-  const plans = [
-    { n: "Essential", saas: "$600.000", tc: "2.5% + 800", pse: "2.200", dispACH: "$1.500 + 0.2%", dispTurbo: "$2.500 + 0.2%", calls: "Sin llamadas", callNote: null, feats: ["Recaudo + suscripciones", "Procesamiento local", "Tesorería básica", "2 recordatorios/usuario/mes"] },
-    { n: "Pro", saas: "$1.800.000", tc: "2% + 500", pse: "1.680", dispACH: "$1.000 + 0.2%", dispTurbo: "$2.000 + 0.2%", calls: "500/mes", callNote: "Numeración USA por defecto. Colombia: +$590.000/mes", feats: ["Todo Essential +", "WhatsApp personalizado", "Plantillas de cobranza", "3 recordatorios/usuario/mes"], star: true },
-    { n: "Growth", saas: "$5.500.000", tc: "1.85% + 300", pse: "1.000", dispACH: "$800 + 0.2%", dispTurbo: "$1.500 + 0.2%", calls: "1.250/mes", callNote: "Numeración USA por defecto. Colombia: +$1.350.000/mes", feats: ["Todo Pro +", "Tesorería corporativa", "Plantillas personalizadas", "Soporte prioritario 8x5", "Recordatorios ilimitados"] }
-  ];
+  const plans = t.plans;
 
   return (
     <Box id="precios">
       <Fade>
-        <Tag>Precios</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>Transparente. Sin letra chica.</h2>
-        <p style={{ fontSize: 16, color: C.g500, maxWidth: 540, lineHeight: 1.6, marginBottom: 32 }}>Tarifa transaccional + SaaS mensual. Sin permanencia. Resultado desde el primer mes.</p>
+        <Tag>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2}</h2>
+        <p style={{ fontSize: 16, color: C.g500, maxWidth: 540, lineHeight: 1.6, marginBottom: 32 }}>{t.sub}</p>
       </Fade>
 
       {/* Plan cards */}
@@ -1762,15 +1698,15 @@ function Pricing() {
         {plans.map((p, i) => (
           <Fade key={i} delay={.06 * i}>
             <div style={{ background: "#fff", borderRadius: 18, padding: 24, border: plan === i ? "2px solid " + C.a500 : "1px solid " + C.g200, position: "relative", transition: "all .4s", boxShadow: plan === i ? "0 8px 32px rgba(99,102,241,.12)" : "none" }}>
-              {p.star && <div style={{ position: "absolute", top: -10, right: 16, padding: "3px 12px", borderRadius: 100, background: C.a500, color: "#fff", fontSize: 10, fontWeight: 700 }}>RECOMENDADO</div>}
-              {plan === i && <div style={{ position: "absolute", top: -10, left: 16, padding: "3px 10px", borderRadius: 100, background: C.s500, color: "#fff", fontSize: 10, fontWeight: 700 }}>{planIdx === -1 ? "Tu plan ideal" : "Seleccionado"}</div>}
-              {plan === i && planIdx !== -1 && planIdx !== planSugerido && <div style={{ fontSize: 10, color: "#FBBF24", marginTop: 2, fontWeight: 600 }}>Sugerido: {planNames[planSugerido]}</div>}
+              {p.star && <div style={{ position: "absolute", top: -10, right: 16, padding: "3px 12px", borderRadius: 100, background: C.a500, color: "#fff", fontSize: 10, fontWeight: 700 }}>{t.recommended}</div>}
+              {plan === i && <div style={{ position: "absolute", top: -10, left: 16, padding: "3px 10px", borderRadius: 100, background: C.s500, color: "#fff", fontSize: 10, fontWeight: 700 }}>{planIdx === -1 ? t.planIdeal : t.seleccionado}</div>}
+              {plan === i && planIdx !== -1 && planIdx !== planSugerido && <div style={{ fontSize: 10, color: "#FBBF24", marginTop: 2, fontWeight: 600 }}>{t.sugerido}{planNames[planSugerido]}</div>}
               <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>{p.n}</h3>
               <div style={{ fontSize: 24, fontWeight: 800, color: C.a500, marginBottom: 2 }}>{p.saas}</div>
-              <div style={{ fontSize: 11, color: C.g500, marginBottom: 14 }}>COP / mes + transaccional</div>
+              <div style={{ fontSize: 11, color: C.g500, marginBottom: 14 }}>{t.copMes}</div>
 
               <div style={{ fontSize: 12, color: C.g600, marginBottom: 12 }}>
-                {[["Tarjetas", p.tc + " + IVA"], ["PSE/billeteras", p.pse + " + IVA"], ["Dispersión ACH", p.dispACH + " + IVA"], ["Dispersión Turbo", p.dispTurbo + " + IVA"], ["Llamadas IA", p.calls]].map(([k, v], j) => (
+                {[[t.planLabels.tarjetas, p.tc + " " + t.planLabels.ivaNote], [t.planLabels.pseBilleteras, p.pse + " " + t.planLabels.ivaNote], [t.planLabels.dispACH, p.dispACH + " " + t.planLabels.ivaNote], [t.planLabels.dispTurbo, p.dispTurbo + " " + t.planLabels.ivaNote], [t.planLabels.llamadasIA, p.calls]].map(([k, v], j) => (
                   <div key={j} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: "1px solid " + C.g100 }}>
                     <span style={{ color: C.g500 }}>{k}</span><span style={{ fontWeight: 600 }}>{v}</span>
                   </div>
@@ -1795,40 +1731,40 @@ function Pricing() {
         <div style={{ background: C.p950, borderRadius: 20, padding: "clamp(24px,4vw,36px)", color: "#fff" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
             <Icon.banknotes size={22} color={C.a400} />
-            <h3 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Calculadora de ROI</h3>
+            <h3 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>{t.roiTitle}</h3>
           </div>
-          <p style={{ fontSize: 13, color: C.g400, marginBottom: 24, lineHeight: 1.5 }}>Ajusta los parámetros de tu ISP y ve el impacto estimado de OnePay en tu negocio.</p>
+          <p style={{ fontSize: 13, color: C.g400, marginBottom: 24, lineHeight: 1.5 }}>{t.roiSub}</p>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20, marginBottom: 28 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Suscriptores activos: <strong style={{ color: "#fff" }}>{dot(subs)}</strong></label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>{t.sliders.subs}<strong style={{ color: "#fff" }}>{dot(subs)}</strong></label>
               <input type="range" min={500} max={50000} step={500} value={subs} onChange={e => setSubs(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Ticket promedio: <strong style={{ color: "#fff" }}>${dot(ticket)}</strong></label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>{t.sliders.ticket}<strong style={{ color: "#fff" }}>${dot(ticket)}</strong></label>
               <input type="range" min={30000} max={200000} step={5000} value={ticket} onChange={e => setTicket(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Tasa recaudo actual: <strong style={{ color: "#fff" }}>{tasa}%</strong></label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>{t.sliders.tasa}<strong style={{ color: "#fff" }}>{tasa}%</strong></label>
               <input type="range" min={50} max={95} step={1} value={tasa} onChange={e => setTasa(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Personas en cobranza: <strong style={{ color: "#fff" }}>{personas}</strong></label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>{t.sliders.personas}<strong style={{ color: "#fff" }}>{personas}</strong></label>
               <input type="range" min={0} max={10} step={1} value={personas} onChange={e => setPersonas(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Dispersiones mensuales (proveedores + nomina): <strong style={{ color: "#fff" }}>${dot(dispersiones)}</strong></label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>{t.sliders.dispersiones}<strong style={{ color: "#fff" }}>${dot(dispersiones)}</strong></label>
               <input type="range" min={0} max={2000000000} step={10000000} value={dispersiones} onChange={e => setDispersiones(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>Plan: <strong style={{ color: "#fff" }}>{planIdx === -1 ? planNames[planSugerido] + " (sugerido)" : planNames[plan]}</strong></label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.5)", display: "block", marginBottom: 6 }}>{t.sliders.plan}<strong style={{ color: "#fff" }}>{planIdx === -1 ? planNames[planSugerido] + t.sliders.planSugerido : planNames[plan]}</strong></label>
               <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
                 <button onClick={() => setPlanIdx(-1)} style={{
                   padding: "6px 12px", borderRadius: 8, border: "none", cursor: "pointer",
                   fontSize: 11, fontWeight: 600,
                   background: planIdx === -1 ? "rgba(99,102,241,.2)" : "rgba(255,255,255,.06)",
                   color: planIdx === -1 ? "#A78BFA" : "rgba(255,255,255,.5)"
-                }}>Auto</button>
+                }}>{t.sliders.auto}</button>
                 {planNames.map((n, i) => (
                   <button key={i} onClick={() => setPlanIdx(i)} style={{
                     padding: "6px 12px", borderRadius: 8, border: "none", cursor: "pointer",
@@ -1844,34 +1780,34 @@ function Pricing() {
           {/* Results */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(155px,1fr))", gap: 10 }}>
             <div style={{ background: "rgba(99,102,241,.08)", borderRadius: 14, padding: 18, border: "1px solid rgba(99,102,241,.12)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>Plan</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t.results.plan}</div>
               <div style={{ fontSize: 20, fontWeight: 800, color: "#A78BFA", marginTop: 4 }}>{planNames[plan]}</div>
               {planIdx !== -1 && planIdx !== planSugerido && (
-                <div style={{ fontSize: 10, color: "#FBBF24", marginTop: 4 }}>Sugerido: {planNames[planSugerido]}</div>
+                <div style={{ fontSize: 10, color: "#FBBF24", marginTop: 4 }}>{t.sugerido}{planNames[planSugerido]}</div>
               )}
             </div>
             <div style={{ background: "rgba(34,197,94,.06)", borderRadius: 14, padding: 18, border: "1px solid rgba(34,197,94,.1)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>Recaudo adicional / mes</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t.results.recaudoAdicional}</div>
               <div style={{ fontSize: 20, fontWeight: 800, color: "#4ADE80", marginTop: 4 }}>${dot(Math.round(plataNueva))}</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>Tasa: {tasa}% → {tasaOnePay}%</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{t.results.tasaLabel}{tasa}% → {tasaOnePay}%</div>
             </div>
             <div style={{ background: "rgba(59,130,246,.06)", borderRadius: 14, padding: 18, border: "1px solid rgba(59,130,246,.1)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>Capacidad liberada</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t.results.capacidadLiberada}</div>
               <div style={{ fontSize: 20, fontWeight: 800, color: "#60A5FA", marginTop: 4 }}>${dot(Math.round(capacidadLiberada))}</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{personas} persona{personas !== 1 ? "s" : ""} → tareas de mayor valor</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{personas}{personas !== 1 ? t.results.personasLabel : t.results.personaLabel}{t.results.tareasValor}</div>
             </div>
             {dispersiones > 0 && <div style={{ background: "rgba(251,191,36,.06)", borderRadius: 14, padding: 18, border: "1px solid rgba(251,191,36,.1)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>Ahorro GMF (2x1000)</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t.results.ahorroGMF}</div>
               <div style={{ fontSize: 20, fontWeight: 800, color: "#FBBF24", marginTop: 4 }}>${dot(Math.round(ahorroGMF))}</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>Modulo tesoreria ahorra 50% del 4x1000</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{t.results.ahorroGMFsub}</div>
             </div>}
             <div style={{ background: "rgba(255,255,255,.04)", borderRadius: 14, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>Inversión OnePay</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t.results.inversionOnePay}</div>
               <div style={{ fontSize: 20, fontWeight: 800, marginTop: 4, color: "#fff" }}>${dot(Math.round(costoTotal))}</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>SaaS ${dot(costoSaaS)} + tx ${dot(Math.round(costoTx))}</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{t.results.saasLabel}${dot(costoSaaS)}{t.results.txLabel}${dot(Math.round(costoTx))}</div>
             </div>
             <div style={{ background: "rgba(34,197,94,.08)", borderRadius: 14, padding: 18, border: "1px solid rgba(34,197,94,.15)", gridColumn: "span 2" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>ROI neto mensual</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t.results.roiNeto}</div>
               <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 4 }}>
                 <span style={{ fontSize: 28, fontWeight: 800, color: roiNeto > 0 ? "#4ADE80" : "#EF4444" }}>${dot(Math.round(roiNeto))}</span>
                 {roiPct > 0 && <span style={{ fontSize: 16, fontWeight: 700, color: "#4ADE80" }}>+{roiPct}% ROI</span>}
@@ -1882,23 +1818,23 @@ function Pricing() {
           {/* Datos complementarios */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginTop: 14 }}>
             <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.04)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase" }}>Velocidad de cobro</div>
-              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 4 }}>~{diasOnePay} días <span style={{ color: "rgba(255,255,255,.4)", fontWeight: 400 }}>vs {diasMercado} días mercado</span></div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase" }}>{t.complementary.velocidad}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 4 }}>{t.complementary.velocidadVal.replace('{dias}', diasOnePay)} <span style={{ color: "rgba(255,255,255,.4)", fontWeight: 400 }}>{t.complementary.velocidadVs.replace('{diasMercado}', diasMercado)}</span></div>
             </div>
             <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.04)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase" }}>Costo mensajería estimado</div>
-              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 4 }}>${dot(costoMensajeria)} <span style={{ color: "rgba(255,255,255,.4)", fontWeight: 400 }}>~5 msg/usuario/mes</span></div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase" }}>{t.complementary.costoMensajeria}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 4 }}>${dot(costoMensajeria)} <span style={{ color: "rgba(255,255,255,.4)", fontWeight: 400 }}>{t.complementary.mensajeriaVal}</span></div>
             </div>
             <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.04)" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase" }}>Impacto en churn</div>
-              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 4 }}>Cobrar 3x más rápido <span style={{ color: "rgba(255,255,255,.4)", fontWeight: 400 }}>= menos cortes</span></div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase" }}>{t.complementary.impactoChurn}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 4 }}>{t.complementary.impactoChurnVal} <span style={{ color: "rgba(255,255,255,.4)", fontWeight: 400 }}>{t.complementary.impactoChurnSub}</span></div>
             </div>
           </div>
 
           {/* Disclaimer */}
           <div style={{ marginTop: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.04)" }}>
             <p style={{ fontSize: 11, color: "rgba(255,255,255,.4)", margin: 0, lineHeight: 1.5 }}>
-              Estimación basada en data real de +60 ISPs activas en OnePay (Feb 2026). Mejora de +12pp en tasa de recaudo. Mix de pago: 95% PSE/billeteras, 5% tarjetas. Capacidad liberada basada en salario mínimo integral ($2.9M/mes) × 80% automatización. Ahorro GMF: el módulo de tesorería permite pagar a proveedores y nómina ahorrando la mitad del 4x1000 (2x1000 = 0.2% sobre el monto dispersado). Resultados varían según adopción y base de suscriptores.
+              {t.disclaimer}
             </p>
           </div>
         </div>
@@ -1908,15 +1844,18 @@ function Pricing() {
 }
 
 function Seguridad() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].seguridad;
+  const certIcons = [<Icon.lock size={22} color={C.a500} />, <Icon.shield size={22} color={C.s500} />, <Icon.creditCard size={22} color={C.b500} />, <Icon.docText size={22} color={C.w500} />];
   return (
     <Box>
       <Fade>
-        <Tag>Seguridad</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>Tu plata está segura.<br /><span style={{ color: C.g400 }}>La de tus usuarios, también.</span></h2>
-        <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>Cumplimos los estándares más exigentes de la industria de pagos. Cada transacción está protegida de extremo a extremo.</p>
+        <Tag>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2[0]}<br /><span style={{ color: C.g400 }}>{t.h2[1]}</span></h2>
+        <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>{t.sub}</p>
       </Fade>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 9 }}>
-        {[{ l: "PCI DSS Level 1", d: "Máximo estándar en pagos", i: <Icon.lock size={22} color={C.a500} /> }, { l: "ISO 27001", d: "Seguridad de información", i: <Icon.shield size={22} color={C.s500} /> }, { l: "Adquirente directo", d: "Visa & Mastercard", i: <Icon.creditCard size={22} color={C.b500} /> }, { l: "Póliza cyber", d: "Cobertura integral", i: <Icon.docText size={22} color={C.w500} /> }].map((s, i) => (
+        {t.certs.map((s, i) => ({ ...s, i: certIcons[i] })).map((s, i) => (
           <Fade key={i} delay={.04 * i}>
             <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid " + C.g200, textAlign: "center" }}>
               <span>{s.i}</span>
@@ -1931,6 +1870,8 @@ function Seguridad() {
 }
 
 function Closing() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].closing;
   return (
     <Box dark style={{ textAlign: "center", paddingBottom: 70 }}>
       <Fade>
@@ -1939,22 +1880,20 @@ function Closing() {
           <div style={{ position: "relative", zIndex: 1 }}>
             <LOGO h={24} />
             <h2 style={{ fontSize: "clamp(26px,4.5vw,40px)", fontWeight: 800, letterSpacing: "-.03em", lineHeight: 1.08, color: "#fff", margin: "22px 0 14px" }}>
-              Cobre en 5 días<br />lo que hoy te toma 25.
+              {t.h2[0]}<br />{t.h2[1]}
             </h2>
             <p style={{ fontSize: 16, color: C.g400, lineHeight: 1.6, maxWidth: 420, margin: "0 auto 22px" }}>
-              Sin contratar más gente. Sin cambiar tu sistema. Resultados desde la primera semana.
+              {t.sub}
             </p>
             <div style={{ display: "flex", justifyContent: "center", gap: 18, fontSize: 12, color: C.g500, flexWrap: "wrap" }}>
-              <span>{"\u2713"} Sin permanencia</span>
-              <span>{"\u2713"} Piloto controlado</span>
-              <span>{"\u2713"} Soporte total</span>
+              {t.bullets.map((b, i) => <span key={i}>{b}</span>)}
             </div>
           </div>
         </div>
       </Fade>
       <div style={{ marginTop: 36 }}>
         <LOGO color={C.g500} h={14} />
-        <div style={{ fontSize: 10, color: C.g500, marginTop: 5 }}>Recaudo inteligente {"\u00B7"} PCI DSS Level 1</div>
+        <div style={{ fontSize: 10, color: C.g500, marginTop: 5 }}>{t.footer}</div>
       </div>
     </Box>
   );
@@ -1964,25 +1903,28 @@ function Closing() {
    MAIN EXPORT
    ═════════════════════════════════════════════════════════════ */
 export default function App() {
+  const [lang, setLang] = useState('es');
   return (
-    <div style={{ fontFamily: "'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", WebkitFontSmoothing: "antialiased" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-      <style>{`*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}::selection{background:rgba(99,102,241,.2)}body{overflow-x:hidden}`}</style>
-      <NavBar />
-      <Hero />
-      <Problema />
-      <Insight />
-      <Producto />
-      <InvoiceLifecycle />
-      <Timeline />
-      <Data />
-      <Reconciliation />
-      <Integraciones />
-      <Resultados />
-      <CicloFinanciero />
-      <Pricing />
-      <Seguridad />
-      <Closing />
-    </div>
+    <LangCtx.Provider value={lang}>
+      <div style={{ fontFamily: "'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", WebkitFontSmoothing: "antialiased" }}>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <style>{`*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}::selection{background:rgba(99,102,241,.2)}body{overflow-x:hidden}`}</style>
+        <NavBar setLang={setLang} />
+        <Hero />
+        <Problema />
+        <Insight />
+        <Producto />
+        <InvoiceLifecycle />
+        <Timeline />
+        <Data />
+        <Reconciliation />
+        <Integraciones />
+        <Resultados />
+        <CicloFinanciero />
+        <Pricing />
+        <Seguridad />
+        <Closing />
+      </div>
+    </LangCtx.Provider>
   );
 }
