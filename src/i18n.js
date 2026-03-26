@@ -30,38 +30,44 @@ export const i18n = {
     /* ─── Problema ─── */
     problema: {
       tag: "El problema",
-      h2: "Entre facturar y recaudar hay una brecha.\nEsa brecha es plata que ya ganaste.",
-      sub: "Los pagos llegan tarde, el corte es la única herramienta, y tu equipo persigue pagos en vez de crecer el ingreso por usuario.",
+      h2: "No estás perdiendo pagos.\nEstás perdiendo clientes.",
+      sub: "Cuando pagar es difícil, el usuario no insiste — se rinde. Eso genera tres problemas que impactan tanto a tu operación como a la experiencia de tu usuario.",
+      empresaLabel: "Tu operación",
+      usuarioLabel: "Tu usuario",
       cards: [
         {
-          t: "Lado empresa",
-          its: [
-            ["25-35%", "cartera vencida >30 días"],
-            ["2-3", "personas dedicadas a cobrar"],
-            ["$8-12M", "COP/mes en cobranza"],
-            ["Día 18", "promedio para recibir pago"],
-            ["500+", "llamadas manuales al mes"],
-          ],
-          q: "\u201CLa plata ya se facturó pero no llega. Y el único recurso es el corte.\u201D",
+          category: "Flujo de caja",
+          title: "Ingreso facturado que nunca llega",
+          descEmpresa: "Cada día sin pago es flujo de caja que no tienes. Tu equipo persigue pagos en vez de vender, retener o crecer — y <strong>el costo operativo de cobrar consume lo que deberías estar invirtiendo.</strong>",
+          descUsuario: "El usuario quiere pagar, pero el proceso es complicado — o simplemente <strong>se le olvida.</strong> El día que tiene plata no tiene tiempo; cuando tiene tiempo, ya no tiene plata. <strong>Lo deja para después, y \"después\" se convierte en nunca.</strong>",
+          stat: "Día 18",
+          statDesc: "promedio para recibir un pago — 18 días de caja que financia la operación de otros",
         },
         {
-          t: "Lado usuario",
-          its: [
-            ["40%", "abandono en PSE"],
-            ["17", "pasos para pagar por PSE"],
-            ["20%", "apertura emails de cobro"],
-            ["0", "apps quiere descargar"],
-            ["3+", "intentos para pagar"],
-          ],
-          q: "\u201CDoña Carmen no es morosa \u2014 pagar es difícil.\u201D",
+          category: "Fuga de clientes",
+          title: "Se van sin decirte por qué",
+          descEmpresa: "Tú lo lees como cartera vencida. <strong>En realidad es fuga de clientes disfrazada.</strong> El 25-35% de esa cartera nunca se va a recuperar — porque el usuario ya se fue.",
+          descUsuario: "No llama a cancelar. No se queja. <strong>Se frustra, deja de pagar, espera el corte y se va con otro ISP.</strong> El corte fue la excusa que necesitaba.",
+          stat: "25–35%",
+          statDesc: "de cartera vencida que en realidad es deserción silenciosa",
+        },
+        {
+          category: "Experiencia rota",
+          title: "Cada fricción te aleja del usuario",
+          descEmpresa: "Cada ticket de soporte por pago fallido es costo. Cada llamada de cobranza es desgaste. <strong>Tu operación se dedica a resolver problemas de pago en vez de dar un mejor servicio.</strong>",
+          descUsuario: "Cada intento fallido de pago es frustración. <strong>El usuario no recuerda que el problema fue PSE — recuerda que fue contigo.</strong> Y eso es reputación que no se recupera fácil.",
+          stat: "3+",
+          statDesc: "intentos de pago fallidos antes de rendirse — cada uno daña la relación",
         },
       ],
+      connector: "Los tres nacen del mismo origen: pagar es difícil",
+      closer: "El corte no soluciona ninguno de los tres. Solo los aplaza — y se lleva al cliente.",
     },
 
     /* ─── Insight ─── */
     insight: {
-      tag: "El insight",
-      h2: ["Para cobrar hay que resolver", "cómo paga la gente"],
+      tag: "Qué resuelve OnePay",
+      h2: ["Cuatro preguntas que nadie", "le resolvió a tu ISP"],
       sub: "La industria optimiza el cobro. Nadie optimiza el pago. OnePay hace las dos.",
       questions: [
         { q: "\u00BFCon qué pagar?", w: "Pasarelas", d: "Visa, MC, Nequi, Daviplata, PSE, Bre-B" },
@@ -70,6 +76,98 @@ export const i18n = {
         { q: "\u00BFCómo hacer que pague?", w: "OnePay", d: "Behavioral intelligence + timing" },
       ],
       questionLabel: "Pregunta",
+    },
+
+    /* ─── Intelligence ─── */
+    intelligence: {
+      tag: "OnePay Intelligence",
+      h2: "Más del 65% de los que no te pagan, sí te quieren pagar.",
+      sub: "Tener una forma de pago fácil es el paso cero. OnePay observa cada interacción de tus usuarios durante 2-3 meses para construir modelos predictivos únicos por persona.",
+      scenario: {
+        title: "¿Por qué no te pagan a tiempo?",
+        days: [
+          { day: "Día 5", emoji: "\u{1F4B0}", has: "Tiene dinero", but: "No tiene tiempo", color: "#F59E0B" },
+          { day: "Día 12", emoji: "\u23F0", has: "Tiene tiempo", but: "Ya no tiene plata", color: "#3B82F6" },
+          { day: "Día 20", emoji: "\u{1F9E0}", has: "Tiene tiempo y dinero", but: "Se le olvidó", color: "#EF4444" },
+        ],
+        onepay: { label: "OnePay entra aquí", desc: "Justo cuando es más probable que pague — y el pago queda completado." },
+      },
+      months: [
+        {
+          label: "Mes 1 — Primeros resultados",
+          user: { name: "María López", emoji: "\u{1F469}" },
+          events: [
+            { channel: "whatsapp", time: "Día 1", action: "Cobro automático enviado", result: "Abierto, vio la factura", positive: false },
+            { channel: "email", time: "Día 3", action: "Recordatorio por email", result: "No abierto", positive: false },
+            { channel: "whatsapp", time: "Día 5", action: "Recordatorio WhatsApp", result: "Abierto, inició flujo de pago, abandonó", positive: false },
+            { channel: "call", time: "Día 7", action: "Llamada IA", result: "Contestó, dijo que paga el viernes", positive: false },
+            { channel: "whatsapp", time: "Día 8, 6:20 PM", action: "Recordatorio post-llamada", result: "\u2713 Pagó — Nequi, 6:22 PM", positive: true },
+          ],
+          score: {
+            canal: { label: "Canal preferido", value: "Aprendiendo...", confidence: 35 },
+            hora: { label: "Hora óptima", value: "~6:00 PM", confidence: 30 },
+            dia: { label: "Día de pago", value: "~Día 8", confidence: 40 },
+            metodo: { label: "Método", value: "Nequi", confidence: 45 },
+            prediccion: { label: "Predicción", value: "Modelo en construcción", confidence: 0 },
+          },
+          metricValue: "8 días",
+        },
+        {
+          label: "Mes 2 — Aprendiendo",
+          user: { name: "María López", emoji: "\u{1F469}" },
+          events: [
+            { channel: "whatsapp", time: "Día 1", action: "Cobro automático", result: "Abierto", positive: false },
+            { channel: "whatsapp", time: "Día 5, 6:00 PM", action: "Recordatorio en hora óptima", result: "Abierto, inició flujo de pago", positive: false },
+            { channel: "whatsapp", time: "Día 5, 6:08 PM", action: "Push de pago", result: "\u2713 Pagó — Nequi, 6:10 PM", positive: true },
+          ],
+          score: {
+            canal: { label: "Canal preferido", value: "WhatsApp", confidence: 75 },
+            hora: { label: "Hora óptima", value: "6:00 - 6:30 PM", confidence: 70 },
+            dia: { label: "Día de pago", value: "Día 5-6", confidence: 78 },
+            metodo: { label: "Método", value: "Nequi", confidence: 85 },
+            prediccion: { label: "Predicción", value: "Día 5, ~6 PM, WhatsApp", confidence: 65 },
+          },
+          metricValue: "5 días",
+        },
+        {
+          label: "Mes 3 — Prediciendo",
+          user: { name: "María López", emoji: "\u{1F469}" },
+          events: [
+            { channel: "whatsapp", time: "Día 1", action: "Cobro automático", result: "Abierto", positive: false },
+            { channel: "whatsapp", time: "Día 4, 5:55 PM", action: "Mensaje predictivo — momento exacto", result: "\u2713 Pagó — Nequi, 5:58 PM", positive: true },
+          ],
+          score: {
+            canal: { label: "Canal preferido", value: "WhatsApp", confidence: 95 },
+            hora: { label: "Hora óptima", value: "5:50 - 6:10 PM", confidence: 92 },
+            dia: { label: "Día de pago", value: "Día 4-5", confidence: 94 },
+            metodo: { label: "Método", value: "Nequi", confidence: 97 },
+            prediccion: { label: "Predicción", value: "Día 4, 5:55 PM \u2192 3 min", confidence: 95 },
+          },
+          metricValue: "3 min",
+        },
+      ],
+      interactionsLabel: "Interacciones",
+      scorecardLabel: "Scorecard",
+      timeToPay: "Comunicación \u2192 Pago",
+      equationTitle: "La ecuación predictiva",
+      equationVars: [
+        { symbol: "X\u2095", label: "Historial de pagos", desc: "Cuándo pagó los últimos 3 meses", color: "#25d366" },
+        { symbol: "Xc", label: "Comportamiento digital", desc: "Aperturas, clicks, intentos, abandonos", color: "#60A5FA" },
+        { symbol: "Xd", label: "Variable temporal", desc: "Hora, día de la semana, quincena", color: "#FBBF24" },
+        { symbol: "X\u2098", label: "Momento post-comunicación", desc: "Tiempo desde el último mensaje enviado", color: "#A78BFA" },
+      ],
+      equationResultLabel: "Scorecard único \u2192 cobrar a cada usuario en su momento exacto",
+      equationResultValue: "María López \u2192 Día 4, 5:55 PM, WhatsApp + Nequi — 95% probabilidad",
+      metricTitle: "El resultado: cada mes más preciso",
+      metricSub: "Tiempo entre comunicación y pago",
+      metricSteps: [
+        { month: "Mes 1", value: "8 días", pct: 100, color: "#F59E0B" },
+        { month: "Mes 2", value: "5 días", pct: 62, color: "#F59E0B" },
+        { month: "Mes 3", value: "3 min", pct: 5, color: "#22C55E" },
+      ],
+      metricNote: "Medido desde el envío de la comunicación hasta el pago, no desde la emisión de la factura.",
+      metricInsight: "Entre más cercano el mensaje al momento de mayor probabilidad, más rápido paga el usuario. A los que se les olvidaba, les recordamos justo cuando pueden pagar. A los que hay que gestionar, los llamamos cuando están receptivos.",
+      differentiator: "Cualquiera te manda un WhatsApp. Nadie más predice cuándo va a pagar cada persona.",
     },
 
     /* ─── Producto ─── */
@@ -309,15 +407,15 @@ export const i18n = {
       items: [
         { t: "Recaudo inteligente", st: "Activo", ds: "Cobro automatizado multicanal con behavioral intelligence.", dt: "WhatsApp, email, portal y llamada IA. Secuencias adaptativas por pagador. Conciliación automática." },
         { t: "Tesorería en tiempo real", st: "Activo", ds: "Dashboard de conciliación, predicción y reportes.", dt: "Todos tus cobros en un solo lugar. Predice flujo semanal. Reportes por canal, fecha y estado. Sin cruzar archivos de bancos." },
-        { t: "Dispersiones", st: "Activo", ds: "Pago a terceros y desembolsos automáticos.", dt: "Turbo ACH (intrabancario H2H), Bre-B (instantáneo vía Banco de la República) y ACH estándar. Elige según urgencia y costo." },
-        { t: "Tarjetas corporativas", st: "Próximamente", ds: "Control de gastos empresariales integrado.", dt: "Tarjetas físicas y virtuales con límites por persona y categoría. Todo visible en un dashboard." },
+        { t: "Dispersiones", st: "Activo", ds: "Pago a terceros y desembolsos automáticos.", dt: "Turbo (intrabancario H2H), Bre-B (instantáneo vía Banco de la República) y ACH estándar. Elige según urgencia y costo." },
+        { t: "Tarjetas corporativas", st: "Activo", ds: "Control de gastos empresariales integrado.", dt: "Tarjetas físicas y virtuales con límites por persona y categoría. Todo visible en un dashboard." },
         { t: "Servicios públicos", st: "Activo", ds: "Recaudo de utilities con la misma infraestructura.", dt: "Gas, energía, agua, telecomunicaciones. Ya operamos con EPM Gas, Surtigas, Movistar y Grupo Promigas." },
       ],
       statusActive: "Activo",
       statusSoon: "Próximamente",
       dispersionesTitle: "Dispersiones \u2014 Tres canales",
       channels: [
-        { n: "Turbo ACH", t: "5 min \u2013 2 horas", co: "Intrabancario Host-to-Host", d: "Transferencias directas con bancos principales. Bancolombia <30 min, Davivienda <20 min, Nequi <5 min. 24/7 en principales bancos." },
+        { n: "Turbo", t: "5 min \u2013 2 horas", co: "Intrabancario Host-to-Host", d: "Transferencias directas con bancos principales. Bancolombia <30 min, Davivienda <20 min, Nequi <5 min. 24/7 en principales bancos." },
         { n: "Bre-B", t: "< 5 minutos", co: "Banco de la República", d: "Pagos instantáneos vía Bre-B. Personas naturales y jurídicas. Todos los bancos con llave registrada, 24/7." },
         { n: "ACH estándar", t: "6 \u2013 30 horas", co: "Menor costo", d: "Rieles ACH bancarios. Hasta 36h hábiles o 72h en fines de semana. Menor costo por transacción." },
       ],
@@ -432,6 +530,10 @@ export const i18n = {
       ],
       balanceReservas: "Sin reservas activas",
       contableCallout: ["Descarga en Excel y PDF cuando quieras.", " Cada movimiento ya está categorizado y agrupado por nodo. Tu equipo financiero cuadra en minutos, no en días."],
+      brebCallout: {
+        title: "Transferencias bancarias — conciliadas automáticamente",
+        desc: "Con la integración de Bre-B, el usuario sigue pagando por transferencia bancaria como siempre — pero ahora se concilia automáticamente en tu sistema de gestión. Sin comprobantes. Sin ir al banco. Sin conciliación manual.",
+      },
     },
 
     /* ─── Pricing ─── */
@@ -508,7 +610,7 @@ export const i18n = {
         capacidadLiberada: "Capacidad liberada",
         personaLabel: " persona",
         personasLabel: " personas",
-        tareasValor: " \u2192 tareas de mayor valor",
+        tareasValor: " \u2192 Tu equipo deja de cobrar y se dedica a crecer el negocio",
         ahorroGMF: "Ahorro GMF (2x1000)",
         ahorroGMFsub: "Modulo tesoreria ahorra 50% del 4x1000",
         inversionOnePay: "Inversión OnePay",
@@ -527,6 +629,57 @@ export const i18n = {
         impactoChurnSub: "= menos cortes",
       },
       disclaimer: "Estimación basada en data real de +100 ISPs activas en OnePay (Feb 2026). Mejora de +12pp en tasa de recaudo. Mix de pago: 95% PSE/billeteras, 5% tarjetas. Capacidad liberada basada en salario mínimo integral ($2.9M/mes) \u00D7 80% automatización. Ahorro GMF: el módulo de tesorería permite pagar a proveedores y nómina ahorrando la mitad del 4x1000 (2x1000 = 0.2% sobre el monto dispersado). Resultados varían según adopción y base de suscriptores.",
+    },
+
+    /* ─── Vs Pasarela ─── */
+    vsPasarela: {
+      tag: "¿Por qué OnePay?",
+      h2: "La pasarela procesa el pago.\nOnePay resuelve el cobro.",
+      sub: "La pregunta no es qué herramienta usas para cobrar. Es qué le pasa a tu operación cuando no te pagan a tiempo.",
+      left: {
+        title: "Cuando solo procesas pagos",
+        sub: "Lo que le pasa a tu operación con una pasarela",
+        items: [
+          { pain: "Tu equipo sigue persiguiendo pagos", because: "La pasarela no cobra — espera a que el usuario llegue solo." },
+          { pain: "Conciliar cada pago toma horas", because: "No se conecta con tu sistema de gestión. Toca cruzar extractos y comprobantes." },
+          { pain: "Todos tus usuarios reciben el mismo trato", because: "No hay inteligencia. El que paga puntual y el moroso reciben el mismo mensaje." },
+          { pain: "No sabes cuánto vas a recaudar esta semana", because: "No hay predicción. Solo esperas y miras el banco." },
+          { pain: "El corte sigue siendo tu única herramienta", because: "Sin cobranza proactiva, el corte es lo único que mueve al usuario." },
+        ],
+        result: "Persigues pagos, pierdes clientes, y tu flujo de caja es impredecible.",
+      },
+      right: {
+        title: "Cuando resuelves el problema de fondo",
+        sub: "Lo que cambia en tu operación con OnePay",
+        items: [
+          { value: "Tu equipo deja de perseguir pagos", impact: "Se dedica a vender, retener y crecer el negocio." },
+          { value: "Cada pago se concilia solo, en tiempo real", impact: "Cero horas en conciliación. Incluso transferencias bancarias." },
+          { value: "Cada usuario recibe cobro personalizado", impact: "Pagan antes porque les cobras cuando pueden pagar." },
+          { value: "Predices tu flujo de caja semana a semana", impact: "Tomas mejores decisiones con información real, no con esperanza." },
+          { value: "El corte deja de ser necesario", impact: "Porque la mayoría paga antes de llegar ahí." },
+        ],
+        result: "Tus usuarios te pagan en 5 días. Tu flujo de caja es predecible. Tu equipo crece el negocio.",
+      },
+      priceTransparency: "OnePay cobra más por transacción que una pasarela convencional. Ese diferencial financia la inteligencia, la automatización y la operación que hace que tu ISP recaude más, más rápido, y con menos esfuerzo.",
+      bottomStatement: "Más de 100 ISPs ya lo usan. El resultado: el dinero llega en 5 días — no en 25.",
+    },
+
+    /* ─── Operación Financiera ─── */
+    operacionFinanciera: {
+      tag: "Tu operación financiera",
+      h2: "No solo cobramos.\nToda tu operación financiera funciona mejor.",
+      sub: "Desde que entra la plata hasta que se dispersa. Todo rastreado. Todo conciliado.",
+      items: [
+        { n: "Conciliación inteligente", st: "Activo", desc: "Todos los métodos de pago conciliados automáticamente en tu sistema de gestión. En tiempo real.", detail: "PSE, Nequi, Daviplata, tarjetas — todo se concilia solo. Transferencias bancarias vía Bre-B: el usuario sigue pagando como siempre, pero se concilia automáticamente. Cero comprobantes falsos. Cero ir al banco. Cero conciliación manual.", icon: "reconciliation" },
+        { n: "Tesorería en tiempo real", st: "Activo", desc: "Dashboard con el flujo completo de tu dinero. Cuánto entró, cuánto salió, cuánto se dispersó.", detail: "Reportes por canal, fecha y estado. Predicción de flujo de caja con la data de OnePay Intelligence. Sin descargar extractos bancarios. Sin cruzar archivos.", icon: "treasury" },
+        { n: "Dispersiones optimizadas", st: "Activo", desc: "Paga proveedores y nómina desde OnePay. Ahórrate la mitad del 4x1000.", detail: "Turbo (intrabancario, <2h), Bre-B (instantáneo, <5min) y ACH estándar (menor costo). Desembolsos a tu propia cuenta: $0 costo. Por cada $10M que dispersas, te ahorras ~$20.000 vs tu banco.", icon: "disbursement" },
+        { n: "Tarjetas corporativas", st: "Activo", desc: "Control de gastos empresariales integrado a tu operación.", detail: "Tarjetas físicas y virtuales con límites por persona y categoría. Todo visible en un dashboard unificado. Sin bancos externos.", icon: "cards" },
+        { n: "Servicios públicos", st: "Activo", desc: "Pago masivo de servicios públicos como valor agregado para tus usuarios.", detail: "Gas, energía, agua, telecomunicaciones. Ya operamos con EPM Gas, Surtigas, Movistar y Grupo Promigas. Tu ISP ofrece más sin desarrollar nada.", icon: "utilities" },
+      ],
+      brebHighlight: {
+        title: "Transferencias bancarias — sin cambiar el hábito del usuario",
+        desc: "Muchos usuarios prefieren pagar con transferencia. Antes eso significaba recibir comprobantes, ir al banco a validar y conciliar manual. Con la integración Bre-B de OnePay, la transferencia se concilia automáticamente. El usuario no cambia nada. Tú no haces nada.",
+      },
     },
 
     /* ─── Seguridad ─── */
@@ -579,38 +732,44 @@ export const i18n = {
     /* ─── Problema ─── */
     problema: {
       tag: "O problema",
-      h2: "Entre faturar e receber existe uma brecha.\nEssa brecha é dinheiro que você já ganhou.",
-      sub: "Os pagamentos atrasam, o bloqueio é a única ferramenta real, e sua equipe perde tempo cobrando em vez de aumentar a receita por assinante.",
+      h2: "Você não está perdendo pagamentos.\nEstá perdendo clientes.",
+      sub: "Quando pagar é difícil, o assinante não insiste — desiste. Isso gera três problemas que impactam tanto sua operação quanto a experiência do seu assinante.",
+      empresaLabel: "Sua operação",
+      usuarioLabel: "Seu assinante",
       cards: [
         {
-          t: "Lado empresa",
-          its: [
-            ["25-35%", "carteira vencida >30 dias"],
-            ["2-3", "pessoas dedicadas a cobrar"],
-            ["$8-12M", "COP/mês em cobrança"],
-            ["Dia 18", "média para receber pagamento"],
-            ["500+", "ligações manuais por mês"],
-          ],
-          q: "\u201CO dinheiro já foi faturado mas não chega. E o único recurso é o bloqueio.\u201D",
+          category: "Fluxo de caixa",
+          title: "Receita faturada que nunca chega",
+          descEmpresa: "Cada dia sem pagamento é fluxo de caixa que você não tem. Sua equipe persegue pagamentos em vez de vender, reter ou crescer — e <strong>o custo operacional de cobrar consome o que deveria estar investindo.</strong>",
+          descUsuario: "O assinante quer pagar, mas o processo é complicado — ou simplesmente <strong>esquece.</strong> No dia que tem dinheiro não tem tempo; quando tem tempo, já não tem dinheiro. <strong>Deixa para depois, e \"depois\" vira nunca.</strong>",
+          stat: "Dia 18",
+          statDesc: "média para receber um pagamento — 18 dias de caixa financiando a operação de outros",
         },
         {
-          t: "Lado assinante",
-          its: [
-            ["40%", "abandono no PSE"],
-            ["17", "passos para pagar via PSE"],
-            ["20%", "abertura de e-mails de cobrança"],
-            ["0", "apps quer baixar"],
-            ["3+", "tentativas para pagar"],
-          ],
-          q: "\u201CDona Maria não é inadimplente \u2014 pagar é que é difícil.\u201D",
+          category: "Fuga de clientes",
+          title: "Vão embora sem avisar",
+          descEmpresa: "Você lê como carteira vencida. <strong>Na verdade é fuga de clientes disfarçada.</strong> 25-35% dessa carteira nunca vai ser recuperada — porque o assinante já foi embora.",
+          descUsuario: "Não liga para cancelar. Não reclama. <strong>Se frustra, para de pagar, espera o bloqueio e vai para outro provedor.</strong> O bloqueio foi a desculpa que precisava.",
+          stat: "25–35%",
+          statDesc: "de carteira vencida que na verdade é deserção silenciosa",
+        },
+        {
+          category: "Experiência quebrada",
+          title: "Cada atrito te afasta do assinante",
+          descEmpresa: "Cada ticket de suporte por pagamento falho é custo. Cada ligação de cobrança é desgaste. <strong>Sua operação se dedica a resolver problemas de pagamento em vez de entregar um serviço melhor.</strong>",
+          descUsuario: "Cada tentativa falha de pagamento é frustração. <strong>O assinante não lembra que o problema foi o PSE — lembra que foi com você.</strong> E isso é reputação que não se recupera fácil.",
+          stat: "3+",
+          statDesc: "tentativas de pagamento antes de desistir — cada uma danifica a relação",
         },
       ],
+      connector: "Os três nascem da mesma origem: pagar é difícil",
+      closer: "O bloqueio não resolve nenhum dos três. Só adia — e leva o cliente.",
     },
 
     /* ─── Insight ─── */
     insight: {
-      tag: "O insight",
-      h2: ["Para cobrar é preciso resolver", "como as pessoas pagam"],
+      tag: "O que o OnePay resolve",
+      h2: ["Quatro perguntas que ninguém", "resolveu pro seu provedor"],
       sub: "A indústria otimiza a cobrança. Ninguém otimiza o pagamento. OnePay faz os dois.",
       questions: [
         { q: "Com o quê pagar?", w: "Gateways", d: "Visa, MC, Nequi, Daviplata, PSE, Bre-B" },
@@ -619,6 +778,98 @@ export const i18n = {
         { q: "Como fazer a pessoa pagar?", w: "OnePay", d: "Behavioral intelligence + timing" },
       ],
       questionLabel: "Pergunta",
+    },
+
+    /* ─── Intelligence ─── */
+    intelligence: {
+      tag: "OnePay Intelligence",
+      h2: "Mais de 65% dos que não te pagam, querem te pagar.",
+      sub: "Ter uma forma de pagamento fácil é o passo zero. OnePay observa cada interação dos seus assinantes durante 2-3 meses para construir modelos preditivos únicos por pessoa.",
+      scenario: {
+        title: "Por que não te pagam em dia?",
+        days: [
+          { day: "Dia 5", emoji: "\u{1F4B0}", has: "Tem dinheiro", but: "Não tem tempo", color: "#F59E0B" },
+          { day: "Dia 12", emoji: "\u23F0", has: "Tem tempo", but: "Não tem mais dinheiro", color: "#3B82F6" },
+          { day: "Dia 20", emoji: "\u{1F9E0}", has: "Tem tempo e dinheiro", but: "Esqueceu", color: "#EF4444" },
+        ],
+        onepay: { label: "OnePay entra aqui", desc: "No exato momento em que é mais provável que pague — e o pagamento é concluído." },
+      },
+      months: [
+        {
+          label: "Mês 1 — Primeiros resultados",
+          user: { name: "María López", emoji: "\u{1F469}" },
+          events: [
+            { channel: "whatsapp", time: "Dia 1", action: "Cobrança automática enviada", result: "Aberto, viu a fatura", positive: false },
+            { channel: "email", time: "Dia 3", action: "Lembrete por e-mail", result: "Não aberto", positive: false },
+            { channel: "whatsapp", time: "Dia 5", action: "Lembrete WhatsApp", result: "Aberto, iniciou fluxo de pagamento, abandonou", positive: false },
+            { channel: "call", time: "Dia 7", action: "Ligação IA", result: "Atendeu, disse que paga na sexta", positive: false },
+            { channel: "whatsapp", time: "Dia 8, 6:20 PM", action: "Lembrete pós-ligação", result: "\u2713 Pagou — Nequi, 6:22 PM", positive: true },
+          ],
+          score: {
+            canal: { label: "Canal preferido", value: "Aprendendo...", confidence: 35 },
+            hora: { label: "Hora ideal", value: "~6:00 PM", confidence: 30 },
+            dia: { label: "Dia de pagamento", value: "~Dia 8", confidence: 40 },
+            metodo: { label: "Método", value: "Nequi", confidence: 45 },
+            prediccion: { label: "Previsão", value: "Modelo em construção", confidence: 0 },
+          },
+          metricValue: "8 dias",
+        },
+        {
+          label: "Mês 2 — Aprendendo",
+          user: { name: "María López", emoji: "\u{1F469}" },
+          events: [
+            { channel: "whatsapp", time: "Dia 1", action: "Cobrança automática", result: "Aberto", positive: false },
+            { channel: "whatsapp", time: "Dia 5, 6:00 PM", action: "Lembrete na hora ideal", result: "Aberto, iniciou fluxo de pagamento", positive: false },
+            { channel: "whatsapp", time: "Dia 5, 6:08 PM", action: "Push de pagamento", result: "\u2713 Pagou — Nequi, 6:10 PM", positive: true },
+          ],
+          score: {
+            canal: { label: "Canal preferido", value: "WhatsApp", confidence: 75 },
+            hora: { label: "Hora ideal", value: "6:00 - 6:30 PM", confidence: 70 },
+            dia: { label: "Dia de pagamento", value: "Dia 5-6", confidence: 78 },
+            metodo: { label: "Método", value: "Nequi", confidence: 85 },
+            prediccion: { label: "Previsão", value: "Dia 5, ~6 PM, WhatsApp", confidence: 65 },
+          },
+          metricValue: "5 dias",
+        },
+        {
+          label: "Mês 3 — Prevendo",
+          user: { name: "María López", emoji: "\u{1F469}" },
+          events: [
+            { channel: "whatsapp", time: "Dia 1", action: "Cobrança automática", result: "Aberto", positive: false },
+            { channel: "whatsapp", time: "Dia 4, 5:55 PM", action: "Mensagem preditiva — momento exato", result: "\u2713 Pagou — Nequi, 5:58 PM", positive: true },
+          ],
+          score: {
+            canal: { label: "Canal preferido", value: "WhatsApp", confidence: 95 },
+            hora: { label: "Hora ideal", value: "5:50 - 6:10 PM", confidence: 92 },
+            dia: { label: "Dia de pagamento", value: "Dia 4-5", confidence: 94 },
+            metodo: { label: "Método", value: "Nequi", confidence: 97 },
+            prediccion: { label: "Previsão", value: "Dia 4, 5:55 PM \u2192 3 min", confidence: 95 },
+          },
+          metricValue: "3 min",
+        },
+      ],
+      interactionsLabel: "Interações",
+      scorecardLabel: "Scorecard",
+      timeToPay: "Comunicação \u2192 Pagamento",
+      equationTitle: "A equação preditiva",
+      equationVars: [
+        { symbol: "X\u2095", label: "Histórico de pagamentos", desc: "Quando pagou nos últimos 3 meses", color: "#25d366" },
+        { symbol: "Xc", label: "Comportamento digital", desc: "Aberturas, cliques, tentativas, abandonos", color: "#60A5FA" },
+        { symbol: "Xd", label: "Variável temporal", desc: "Hora, dia da semana, quinzena", color: "#FBBF24" },
+        { symbol: "X\u2098", label: "Momento pós-comunicação", desc: "Tempo desde a última mensagem enviada", color: "#A78BFA" },
+      ],
+      equationResultLabel: "Scorecard único \u2192 cobrar de cada assinante no momento exato",
+      equationResultValue: "María López \u2192 Dia 4, 17:55, WhatsApp + Nequi — 95% probabilidade",
+      metricTitle: "O resultado: cada mês mais preciso",
+      metricSub: "Tempo entre comunicação e pagamento",
+      metricSteps: [
+        { month: "Mês 1", value: "8 dias", pct: 100, color: "#F59E0B" },
+        { month: "Mês 2", value: "5 dias", pct: 62, color: "#F59E0B" },
+        { month: "Mês 3", value: "3 min", pct: 5, color: "#22C55E" },
+      ],
+      metricNote: "Medido desde o envio da comunicação até o pagamento, não desde a emissão da fatura.",
+      metricInsight: "Quanto mais próxima a mensagem do momento de maior probabilidade, mais rápido o assinante paga. Para os que esqueciam, lembramos no momento certo. Para os que precisam de gestão, ligamos quando estão receptivos.",
+      differentiator: "Qualquer um te manda um WhatsApp. Ninguém mais prevê quando cada pessoa vai pagar.",
     },
 
     /* ─── Produto ─── */
@@ -858,15 +1109,15 @@ export const i18n = {
       items: [
         { t: "Cobrança inteligente", st: "Ativo", ds: "Cobrança automatizada multicanal com behavioral intelligence.", dt: "WhatsApp, e-mail, portal e ligação IA. Sequências adaptativas por pagador. Conciliação automática." },
         { t: "Tesouraria em tempo real", st: "Ativo", ds: "Dashboard de conciliação, previsão e relatórios.", dt: "Todas as cobranças em um só lugar. Prevê fluxo semanal. Relatórios por canal, data e status. Sem cruzar arquivos de bancos." },
-        { t: "Repasses", st: "Ativo", ds: "Pagamento a terceiros e desembolsos automáticos.", dt: "Turbo ACH (intrabancário H2H), Bre-B (instantâneo via Banco de la República) e ACH padrão. Escolha conforme urgência e custo." },
-        { t: "Cartões corporativos", st: "Em breve", ds: "Controle de despesas empresariais integrado.", dt: "Cartões físicos e virtuais com limites por pessoa e categoria. Tudo visível em um dashboard." },
+        { t: "Repasses", st: "Ativo", ds: "Pagamento a terceiros e desembolsos automáticos.", dt: "Turbo (intrabancário H2H), Bre-B (instantâneo via Banco de la República) e ACH padrão. Escolha conforme urgência e custo." },
+        { t: "Cartões corporativos", st: "Ativo", ds: "Controle de despesas empresariais integrado.", dt: "Cartões físicos e virtuais com limites por pessoa e categoria. Tudo visível em um dashboard." },
         { t: "Serviços públicos", st: "Ativo", ds: "Cobrança de utilities com a mesma infraestrutura.", dt: "Gás, energia, água, telecomunicações. Já operamos com EPM Gas, Surtigas, Movistar e Grupo Promigas." },
       ],
       statusActive: "Ativo",
       statusSoon: "Em breve",
       dispersionesTitle: "Repasses \u2014 Três canais",
       channels: [
-        { n: "Turbo ACH", t: "5 min \u2013 2 horas", co: "Intrabancário Host-to-Host", d: "Transferências diretas com os principais bancos. Bancolombia <30 min, Davivienda <20 min, Nequi <5 min. 24/7 nos principais bancos." },
+        { n: "Turbo", t: "5 min \u2013 2 horas", co: "Intrabancário Host-to-Host", d: "Transferências diretas com os principais bancos. Bancolombia <30 min, Davivienda <20 min, Nequi <5 min. 24/7 nos principais bancos." },
         { n: "Bre-B", t: "< 5 minutos", co: "Banco de la República", d: "Pagamentos instantâneos via Bre-B. Pessoas físicas e jurídicas. Todos os bancos com chave registrada, 24/7." },
         { n: "ACH padrão", t: "6 \u2013 30 horas", co: "Menor custo", d: "Trilhos ACH bancários. Até 36h úteis ou 72h em finais de semana. Menor custo por transação." },
       ],
@@ -981,6 +1232,10 @@ export const i18n = {
       ],
       balanceReservas: "Sem reservas ativas",
       contableCallout: ["Baixe em Excel e PDF quando quiser.", " Cada movimentação já está categorizada e agrupada por nó. Sua equipe financeira fecha em minutos, não em dias."],
+      brebCallout: {
+        title: "Transferências bancárias — conciliadas automaticamente",
+        desc: "Com a integração Bre-B, o assinante continua pagando por transferência bancária como sempre — mas agora se concilia automaticamente no seu sistema de gestão. Sem comprovantes. Sem ir ao banco. Sem conciliação manual.",
+      },
     },
 
     /* ─── Pricing ─── */
@@ -1057,7 +1312,7 @@ export const i18n = {
         capacidadLiberada: "Capacidade liberada",
         personaLabel: " pessoa",
         personasLabel: " pessoas",
-        tareasValor: " \u2192 tarefas de maior valor",
+        tareasValor: " \u2192 Sua equipe para de cobrar e se dedica a crescer o negócio",
         ahorroGMF: "Economia GMF (2x1000)",
         ahorroGMFsub: "Módulo tesouraria economiza 50% do 4x1000",
         inversionOnePay: "Investimento OnePay",
@@ -1076,6 +1331,57 @@ export const i18n = {
         impactoChurnSub: "= menos bloqueios",
       },
       disclaimer: "Estimativa baseada em dados reais de +100 provedores ativos na OnePay (Fev 2026). Melhoria de +12pp na taxa de recebimento. Mix de pagamento: 95% PSE/carteiras, 5% cartões. Capacidade liberada baseada em salário mínimo integral ($2,9M/mês) \u00D7 80% automação. Economia GMF: o módulo de tesouraria permite pagar fornecedores e folha economizando metade do 4x1000 (2x1000 = 0,2% sobre o valor repassado). Resultados variam conforme adoção e base de assinantes.",
+    },
+
+    /* ─── Vs Pasarela ─── */
+    vsPasarela: {
+      tag: "Por que o OnePay?",
+      h2: "A gateway processa o pagamento.\nOnePay resolve a cobrança.",
+      sub: "A pergunta não é qual ferramenta você usa para cobrar. É o que acontece com sua operação quando não te pagam a tempo.",
+      left: {
+        title: "Quando você só processa pagamentos",
+        sub: "O que acontece na sua operação com um gateway",
+        items: [
+          { pain: "Sua equipe continua perseguindo pagamentos", because: "O gateway não cobra — espera o assinante chegar sozinho." },
+          { pain: "Conciliar cada pagamento leva horas", because: "Não se conecta com seu sistema de gestão. Precisa cruzar extratos e comprovantes." },
+          { pain: "Todos os assinantes recebem o mesmo tratamento", because: "Sem inteligência. Quem paga pontual e o inadimplente recebem a mesma mensagem." },
+          { pain: "Não sabe quanto vai receber essa semana", because: "Sem previsão. Só espera e olha o banco." },
+          { pain: "O bloqueio continua sendo a única ferramenta", because: "Sem cobrança proativa, o bloqueio é a única coisa que move o assinante." },
+        ],
+        result: "Persegue pagamentos, perde clientes, e seu fluxo de caixa é imprevisível.",
+      },
+      right: {
+        title: "Quando você resolve o problema de fundo",
+        sub: "O que muda na sua operação com o OnePay",
+        items: [
+          { value: "Sua equipe para de perseguir pagamentos", impact: "Se dedica a vender, reter e crescer o negócio." },
+          { value: "Cada pagamento se concilia sozinho, em tempo real", impact: "Zero horas em conciliação. Inclusive transferências bancárias." },
+          { value: "Cada assinante recebe cobrança personalizada", impact: "Pagam antes porque você cobra quando eles podem pagar." },
+          { value: "Prevê seu fluxo de caixa semana a semana", impact: "Toma melhores decisões com informação real, não com esperança." },
+          { value: "O bloqueio deixa de ser necessário", impact: "Porque a maioria paga antes de chegar lá." },
+        ],
+        result: "Seus assinantes pagam em 5 dias. Seu fluxo de caixa é previsível. Sua equipe cresce o negócio.",
+      },
+      priceTransparency: "O OnePay cobra mais por transação do que um gateway convencional. Esse diferencial financia a inteligência, a automação e a operação que faz seu provedor receber mais, mais rápido, e com menos esforço.",
+      bottomStatement: "Mais de 100 provedores já usam. O resultado: o dinheiro chega em 5 dias — não em 25.",
+    },
+
+    /* ─── Operação Financeira ─── */
+    operacionFinanciera: {
+      tag: "Sua operação financeira",
+      h2: "Não só cobramos.\nToda sua operação financeira funciona melhor.",
+      sub: "Desde que o dinheiro entra até ser repassado. Tudo rastreado. Tudo conciliado.",
+      items: [
+        { n: "Conciliação inteligente", st: "Ativo", desc: "Todos os meios de pagamento conciliados automaticamente no seu sistema de gestão. Em tempo real.", detail: "PSE, Nequi, Daviplata, cartões — tudo se concilia sozinho. Transferências bancárias via Bre-B: o assinante continua pagando como sempre, mas se concilia automaticamente. Zero comprovantes falsos. Zero ir ao banco. Zero conciliação manual.", icon: "reconciliation" },
+        { n: "Tesouraria em tempo real", st: "Ativo", desc: "Dashboard com o fluxo completo do seu dinheiro. Quanto entrou, quanto saiu, quanto foi repassado.", detail: "Relatórios por canal, data e status. Previsão de fluxo de caixa com os dados do OnePay Intelligence. Sem baixar extratos bancários. Sem cruzar arquivos.", icon: "treasury" },
+        { n: "Repasses otimizados", st: "Ativo", desc: "Pague fornecedores e folha desde o OnePay. Economize a metade do 4x1000.", detail: "Turbo (intrabancário, <2h), Bre-B (instantâneo, <5min) e ACH padrão (menor custo). Saques para sua própria conta: custo $0. A cada $10M repassados, você economiza ~$20.000 vs seu banco.", icon: "disbursement" },
+        { n: "Cartões corporativos", st: "Ativo", desc: "Controle de despesas empresariais integrado à sua operação.", detail: "Cartões físicos e virtuais com limites por pessoa e categoria. Tudo visível em um dashboard unificado. Sem bancos externos.", icon: "cards" },
+        { n: "Serviços públicos", st: "Ativo", desc: "Pagamento massivo de serviços públicos como valor agregado para seus assinantes.", detail: "Gás, energia, água, telecomunicações. Já operamos com EPM Gas, Surtigas, Movistar e Grupo Promigas. Seu provedor oferece mais sem desenvolver nada.", icon: "utilities" },
+      ],
+      brebHighlight: {
+        title: "Transferências bancárias — sem mudar o hábito do assinante",
+        desc: "Muitos assinantes preferem pagar com transferência. Antes isso significava receber comprovantes, ir ao banco validar e conciliar manualmente. Com a integração Bre-B do OnePay, a transferência se concilia automaticamente. O assinante não muda nada. Você não faz nada.",
+      },
     },
 
     /* ─── Segurança ─── */

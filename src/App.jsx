@@ -291,23 +291,56 @@ function Tag(p) {
 }
 
 function Box(p) {
+  const bg = p.dark
+    ? (p.alt ? C.p900 : C.p950)
+    : (p.white ? (p.alt ? C.g50 : "#fff") : C.g50);
+  const s = p.dark ? "rgba(99,102,241,.08)" : "rgba(99,102,241,.035)";
+  const j = p.dark ? "rgba(99,102,241,.12)" : "rgba(99,102,241,.05)";
+  const glow = p.dark ? "rgba(139,92,246,.3)" : "rgba(99,102,241,.15)";
+  const pL = "M 120 0 L 120 380 C 120 420,160 440,200 440 L 340 440 C 380 440,400 460,400 500 L 400 1000";
+  const pR = "M 1280 0 L 1280 280 C 1280 320,1240 340,1200 340 L 1060 340 C 1020 340,1000 360,1000 400 L 1000 600 C 1000 640,1020 660,1060 660 L 1200 660 C 1240 660,1280 680,1280 720 L 1280 1000";
+  const pipes = p.pipe !== false && (
+    <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} preserveAspectRatio="none" viewBox="0 0 1400 1000">
+      {/* Static pipe network */}
+      <path d={pL} fill="none" stroke={s} strokeWidth="1" />
+      <path d={pR} fill="none" stroke={s} strokeWidth="1" />
+      <path d="M 400 500 L 600 500 C 640 500,660 480,660 440 L 660 340 C 660 300,680 280,720 280 L 1000 280" fill="none" stroke={s} strokeWidth="1" />
+      <path d="M 120 200 C 120 220,140 240,180 240 L 240 240 C 260 240,280 260,280 300 L 280 1000" fill="none" stroke={s} strokeWidth="1" />
+      <path d="M 1000 600 L 800 600 C 760 600,740 620,740 660 L 740 1000" fill="none" stroke={s} strokeWidth="1" />
+      <path d="M 340 0 L 340 120 C 340 160,360 180,400 180 L 660 180" fill="none" stroke={s} strokeWidth="1" />
+      {/* Junction dots */}
+      <circle cx="120" cy="200" r="2" fill={j} /><circle cx="400" cy="500" r="2" fill={j} />
+      <circle cx="1000" cy="280" r="2" fill={j} /><circle cx="1000" cy="600" r="2" fill={j} />
+      <circle cx="660" cy="340" r="2" fill={j} /><circle cx="1280" cy="340" r="2" fill={j} />
+      <circle cx="340" cy="120" r="2" fill={j} /><circle cx="1280" cy="660" r="2" fill={j} />
+      {/* Glow pulse traveling along left pipe — illuminated segment */}
+      <path d={pL} fill="none" stroke={glow} strokeWidth="3" strokeLinecap="round" strokeDasharray="80 2400" strokeDashoffset="0">
+        <animate attributeName="stroke-dashoffset" from="0" to="-2480" dur="10s" repeatCount="indefinite" />
+      </path>
+      {/* Glow pulse traveling along right pipe */}
+      <path d={pR} fill="none" stroke={glow} strokeWidth="3" strokeLinecap="round" strokeDasharray="80 2800" strokeDashoffset="0">
+        <animate attributeName="stroke-dashoffset" from="0" to="-2880" dur="12s" begin="3s" repeatCount="indefinite" />
+      </path>
+    </svg>
+  );
   return (
     <section id={p.id} style={{
       position: "relative",
-      background: p.dark ? C.p950 : (p.white ? "#fff" : C.g50),
+      background: bg,
       color: p.dark ? "#fff" : C.g900,
-      padding: "clamp(56px,9vw,110px) clamp(20px,5vw,72px)",
+      padding: "clamp(72px,11vw,130px) clamp(20px,5vw,72px)",
       overflow: "hidden",
       ...p.style
     }}>
-      {p.dark && (
+      {p.dark && !p.alt && (
         <div style={{
-          position: "absolute", inset: 0, opacity: .22,
+          position: "absolute", inset: 0, opacity: .22, zIndex: 0,
           backgroundImage: "radial-gradient(circle at 1px 1px, rgba(99,102,241,.1) 1px, transparent 0)",
           backgroundSize: "32px 32px"
         }} />
       )}
-      <div style={{ position: "relative", maxWidth: 1160, margin: "0 auto", zIndex: 1 }}>
+      {pipes}
+      <div style={{ position: "relative", maxWidth: 1160, margin: "0 auto", zIndex: 2 }}>
         {p.children}
       </div>
     </section>
@@ -490,37 +523,59 @@ function Hero() {
 function Problema() {
   const lang = useContext(LangCtx);
   const t = i18n[lang].problema;
-  const cardIcons = [<Icon.building size={22} color={C.e500} />, <Icon.user size={22} color={C.b500} />];
-  const cardColors = [C.e500, C.b500];
+  const colors = [C.e500, C.w500, C.b500];
+  const nums = ["01", "02", "03"];
   return (
-    <Box>
+    <Box white pipe="right">
       <Fade>
         <Tag>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08, whiteSpace: "pre-line" }}>{t.h2}</h2>
-        <p style={{ fontSize: 16, color: C.g500, maxWidth: 540, lineHeight: 1.6, marginBottom: 40 }}>{t.sub}</p>
+        <p style={{ fontSize: 16, color: C.g500, maxWidth: 600, lineHeight: 1.6, marginBottom: 40 }}>{t.sub}</p>
       </Fade>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
-        {t.cards.map((cd, ci) => (
-          <Fade key={ci} delay={ci * .12}>
-            <div style={{ background: "#fff", borderRadius: 18, padding: 28, border: "1px solid " + C.g200, height: "100%" }}>
-              <span>{cardIcons[ci]}</span>
-              <h3 style={{ fontSize: 19, fontWeight: 700, margin: "10px 0 14px" }}>{cd.t}</h3>
-              {cd.its.map(([m, tx], i) => (
-                <div key={i} style={{ display: "flex", gap: 9, alignItems: "baseline", marginBottom: 9 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: cardColors[ci], minWidth: 56, flexShrink: 0 }}>{m}</span>
-                  <span style={{ fontSize: 13, color: C.g600, lineHeight: 1.4 }}>{tx}</span>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 16 }}>
+        {t.cards.map((card, i) => (
+          <Fade key={i} delay={i * .1} style={{ display: "grid", gridRow: "span 5", gridTemplateRows: "subgrid", rowGap: 0 }}>
+            <div style={{ gridRow: "1 / -1", display: "grid", gridTemplateRows: "subgrid", background: "#fff", borderRadius: 18, border: "1px solid " + C.g200 }}>
+              <div style={{ padding: "28px 28px 0", fontSize: 11, fontWeight: 800, color: colors[i], textTransform: "uppercase", letterSpacing: ".06em" }}>
+                {nums[i]} — {card.category}
+              </div>
+              <h3 style={{ fontSize: 19, fontWeight: 800, margin: 0, lineHeight: 1.2, padding: "0 28px" }}>{card.title}</h3>
+              <div style={{ padding: "12px 28px 0" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.e500, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                  <Icon.building size={12} color={C.e500} /> {t.empresaLabel}
                 </div>
-              ))}
-              <div style={{ marginTop: 16, padding: 12, borderRadius: 10, background: C.g50, fontStyle: "italic", fontSize: 13, color: C.g600, lineHeight: 1.5, borderLeft: "3px solid " + cardColors[ci] }}>{cd.q}</div>
+                <p style={{ fontSize: 13, color: C.g600, lineHeight: 1.6, margin: 0 }} dangerouslySetInnerHTML={{ __html: card.descEmpresa }} />
+              </div>
+              <div style={{ padding: "12px 28px 0" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.b500, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                  <Icon.user size={12} color={C.b500} /> {t.usuarioLabel}
+                </div>
+                <p style={{ fontSize: 13, color: C.g600, lineHeight: 1.6, margin: 0 }} dangerouslySetInnerHTML={{ __html: card.descUsuario }} />
+              </div>
+              <div style={{ padding: "16px 28px 28px", margin: "0 28px", borderTop: "1px solid " + C.g200, display: "flex", gap: 10, alignItems: "baseline", alignSelf: "end" }}>
+                <span style={{ fontSize: 28, fontWeight: 800, color: colors[i], lineHeight: 1, flexShrink: 0 }}>{card.stat}</span>
+                <span style={{ fontSize: 12, color: C.g500, lineHeight: 1.4, flex: 1 }}>{card.statDesc}</span>
+              </div>
             </div>
           </Fade>
         ))}
       </div>
+      <Fade delay={.4}>
+        <div style={{ textAlign: "center", margin: "36px 0 20px", position: "relative" }}>
+          <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: 1, background: C.g200 }} />
+          <span style={{ position: "relative", background: "#fff", padding: "0 20px", fontSize: 13, color: C.g500, fontStyle: "italic" }}>{t.connector}</span>
+        </div>
+      </Fade>
+      <Fade delay={.5}>
+        <p style={{ fontSize: "clamp(16px,2vw,20px)", fontWeight: 700, color: C.e500, textAlign: "center", margin: 0, lineHeight: 1.5 }}>
+          {t.closer}
+        </p>
+      </Fade>
     </Box>
   );
 }
 
-function Insight() {
+function CuatroPreguntas() {
   const lang = useContext(LangCtx);
   const t = i18n[lang].insight;
   const [aq, saq] = useState(null);
@@ -529,7 +584,7 @@ function Insight() {
   const qIcons = ["cc", "mon", "ph", "br"];
   const qs = t.questions.map((q, i) => ({ ...q, i: qIcons[i] }));
   return (
-    <Box dark>
+    <Box dark alt pipe="left">
       <Fade>
         <Tag dark>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
@@ -561,6 +616,429 @@ function Insight() {
           );
         })}
       </div>
+    </Box>
+  );
+}
+
+function Intelligence() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].intelligence;
+  const [ref, vis] = useVis();
+  const [scenarioStep, setScenarioStep] = useState(-1);
+  const [currentMonth, setCurrentMonth] = useState(0);
+  const [eventIdx, setEventIdx] = useState(-1);
+  const [eqStep, setEqStep] = useState(-1);
+  const [eqOpen, setEqOpen] = useState(false);
+
+  // Animate equation variables when opened
+  useEffect(() => {
+    if (!eqOpen) { setEqStep(-1); return; }
+    const timers = [0,1,2,3,4].map(i => setTimeout(() => setEqStep(i), 300 + i * 600));
+    return () => timers.forEach(clearTimeout);
+  }, [eqOpen]);
+
+  // Animate Day 5/12/20 scenario
+  useEffect(() => {
+    if (!vis) return;
+    const timers = [0, 1, 2, 3].map(i => setTimeout(() => setScenarioStep(i), 300 + i * 400));
+    return () => timers.forEach(clearTimeout);
+  }, [vis]);
+
+  // Auto-advance events within current month, then cycle months
+  useEffect(() => {
+    if (!vis) return;
+    const month = t.months?.[currentMonth];
+    if (!month) return;
+    setEventIdx(-1);
+    const timers = month.events.map((_, i) =>
+      setTimeout(() => setEventIdx(i), 600 + i * 1500)
+    );
+    const advanceTimer = setTimeout(() => {
+      setCurrentMonth(prev => (prev + 1) % 3);
+    }, 600 + month.events.length * 1500 + 3000);
+    return () => { timers.forEach(clearTimeout); clearTimeout(advanceTimer); };
+  }, [vis, currentMonth]);
+
+  const month = t.months?.[currentMonth] || t.months?.[0];
+
+  return (
+    <Box dark alt pipe="right">
+      {/* HEADER */}
+      <Fade>
+        <Tag dark>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2}</h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 620, lineHeight: 1.6, marginBottom: 40 }}>{t.sub}</p>
+      </Fade>
+
+      {/* Day 5/12/20 scenario — kept */}
+      <div ref={ref}>
+        <Fade delay={.1}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: C.g300, marginBottom: 14 }}>{t.scenario.title}</h3>
+        </Fade>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginBottom: 10 }}>
+          {t.scenario.days.map((d, i) => (
+            <div key={i} style={{
+              background: "rgba(255,255,255,.03)", borderRadius: 14, padding: 20, border: "1px solid rgba(255,255,255,.04)",
+              opacity: scenarioStep >= i ? 1 : 0.15, transform: scenarioStep >= i ? "translateY(0)" : "translateY(16px)",
+              transition: "all .6s cubic-bezier(.16,1,.3,1)"
+            }}>
+              <div style={{ fontSize: 24, marginBottom: 6 }}>{d.emoji}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: d.color, marginBottom: 4 }}>{d.day}</div>
+              <div style={{ fontSize: 12, color: "#fff", marginBottom: 2 }}>{d.has}</div>
+              <div style={{ fontSize: 12, color: C.e500, fontStyle: "italic" }}>{d.but}</div>
+            </div>
+          ))}
+          <div style={{
+            background: "rgba(34,197,94,.06)", borderRadius: 14, padding: 20, border: "1px solid rgba(34,197,94,.12)",
+            opacity: scenarioStep >= 3 ? 1 : 0.15, transform: scenarioStep >= 3 ? "translateY(0) scale(1)" : "translateY(16px) scale(0.97)",
+            transition: "all .6s cubic-bezier(.16,1,.3,1)"
+          }}>
+            <div style={{ fontSize: 24, marginBottom: 6 }}>{"\u2705"}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.s400, marginBottom: 4 }}>{t.scenario.onepay.label}</div>
+            <div style={{ fontSize: 12, color: C.g300, lineHeight: 1.5 }}>{t.scenario.onepay.desc}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2-Panel Side-by-Side with Month Evolution */}
+      <Fade delay={.2}>
+        <div style={{ marginTop: 48 }}>
+          {/* Month indicator tabs */}
+          <div style={{ display: "flex", gap: 4, marginBottom: 20, flexWrap: "wrap" }}>
+            {t.months.map((m, i) => (
+              <button key={i} onClick={() => { setCurrentMonth(i); setEventIdx(-1); }} style={{
+                padding: "8px 18px", borderRadius: 10, border: "none", cursor: "pointer",
+                fontSize: 12, fontWeight: 700, transition: "all .4s",
+                background: currentMonth === i ? "rgba(99,102,241,.15)" : "rgba(255,255,255,.03)",
+                color: currentMonth === i ? C.a300 : C.g500,
+                borderWidth: 1, borderStyle: "solid",
+                borderColor: currentMonth === i ? "rgba(99,102,241,.2)" : "rgba(255,255,255,.04)"
+              }}>{m.label}</button>
+            ))}
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            {/* LEFT: Interactions */}
+            <div style={{ background: "rgba(255,255,255,.02)", borderRadius: 16, padding: 22, border: "1px solid rgba(255,255,255,.06)", minHeight: 350 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                <span style={{ fontSize: 16 }}>{month.user.emoji}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{month.user.name}</span>
+                <span style={{ fontSize: 10, color: C.g500, marginLeft: "auto" }}>{t.interactionsLabel}</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {month.events.map((ev, i) => {
+                  const shown = eventIdx >= i;
+                  const isCurrent = eventIdx === i;
+                  const channelColors = { whatsapp: "#25d366", email: C.b500, portal: C.a500, call: C.w500 };
+                  const channelLabels = { whatsapp: "WhatsApp", email: "Email", portal: "Portal", call: "Llamada IA" };
+                  return (
+                    <div key={i} style={{
+                      display: "flex", gap: 10, alignItems: "flex-start", padding: "10px 12px", borderRadius: 10,
+                      background: isCurrent ? "rgba(99,102,241,.1)" : shown ? "rgba(255,255,255,.02)" : "transparent",
+                      border: "1px solid " + (isCurrent ? "rgba(99,102,241,.2)" : "transparent"),
+                      opacity: shown ? 1 : 0.08,
+                      transform: shown ? "translateX(0)" : "translateX(-10px)",
+                      transition: "all .5s cubic-bezier(.16,1,.3,1)"
+                    }}>
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: channelColors[ev.channel], marginTop: 6, flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <span style={{ fontSize: 11, fontWeight: 600, color: channelColors[ev.channel] }}>{channelLabels[ev.channel]}</span>
+                          <span style={{ fontSize: 9, color: C.g500 }}>{ev.time}</span>
+                        </div>
+                        <div style={{ fontSize: 11, color: "#fff", marginTop: 2 }}>{ev.action}</div>
+                        <div style={{ fontSize: 10, color: ev.positive ? C.s400 : C.g500, marginTop: 2 }}>{ev.result}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* RIGHT: Scorecard + Prediction */}
+            <div style={{ background: "rgba(99,102,241,.05)", borderRadius: 16, padding: 22, border: "1px solid rgba(99,102,241,.1)" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.a300, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 18 }}>
+                {t.scorecardLabel} — {month.user.name}
+              </div>
+
+              {Object.values(month.score).map((metric, i) => {
+                const isLast = i === Object.values(month.score).length - 1;
+                const fillProgress = eventIdx >= 0 ? metric.confidence : 0;
+                return (
+                  <div key={i} style={{ marginBottom: isLast ? 0 : 16, padding: isLast ? "12px 14px" : 0, borderRadius: isLast ? 10 : 0, background: isLast ? (metric.confidence > 50 ? "rgba(34,197,94,.1)" : "rgba(255,255,255,.03)") : "transparent", border: isLast ? ("1px solid " + (metric.confidence > 50 ? "rgba(34,197,94,.15)" : "rgba(255,255,255,.04)")) : "none", transition: "all .6s" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, marginBottom: 4 }}>
+                      <span style={{ color: isLast ? (metric.confidence > 50 ? C.s400 : C.g500) : C.g300, fontWeight: 600 }}>{metric.label}</span>
+                      <span style={{ color: isLast ? (metric.confidence > 50 ? "#fff" : C.g500) : C.a300, fontWeight: 700, transition: "color .6s" }}>
+                        {eventIdx >= 0 ? metric.value : "\u2014"}
+                      </span>
+                    </div>
+                    {!isLast && (
+                      <div style={{ height: 3, borderRadius: 2, background: "rgba(255,255,255,.06)" }}>
+                        <div style={{ height: "100%", borderRadius: 2, background: "linear-gradient(90deg," + C.a500 + "," + C.b500 + ")", width: (eventIdx >= 0 ? fillProgress : 0) + "%", transition: "width 1s cubic-bezier(.16,1,.3,1)" }} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Time-to-pay metric for this month */}
+              <div style={{ marginTop: 18, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.06)" }}>
+                <div style={{ fontSize: 9, color: C.g500, textTransform: "uppercase", fontWeight: 600 }}>{t.timeToPay}</div>
+                <div style={{ fontSize: 20, fontWeight: 800, color: currentMonth === 2 ? C.s400 : C.w400, marginTop: 2 }}>{month.metricValue}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Fade>
+
+      {/* FRAME 2: The Equation — Collapsible */}
+      <Fade delay={.3}>
+        <div style={{ marginTop: 52, background: "rgba(0,0,0,.3)", borderRadius: 18, border: "1px solid rgba(99,102,241,.12)", overflow: "hidden" }}>
+          <div onClick={() => setEqOpen(!eqOpen)} style={{ padding: "18px clamp(24px,3vw,36px)", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: C.a300, margin: 0 }}>{t.equationTitle}</h3>
+            <span style={{ fontSize: 14, color: C.g500, transition: "transform .3s", transform: eqOpen ? "rotate(180deg)" : "rotate(0)" }}>{"\u25BE"}</span>
+          </div>
+          <div style={{ maxHeight: eqOpen ? 600 : 0, overflow: "hidden", transition: "max-height .5s cubic-bezier(.16,1,.3,1)", opacity: eqOpen ? 1 : 0 }}>
+          <div style={{ padding: "0 clamp(24px,3vw,36px) clamp(24px,3vw,36px)" }}>
+
+          {/* The formula */}
+          <div style={{ fontFamily: "'Courier New', monospace", fontSize: "clamp(14px,2vw,20px)", color: "#fff", marginBottom: 24, letterSpacing: 1, lineHeight: 1.8, overflowX: "auto", whiteSpace: "nowrap" }}>
+            <span style={{ color: C.s400 }}>P</span>
+            <span style={{ color: C.g400 }}>(</span>
+            <span style={{ color: C.s400 }}>t</span>
+            <span style={{ color: C.g400 }}>)</span>
+            <span style={{ color: C.g500 }}> = </span>
+            <span style={{ color: C.a400 }}>{"\u03C3"}</span>
+            <span style={{ color: C.g400 }}>(</span>
+            <span style={{ color: C.g500 }}>{"\u03B2\u2080"}</span>
+            <span style={{ color: C.g500 }}> + </span>
+            <span style={{ color: "#25d366" }}>{"\u03B2\u2081"}</span>
+            <span style={{ color: C.g500 }}>{"\u00B7"}</span>
+            <span style={{ color: "#25d366" }}>{"X\u2095"}</span>
+            <span style={{ color: C.g500 }}> + </span>
+            <span style={{ color: C.b400 }}>{"\u03B2\u2082"}</span>
+            <span style={{ color: C.g500 }}>{"\u00B7"}</span>
+            <span style={{ color: C.b400 }}>Xc</span>
+            <span style={{ color: C.g500 }}> + </span>
+            <span style={{ color: C.w400 }}>{"\u03B2\u2083"}</span>
+            <span style={{ color: C.g500 }}>{"\u00B7"}</span>
+            <span style={{ color: C.w400 }}>Xd</span>
+            <span style={{ color: C.g500 }}> + </span>
+            <span style={{ color: C.a400 }}>{"\u03B2\u2084"}</span>
+            <span style={{ color: C.g500 }}>{"\u00B7"}</span>
+            <span style={{ color: C.a400 }}>{"X\u2098"}</span>
+            <span style={{ color: C.g400 }}>)</span>
+          </div>
+
+          {/* Variable cards that light up sequentially */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 8 }}>
+            {(t.equationVars || []).map((v, i) => {
+              const active = eqStep >= i;
+              return (
+                <div key={i} style={{
+                  display: "flex", gap: 10, alignItems: "center", padding: "10px 14px", borderRadius: 10,
+                  background: active ? v.color + "15" : "rgba(255,255,255,.02)",
+                  border: "1px solid " + (active ? v.color + "30" : "rgba(255,255,255,.04)"),
+                  opacity: active ? 1 : 0.3,
+                  transition: "all .6s cubic-bezier(.16,1,.3,1)"
+                }}>
+                  <span style={{ fontFamily: "monospace", fontSize: 16, fontWeight: 800, color: v.color }}>{v.symbol}</span>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: active ? "#fff" : C.g500 }}>{v.label}</div>
+                    <div style={{ fontSize: 10, color: active ? C.g300 : C.g600 }}>{v.desc}</div>
+                  </div>
+                  {active && <span style={{ marginLeft: "auto", fontSize: 11, fontWeight: 700, color: v.color }}>{"\u2713"}</span>}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Result — resolves from blurry to sharp */}
+          <div style={{
+            marginTop: 16, padding: "14px 20px", borderRadius: 12,
+            background: eqStep >= 4 ? "rgba(34,197,94,.1)" : "rgba(255,255,255,.02)",
+            border: "1px solid " + (eqStep >= 4 ? "rgba(34,197,94,.2)" : "rgba(255,255,255,.04)"),
+            display: "flex", alignItems: "center", gap: 12,
+            transition: "all .8s cubic-bezier(.16,1,.3,1)"
+          }}>
+            <span style={{ fontSize: 20, color: eqStep >= 4 ? C.s400 : C.g500, transition: "color .6s" }}>{"\uD83C\uDFAF"}</span>
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: eqStep >= 4 ? C.s400 : C.g500, textTransform: "uppercase", transition: "color .6s" }}>{t.equationResultLabel}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: eqStep >= 4 ? "#fff" : C.g600, transition: "all .6s", filter: eqStep >= 4 ? "none" : "blur(4px)" }}>
+                {t.equationResultValue}
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+        </div>
+      </Fade>
+
+      {/* FRAME 3: Key metric — days to minutes */}
+      <Fade delay={.4}>
+        <div style={{ marginTop: 44 }}>
+          <h3 style={{ fontSize: 18, fontWeight: 800, color: "#fff", marginBottom: 6 }}>{t.metricTitle}</h3>
+          <p style={{ fontSize: 13, color: C.g400, marginBottom: 24 }}>{t.metricSub}</p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 12 }}>
+            {(t.metricSteps || []).map((m, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,.03)", borderRadius: 14, padding: "16px 18px", border: "1px solid rgba(255,255,255,.04)" }}>
+                <div style={{ fontSize: 10, color: C.g500, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".05em" }}>{m.month}</div>
+                <div style={{ fontSize: 24, fontWeight: 800, color: m.color, marginTop: 4 }}>{m.value}</div>
+                <div style={{ marginTop: 8, height: 4, borderRadius: 2, background: "rgba(255,255,255,.06)" }}>
+                  <div style={{ height: "100%", borderRadius: 2, background: m.color, width: vis ? (m.pct + "%") : "0%", transition: "width 1.2s cubic-bezier(.16,1,.3,1)" }} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ fontSize: 11, color: C.g500, marginTop: 12, fontStyle: "italic" }}>{t.metricNote}</p>
+          <div style={{ marginTop: 12, padding: "12px 18px", borderRadius: 10, background: "rgba(34,197,94,.06)", border: "1px solid rgba(34,197,94,.08)" }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: C.g300, margin: 0, lineHeight: 1.5 }}>{t.metricInsight}</p>
+          </div>
+        </div>
+      </Fade>
+
+      {/* Differentiator */}
+      <Fade delay={.5}>
+        <div style={{ marginTop: 36, padding: "18px 24px", borderRadius: 12, background: "rgba(99,102,241,.06)", border: "1px solid rgba(99,102,241,.1)", textAlign: "center" }}>
+          <p style={{ fontSize: 15, fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.5 }}>{t.differentiator}</p>
+        </div>
+      </Fade>
+    </Box>
+  );
+}
+
+function VsPasarela() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].vsPasarela;
+  const h2Parts = t.h2.split("\n");
+  return (
+    <Box dark alt pipe="left">
+      <Fade>
+        <Tag dark>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
+          {h2Parts[0]}<br /><span style={{ color: C.g400 }}>{h2Parts[1]}</span>
+        </h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 620, lineHeight: 1.6, marginBottom: 36 }}>{t.sub}</p>
+      </Fade>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 16 }}>
+        {/* Left: Pain — what happens when you only process payments */}
+        <Fade delay={.1}>
+          <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 18, padding: 28, border: "1px solid rgba(255,255,255,.06)", height: "100%" }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: C.g300, marginBottom: 4 }}>{t.left.title}</h3>
+            <p style={{ fontSize: 12, color: C.g500, marginBottom: 20, lineHeight: 1.5 }}>{t.left.sub}</p>
+            {t.left.items.map((item, i) => (
+              <div key={i} style={{ marginBottom: 16, paddingBottom: i < t.left.items.length - 1 ? 16 : 0, borderBottom: i < t.left.items.length - 1 ? "1px solid rgba(255,255,255,.04)" : "none" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: C.e500, marginBottom: 4 }}>{item.pain}</div>
+                <div style={{ fontSize: 12, color: C.g500, lineHeight: 1.5 }}>{item.because}</div>
+              </div>
+            ))}
+            <div style={{ marginTop: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,.06)", border: "1px solid rgba(239,68,68,.1)" }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: C.e500, margin: 0, lineHeight: 1.5 }}>{t.left.result}</p>
+            </div>
+          </div>
+        </Fade>
+
+        {/* Right: Value + Impact — what changes with OnePay */}
+        <Fade delay={.2}>
+          <div style={{ background: "rgba(99,102,241,.08)", borderRadius: 18, padding: 28, border: "1px solid rgba(99,102,241,.15)", height: "100%" }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 4 }}>{t.right.title}</h3>
+            <p style={{ fontSize: 12, color: C.g400, marginBottom: 20, lineHeight: 1.5 }}>{t.right.sub}</p>
+            {t.right.items.map((item, i) => (
+              <div key={i} style={{ marginBottom: 16, paddingBottom: i < t.right.items.length - 1 ? 16 : 0, borderBottom: i < t.right.items.length - 1 ? "1px solid rgba(99,102,241,.08)" : "none" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: C.s400, marginBottom: 4 }}>{item.value}</div>
+                <div style={{ fontSize: 12, color: C.g400, lineHeight: 1.5 }}>{item.impact}</div>
+              </div>
+            ))}
+            <div style={{ marginTop: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(34,197,94,.1)", border: "1px solid rgba(34,197,94,.15)" }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: C.s400, margin: 0, lineHeight: 1.5 }}>{t.right.result}</p>
+            </div>
+          </div>
+        </Fade>
+      </div>
+
+      <Fade delay={.3}>
+        <div style={{ marginTop: 28, padding: "18px 24px", borderRadius: 14, background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.06)" }}>
+          <p style={{ fontSize: 13, color: C.g400, margin: 0, lineHeight: 1.6 }}>{t.priceTransparency}</p>
+        </div>
+      </Fade>
+
+      <Fade delay={.35}>
+        <div style={{ marginTop: 14, padding: "18px 24px", borderRadius: 12, background: "rgba(34,197,94,.06)", border: "1px solid rgba(34,197,94,.12)", textAlign: "center" }}>
+          <p style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: 0 }}>{t.bottomStatement}</p>
+        </div>
+      </Fade>
+    </Box>
+  );
+}
+
+function OperacionFinanciera() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].operacionFinanciera;
+  const tc = i18n[lang].ciclo;
+  const [ac, sAc] = useState(null);
+  const itemIcons = [<Icon.arrowPath size={22} />, <Icon.chartBar size={22} />, <Icon.paperAirplane size={22} />, <Icon.shield size={22} />, <Icon.home size={22} />];
+  const itemColors = [C.a500, C.b500, C.s500, C.w500, "#F97316"];
+  const items = t.items.map((it, i) => ({ ...it, ic: itemIcons[i], c: itemColors[i] }));
+
+  return (
+    <Box dark pipe="right">
+      <Fade>
+        <Tag dark>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08, whiteSpace: "pre-line" }}>{t.h2}</h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 36 }}>{t.sub}</p>
+      </Fade>
+
+      {/* 5 items grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 10 }}>
+        {items.map((it, i) => {
+          const open = ac === i;
+          return (
+            <Fade key={i} delay={.04 * i}>
+              <div onClick={() => sAc(open ? null : i)} style={{ background: open ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)", borderRadius: 14, padding: 20, border: "1px solid " + (open ? "rgba(255,255,255,.08)" : "rgba(255,255,255,.03)"), cursor: "pointer", transition: "all .4s" }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: it.c }}>{it.ic}</span>
+                  <span style={{ padding: "2px 7px", borderRadius: 100, fontSize: 9, fontWeight: 600, background: "rgba(34,197,94,.1)", color: C.s400 }}>{"\u25CF"} {it.st}</span>
+                </div>
+                <h3 style={{ fontSize: 15, fontWeight: 700, margin: "10px 0 4px" }}>{it.n}</h3>
+                <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, margin: 0 }}>{it.desc}</p>
+                <div style={{ maxHeight: open ? 160 : 0, overflow: "hidden", transition: "max-height .4s cubic-bezier(.16,1,.3,1), opacity .3s", opacity: open ? 1 : 0 }}>
+                  <p style={{ fontSize: 12, color: C.g300, lineHeight: 1.55, margin: "10px 0 0", paddingTop: 8, borderTop: "1px solid rgba(255,255,255,.05)" }}>{it.detail}</p>
+                </div>
+              </div>
+            </Fade>
+          );
+        })}
+      </div>
+
+      {/* Dispersiones channels (from CicloFinanciero) */}
+      <Fade delay={.25}>
+        <div style={{ marginTop: 32, padding: 24, borderRadius: 16, background: "rgba(34,197,94,.04)", border: "1px solid rgba(34,197,94,.08)" }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}><Icon.paperAirplane size={18} /> {tc.dispersionesTitle}</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10 }}>
+            {tc.channels.map((ch, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,.03)", borderRadius: 10, padding: 16, border: "1px solid rgba(255,255,255,.04)" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{ch.n}</div>
+                <div style={{ display: "flex", gap: 10, marginBottom: 6, fontSize: 11 }}>
+                  <span style={{ color: C.s400, display: "flex", alignItems: "center", gap: 3 }}><Icon.bolt size={12} color={C.s400} /> {ch.t}</span>
+                  <span style={{ color: C.b400, display: "flex", alignItems: "center", gap: 3 }}><Icon.banknotes size={12} color={C.b400} /> {ch.co}</span>
+                </div>
+                <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, margin: 0 }}>{ch.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Fade>
+
+      {/* Bre-B highlight */}
+      <Fade delay={.35}>
+        <div style={{ marginTop: 20, padding: "18px 24px", borderRadius: 12, background: "rgba(34,197,94,.06)", border: "1px solid rgba(34,197,94,.12)" }}>
+          <h4 style={{ fontSize: 14, fontWeight: 700, color: C.s400, marginBottom: 6 }}>{t.brebHighlight.title}</h4>
+          <p style={{ fontSize: 13, color: C.g300, margin: 0, lineHeight: 1.55 }}>{t.brebHighlight.desc}</p>
+        </div>
+      </Fade>
     </Box>
   );
 }
@@ -706,7 +1184,7 @@ function Producto() {
   };
 
   return (
-    <Box white>
+    <Box white pipe="left">
       <Fade>
         <Tag>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2}</h2>
@@ -1022,67 +1500,60 @@ function Producto() {
   );
 }
 
-function Timeline() {
+function Integraciones() {
   const lang = useContext(LangCtx);
-  const t = i18n[lang].timeline;
-  const [as, sAs] = useState(-1);
-  const [exp, sExp] = useState(null);
-  const [r, v] = useVis();
-  useEffect(() => { if (!v) return; const ti = [0, 1, 2, 3, 4, 5].map(i => setTimeout(() => sAs(i), 250 + i * 350)); return () => ti.forEach(clearTimeout); }, [v]);
-
-  const stepIcons = [<Icon.clipboard size={18} color="#fff" />, <Icon.phone size={18} color="#fff" />, <Icon.bell size={18} color="#fff" />, <Icon.brain size={18} color="#fff" />, <Icon.phoneCall size={18} color="#fff" />, <Icon.checkCircle size={18} color="#fff" />];
-  const stepColors = [C.b500, C.a500, C.s500, C.w500, C.e500, C.s500];
-  const steps = t.steps.map((s, i) => ({ ...s, ic: stepIcons[i], c: stepColors[i] }));
-
+  const t = i18n[lang].integraciones;
   return (
-    <Box dark>
+    <Box dark pipe="left">
       <Fade>
         <Tag dark>{t.tag}</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2}</h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 40 }}>{t.sub}</p>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2[0]}<br /><span style={{ color: C.a400 }}>{t.h2[1]}</span></h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>{t.sub}</p>
       </Fade>
-      <div ref={r} style={{ position: "relative" }}>
-        <div style={{ position: "absolute", left: 21, top: 22, bottom: 22, width: 2, background: "rgba(255,255,255,.04)", borderRadius: 2, zIndex: 0 }}>
-          <div style={{ width: "100%", borderRadius: 2, background: "linear-gradient(180deg," + C.a500 + "," + C.s500 + ")", height: as >= 0 ? (Math.min(100, ((as + 1) / steps.length) * 100) + "%") : "0%", transition: "height .9s cubic-bezier(.16,1,.3,1)" }} />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          {steps.map((s, i) => {
-            const act = i <= as;
-            const open = exp === i;
-            return (
-              <div key={i} onClick={() => sExp(open ? null : i)} style={{ display: "flex", gap: 16, alignItems: "flex-start", opacity: act ? 1 : .2, transition: "all .5s cubic-bezier(.16,1,.3,1)", cursor: "pointer" }}>
-                <div style={{ width: 42, height: 42, borderRadius: "50%", flexShrink: 0, background: act ? s.c : "rgba(255,255,255,.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, transition: "all .4s", boxShadow: act ? "0 0 20px " + s.c + "20" : "none", position: "relative", zIndex: 1 }}>{s.ic}</div>
-                <div style={{ background: open ? "rgba(255,255,255,.07)" : "rgba(255,255,255,.03)", borderRadius: 12, padding: "16px 20px", flex: 1, border: "1px solid " + (open ? "rgba(255,255,255,.1)" : "rgba(255,255,255,.03)"), transition: "all .4s" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".05em", color: s.c }}>{s.lb}</span>
-                      <h4 style={{ fontSize: 15, fontWeight: 700, margin: "1px 0", color: "#fff" }}>{s.tt}</h4>
-                    </div>
-                    <span style={{ fontSize: 14, color: C.g500, transition: "transform .3s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>{"\u25BE"}</span>
-                  </div>
-                  <div style={{ maxHeight: open ? 160 : 0, overflow: "hidden", transition: "max-height .45s cubic-bezier(.16,1,.3,1), opacity .3s", opacity: open ? 1 : 0 }}>
-                    <p style={{ fontSize: 13, color: C.g400, lineHeight: 1.55, margin: "8px 0 0", paddingTop: 8, borderTop: "1px solid rgba(255,255,255,.06)" }}>{s.dt}</p>
-                  </div>
-                </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14 }}>
+        {["Wispro", "Wisphub", "MikroWISP", "Integra", "WispControl", "SAEplus", null].map((n, i) => (
+          <Fade key={i} delay={.03 * i}>
+            {n ? (
+              <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 16, padding: 24, border: "1px solid rgba(255,255,255,.04)" }}>
+                <div style={{ fontSize: 15, fontWeight: 700 }}>{n}</div>
+                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>{t.directa}</div>
               </div>
-            );
-          })}
-        </div>
+            ) : (
+              <div style={{ background: "rgba(99,102,241,.06)", borderRadius: 16, padding: 24, border: "1px dashed rgba(99,102,241,.18)" }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.a400 }}>{t.tuCRM}</div>
+                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>{t.tuCRMsub}</div>
+              </div>
+            )}
+          </Fade>
+        ))}
       </div>
-      <Fade delay={.3}>
-        <div style={{ marginTop: 36, padding: "18px 24px", borderRadius: 12, background: "rgba(34,197,94,.06)", border: "1px solid rgba(34,197,94,.1)", textAlign: "center" }}>
-          <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>{t.callout[0]}<span style={{ color: C.s400 }}>{t.callout[1]}</span></p>
+      <Fade delay={.25}>
+        <div style={{ marginTop: 36 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: C.g300 }}>{t.mediosPago}</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(100px,1fr))", gap: 10 }}>
+            {[{ n: "PSE", src: "/logos/payment/pse.svg" }, { n: "Nequi", src: "/logos/payment/nequi.svg" }, { n: "Daviplata", src: "/logos/payment/daviplata.svg", h: 44 }, { n: "Bre-B", src: "/logos/payment/breb.svg" }, { n: "VISA", src: "/logos/payment/visa.svg" }, { n: "Mastercard", src: "/logos/payment/mastercard.svg", h: 40 }, { n: "AMEX", src: "/logos/payment/amex.svg" }, { n: "Efecty", src: "/logos/payment/efecty.svg", s: true }].map((m, i) => (
+              <div key={i} style={{ position: "relative", padding: "10px 16px", borderRadius: 10, background: "rgba(255,255,255,.04)", border: "1px solid " + (m.s ? "rgba(251,191,36,.14)" : "rgba(255,255,255,.06)"), display: "flex", alignItems: "center", justifyContent: "center", height: 56 }}>
+                <img src={m.src} alt={m.n} style={{ height: m.h || 30, maxWidth: 100, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: .85 }} />
+                {m.s && <span style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", fontSize: 7, fontWeight: 700, color: C.w500, background: C.g950, padding: "1px 5px", borderRadius: 3, whiteSpace: "nowrap" }}>{t.pronto}</span>}
+              </div>
+            ))}
+          </div>
         </div>
       </Fade>
     </Box>
   );
 }
 
-function Data() {
+function ResultadosData() {
   const lang = useContext(LangCtx);
+  const tr = i18n[lang].resultados;
   const t = i18n[lang].data;
   const [mode, sMode] = useState("top");
   const [r, v] = useVis();
+
+  const cardIcons = [<Icon.bolt size={24} />, <Icon.phone size={24} />, <Icon.checkCircle size={24} />, <Icon.chartBar size={24} />];
+  const cardColors = [C.a500, C.b500, C.s500, C.w500];
+  const cards = tr.cards.map((cd, i) => ({ ...cd, ic: cardIcons[i], c: cardColors[i] }));
 
   const bkData = {
     top: [{ l: "\u22641d", op: 23.4, ot: 8.7 }, { l: "\u22643d", op: 43.5, ot: 28.8 }, { l: "\u22645d", op: 64.6, ot: 55.3 }, { l: "\u22647d", op: 81.9, ot: 77.0 }, { l: "\u226410d", op: 96.1, ot: 93.7 }, { l: "\u226415d", op: 100, ot: 98.8 }],
@@ -1096,9 +1567,32 @@ function Data() {
   const d = sets[mode];
 
   return (
-    <Box white>
+    <Box white alt pipe="right">
+      {/* Resultados section */}
       <Fade>
         <Tag>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0", lineHeight: 1.08 }}>{tr.h2}</h2>
+      </Fade>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14, marginTop: 28, marginBottom: 48 }}>
+        {cards.map((rc, i) => (
+          <Fade key={i} delay={.05 * i}>
+            <div style={{ background: "#fff", borderRadius: 16, padding: 24, border: "1px solid " + C.g200, height: "100%" }}>
+              <span style={{ color: rc.c }}>{rc.ic}</span>
+              <h3 style={{ fontSize: 17, fontWeight: 700, margin: "8px 0" }}>{rc.t}</h3>
+              <div style={{ display: "flex", gap: 5, alignItems: "center", marginBottom: 8, fontSize: 12 }}>
+                <span style={{ padding: "2px 7px", borderRadius: 5, background: C.g100, color: C.g500, textDecoration: "line-through" }}>{rc.bf}</span>
+                <span style={{ color: C.g300 }}>{"\u2192"}</span>
+                <span style={{ padding: "2px 7px", borderRadius: 5, background: rc.c + "10", color: rc.c, fontWeight: 700 }}>{rc.af}</span>
+              </div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: rc.c, letterSpacing: "-.02em" }}>{rc.m}</div>
+              <p style={{ fontSize: 12, color: C.g500, margin: "3px 0 0" }}>{rc.d}</p>
+            </div>
+          </Fade>
+        ))}
+      </div>
+
+      {/* Data section */}
+      <Fade>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2[0]}<br /><span style={{ color: C.g400 }}>{t.h2[1]}</span></h2>
         <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 14 }}>{t.sub}</p>
       </Fade>
@@ -1161,333 +1655,13 @@ function Data() {
   );
 }
 
-function Integraciones() {
-  const lang = useContext(LangCtx);
-  const t = i18n[lang].integraciones;
-  return (
-    <Box dark>
-      <Fade>
-        <Tag dark>{t.tag}</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2[0]}<br /><span style={{ color: C.a400 }}>{t.h2[1]}</span></h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>{t.sub}</p>
-      </Fade>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14 }}>
-        {["Wispro", "Wisphub", "MikroWISP", "Integra", "WispControl", "SAEplus", null].map((n, i) => (
-          <Fade key={i} delay={.03 * i}>
-            {n ? (
-              <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 16, padding: 24, border: "1px solid rgba(255,255,255,.04)" }}>
-                <div style={{ fontSize: 15, fontWeight: 700 }}>{n}</div>
-                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>{t.directa}</div>
-              </div>
-            ) : (
-              <div style={{ background: "rgba(99,102,241,.06)", borderRadius: 16, padding: 24, border: "1px dashed rgba(99,102,241,.18)" }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: C.a400 }}>{t.tuCRM}</div>
-                <div style={{ fontSize: 11, color: C.g500, marginTop: 3 }}>{t.tuCRMsub}</div>
-              </div>
-            )}
-          </Fade>
-        ))}
-      </div>
-      <Fade delay={.25}>
-        <div style={{ marginTop: 36 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: C.g300 }}>{t.mediosPago}</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(100px,1fr))", gap: 10 }}>
-            {[{ n: "PSE", src: "/logos/payment/pse.svg" }, { n: "Nequi", src: "/logos/payment/nequi.svg" }, { n: "Daviplata", src: "/logos/payment/daviplata.svg", h: 44 }, { n: "Bre-B", src: "/logos/payment/breb.svg" }, { n: "VISA", src: "/logos/payment/visa.svg" }, { n: "Mastercard", src: "/logos/payment/mastercard.svg", h: 40 }, { n: "AMEX", src: "/logos/payment/amex.svg" }, { n: "Efecty", src: "/logos/payment/efecty.svg", s: true }].map((m, i) => (
-              <div key={i} style={{ position: "relative", padding: "10px 16px", borderRadius: 10, background: "rgba(255,255,255,.04)", border: "1px solid " + (m.s ? "rgba(251,191,36,.14)" : "rgba(255,255,255,.06)"), display: "flex", alignItems: "center", justifyContent: "center", height: 56 }}>
-                <img src={m.src} alt={m.n} style={{ height: m.h || 30, maxWidth: 100, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: .85 }} />
-                {m.s && <span style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", fontSize: 7, fontWeight: 700, color: C.w500, background: C.g950, padding: "1px 5px", borderRadius: 3, whiteSpace: "nowrap" }}>{t.pronto}</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-      </Fade>
-    </Box>
-  );
-}
-
-function Resultados() {
-  const lang = useContext(LangCtx);
-  const tr = i18n[lang].resultados;
-  const cardIcons = [<Icon.bolt size={24} />, <Icon.phone size={24} />, <Icon.checkCircle size={24} />, <Icon.chartBar size={24} />];
-  const cardColors = [C.a500, C.b500, C.s500, C.w500];
-  const cards = tr.cards.map((cd, i) => ({ ...cd, ic: cardIcons[i], c: cardColors[i] }));
-  return (
-    <Box>
-      <Fade>
-        <Tag>{tr.tag}</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0", lineHeight: 1.08 }}>{tr.h2}</h2>
-      </Fade>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14, marginTop: 28 }}>
-        {cards.map((r, i) => (
-          <Fade key={i} delay={.05 * i}>
-            <div style={{ background: "#fff", borderRadius: 16, padding: 24, border: "1px solid " + C.g200, height: "100%" }}>
-              <span style={{ color: r.c }}>{r.ic}</span>
-              <h3 style={{ fontSize: 17, fontWeight: 700, margin: "8px 0" }}>{r.t}</h3>
-              <div style={{ display: "flex", gap: 5, alignItems: "center", marginBottom: 8, fontSize: 12 }}>
-                <span style={{ padding: "2px 7px", borderRadius: 5, background: C.g100, color: C.g500, textDecoration: "line-through" }}>{r.bf}</span>
-                <span style={{ color: C.g300 }}>{"\u2192"}</span>
-                <span style={{ padding: "2px 7px", borderRadius: 5, background: r.c + "10", color: r.c, fontWeight: 700 }}>{r.af}</span>
-              </div>
-              <div style={{ fontSize: 24, fontWeight: 800, color: r.c, letterSpacing: "-.02em" }}>{r.m}</div>
-              <p style={{ fontSize: 12, color: C.g500, margin: "3px 0 0" }}>{r.d}</p>
-            </div>
-          </Fade>
-        ))}
-      </div>
-    </Box>
-  );
-}
-
-function CicloFinanciero() {
-  const lang = useContext(LangCtx);
-  const tc = i18n[lang].ciclo;
-  const [ac, sAc] = useState(null);
-  const itemIcons = [<Icon.inbox size={22} />, <Icon.chartBar size={22} />, <Icon.paperAirplane size={22} />, <Icon.creditCard size={22} />, <Icon.home size={22} />];
-  const itemColors = [C.a500, C.b500, C.s500, C.w500, "#0EA5E9"];
-  const items = tc.items.map((it, i) => ({ ...it, ic: itemIcons[i], c: itemColors[i] }));
-
-  return (
-    <Box dark>
-      <Fade>
-        <Tag dark>{tc.tag}</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,42px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{tc.h2[0]}<br /><span style={{ color: C.a400 }}>{tc.h2[1]}</span></h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 560, lineHeight: 1.6, marginBottom: 36 }}>{tc.sub}</p>
-      </Fade>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 10 }}>
-        {items.map((it, i) => {
-          const open = ac === i;
-          return (
-            <Fade key={i} delay={.04 * i}>
-              <div onClick={() => sAc(open ? null : i)} style={{ background: open ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)", borderRadius: 14, padding: 20, border: "1px solid " + (open ? "rgba(255,255,255,.08)" : "rgba(255,255,255,.03)"), cursor: "pointer", transition: "all .4s" }}>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ color: it.c }}>{it.ic}</span>
-                  <span style={{ padding: "2px 7px", borderRadius: 100, fontSize: 9, fontWeight: 600, background: it.st === tc.statusActive ? "rgba(34,197,94,.1)" : "rgba(251,191,36,.1)", color: it.st === tc.statusActive ? C.s400 : C.w400 }}>{it.st === tc.statusActive ? "\u25CF" : "\u25D0"} {it.st}</span>
-                </div>
-                <h3 style={{ fontSize: 15, fontWeight: 700, margin: "10px 0 4px" }}>{it.t}</h3>
-                <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, margin: 0 }}>{it.ds}</p>
-                <div style={{ maxHeight: open ? 120 : 0, overflow: "hidden", transition: "max-height .4s cubic-bezier(.16,1,.3,1), opacity .3s", opacity: open ? 1 : 0 }}>
-                  <p style={{ fontSize: 12, color: C.g300, lineHeight: 1.55, margin: "10px 0 0", paddingTop: 8, borderTop: "1px solid rgba(255,255,255,.05)" }}>{it.dt}</p>
-                </div>
-              </div>
-            </Fade>
-          );
-        })}
-      </div>
-
-      <Fade delay={.25}>
-        <div style={{ marginTop: 32, padding: 24, borderRadius: 16, background: "rgba(34,197,94,.04)", border: "1px solid rgba(34,197,94,.08)" }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}><Icon.paperAirplane size={18} /> {tc.dispersionesTitle}</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10 }}>
-            {tc.channels.map((ch, i) => (
-              <div key={i} style={{ background: "rgba(255,255,255,.03)", borderRadius: 10, padding: 16, border: "1px solid rgba(255,255,255,.04)" }}>
-                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{ch.n}</div>
-                <div style={{ display: "flex", gap: 10, marginBottom: 6, fontSize: 11 }}>
-                  <span style={{ color: C.s400, display: "flex", alignItems: "center", gap: 3 }}><Icon.bolt size={12} color={C.s400} /> {ch.t}</span>
-                  <span style={{ color: C.b400, display: "flex", alignItems: "center", gap: 3 }}><Icon.banknotes size={12} color={C.b400} /> {ch.co}</span>
-                </div>
-                <p style={{ fontSize: 12, color: C.g400, lineHeight: 1.5, margin: 0 }}>{ch.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Fade>
-    </Box>
-  );
-}
-
-function DashboardCobranza() {
-  const lang = useContext(LangCtx);
-  const td = i18n[lang].dashboard;
-  const [size, setSize] = useState(0); // 0 = 2K, 1 = 40K
-  const barDataSets = [[1800, 400, 200, 80, 40, 20], [18000, 1200, 800, 300, 120, 60]];
-  const data = td.data.map((dd, i) => ({ ...dd, barData: barDataSets[i] }));
-  const d = data[size];
-  const barLabels = td.barLabels;
-  const barMax = Math.max(...d.barData);
-
-  return (
-    <div style={{ marginTop: 36 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
-        <div>
-          <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>{td.title}</h3>
-          <p style={{ fontSize: 11, color: C.g400, margin: "2px 0 0" }}>{td.sub}</p>
-        </div>
-        <div style={{ display: "flex", gap: 3, padding: 3, background: "rgba(255,255,255,.06)", borderRadius: 9 }}>
-          {td.toggles.map((l, i) => (
-            <button key={i} onClick={() => setSize(i)} style={{
-              padding: "6px 14px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 600, transition: "all .3s",
-              background: size === i ? "rgba(99,102,241,.15)" : "transparent",
-              color: size === i ? C.a300 : C.g500
-            }}>{l}</button>
-          ))}
-        </div>
-      </div>
-
-      {/* Stats cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 10, marginBottom: 16 }}>
-        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.totalLabel}</div>
-          <div style={{ fontSize: 26, fontWeight: 800 }}>{d.total}</div>
-          <div style={{ fontSize: 10, color: C.g500 }}>{td.totalSub}</div>
-        </div>
-        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.tasaLabel}</div>
-          <div style={{ fontSize: 26, fontWeight: 800 }}>{d.tasa}</div>
-          <div style={{ fontSize: 10, color: C.s400 }}>{d.tasaSub}</div>
-        </div>
-        {size === 0 && (
-          <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
-            <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.llamadasLabel}</div>
-            <div style={{ fontSize: 26, fontWeight: 800 }}>{d.llamadas}</div>
-            <div style={{ fontSize: 10, color: C.b400 }}>{td.llamadasSub}</div>
-          </div>
-        )}
-      </div>
-
-      {/* Charts row */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
-        {/* Tendencia semanal - simplified */}
-        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{td.tendencia}</div>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>{td.tendenciaSub}</div>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 60 }}>
-            {(size === 0 ? [20, 35, 50, 40, 60, 75, 55, 80, 70, 90, 85, 95] : [10, 15, 20, 25, 30, 40, 45, 55, 70, 85, 95, 100]).map((h, i) => (
-              <div key={i} style={{ flex: 1, height: h + "%", background: "linear-gradient(180deg," + C.a500 + "," + C.b500 + ")", borderRadius: "3px 3px 0 0", opacity: .7 + (i / 24) }} />
-            ))}
-          </div>
-        </div>
-        {/* Recordatorios hasta el pago */}
-        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,.06)" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{td.recordatoriosHastaPago}</div>
-          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>{td.recordatoriosHastaPagoSub}</div>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 60 }}>
-            {d.barData.map((v, i) => (
-              <div key={i} style={{ flex: 1, textAlign: "center" }}>
-                <div style={{ height: Math.max(4, (v / barMax) * 60), background: C.g600, borderRadius: "3px 3px 0 0", marginBottom: 3 }} />
-                <div style={{ fontSize: 8, color: C.g500 }}>{barLabels[i]}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 14, border: "1px solid rgba(255,255,255,.06)", overflowX: "auto" }}>
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10, gap: 8 }}>
-          <div style={{ padding: "5px 12px", borderRadius: 6, background: "rgba(255,255,255,.05)", fontSize: 10, color: C.g400, display: "flex", alignItems: "center", gap: 4 }}><Icon.search size={12} color={C.g400} /> {td.buscar}</div>
-        </div>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid rgba(255,255,255,.06)" }}>
-              {td.tableHeaders.map((h, i) => (
-                <th key={i} style={{ padding: "6px 8px", textAlign: "left", color: C.g500, fontWeight: 600, fontSize: 10, whiteSpace: "nowrap" }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {d.tabla.map((r, i) => (
-              <tr key={i} style={{ borderBottom: "1px solid rgba(255,255,255,.03)" }}>
-                <td style={{ padding: "6px 8px", color: C.g400, fontSize: 10, fontFamily: "monospace" }}>{r.id}</td>
-                <td style={{ padding: "6px 8px", color: C.g300, fontSize: 10, maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.cobro}</td>
-                <td style={{ padding: "6px 8px" }}><span style={{ padding: "2px 6px", borderRadius: 4, background: r.canal === "WhatsApp" ? "rgba(37,211,102,.1)" : "rgba(99,102,241,.1)", color: r.canal === "WhatsApp" ? "#25d366" : C.a400, fontSize: 9, fontWeight: 600 }}>{r.canal}</span></td>
-                <td style={{ padding: "6px 8px", color: C.g400, fontSize: 10 }}>{r.cobranza}</td>
-                <td style={{ padding: "6px 8px" }}><span style={{ padding: "2px 6px", borderRadius: 4, background: "rgba(255,255,255,.04)", color: C.g500, fontSize: 9 }}>{r.regla}</span></td>
-                <td style={{ padding: "6px 8px" }}><span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 9, color: C.s400 }}><span style={{ width: 5, height: 5, borderRadius: "50%", background: C.s400 }} />{r.estado}</span></td>
-                <td style={{ padding: "6px 8px", color: C.g500, fontSize: 10, whiteSpace: "nowrap" }}>{r.creado}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function InvoiceLifecycle() {
-  const lang = useContext(LangCtx);
-  const t = i18n[lang].invoiceLifecycle;
-  const [activeNode, setAN] = useState(null);
-  const [r, v] = useVis();
-  const [step, setStep] = useState(-1);
-  useEffect(() => { if (!v) return; const ti = [0,1,2,3,4,5,6].map(i => setTimeout(() => setStep(i), 300 + i * 300)); return () => ti.forEach(clearTimeout); }, [v]);
-
-  const nodeIcons = [<Icon.bell size={16} color="#fff" />, <Icon.calendar size={16} color="#fff" />, <Icon.clock size={16} color="#fff" />, <Icon.warning size={16} color="#fff" />, <Icon.phoneCall size={16} color="#fff" />, <Icon.noSymbol size={16} color="#fff" />, <Icon.heart size={16} color="#fff" />];
-  const nodeColors = [C.b500, C.a500, C.w500, "#F97316", C.e500, C.g600, C.s500];
-  const nodes = t.nodes.map((n, i) => ({ ...n, id: i, icon: nodeIcons[i], color: nodeColors[i] }));
-
-  return (
-    <Box dark id="cobranza">
-      <Fade>
-        <Tag dark>{t.tag}</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
-          {t.h2[0]}<br /><span style={{ color: C.a400 }}>{t.h2[1]}</span>
-        </h2>
-        <p style={{ fontSize: 16, color: C.g400, maxWidth: 600, lineHeight: 1.6, marginBottom: 12 }}>
-          {t.sub}
-        </p>
-        <p style={{ fontSize: 13, color: C.g500, maxWidth: 560, lineHeight: 1.5, marginBottom: 36 }}>
-          {t.subDetail}
-        </p>
-      </Fade>
-
-      {/* Flow nodes */}
-      <div ref={r} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        {nodes.map((n, i) => {
-          const act = step >= i;
-          const open = activeNode === i;
-          return (
-            <Fade key={i} delay={.03 * i}>
-              <div onClick={() => setAN(open ? null : i)} style={{ display: "flex", gap: 14, alignItems: "flex-start", opacity: act ? 1 : .2, transition: "all .5s cubic-bezier(.16,1,.3,1)", cursor: "pointer" }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: act ? n.color : "rgba(255,255,255,.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, transition: "all .4s", boxShadow: act ? "0 0 16px " + n.color + "25" : "none" }}>{n.icon}</div>
-                  {i < nodes.length - 1 && <div style={{ width: 2, height: 20, background: act ? n.color + "40" : "rgba(255,255,255,.04)", transition: "background .4s" }} />}
-                </div>
-                <div style={{ background: open ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)", borderRadius: 12, padding: "14px 18px", flex: 1, border: "1px solid " + (open ? "rgba(255,255,255,.1)" : "rgba(255,255,255,.03)"), transition: "all .4s" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".05em", color: n.color }}>{n.day}</span>
-                        <span style={{ fontSize: 10, color: C.g500 }}>{"\u2022"}</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{n.label}</span>
-                      </div>
-                      <p style={{ fontSize: 12, color: C.g400, margin: "3px 0 0", lineHeight: 1.4 }}>{n.desc}</p>
-                    </div>
-                    <span style={{ fontSize: 12, color: C.g500, transition: "transform .3s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>{"\u25BE"}</span>
-                  </div>
-                  <div style={{ maxHeight: open ? 120 : 0, overflow: "hidden", transition: "max-height .4s cubic-bezier(.16,1,.3,1), opacity .3s", opacity: open ? 1 : 0 }}>
-                    <p style={{ fontSize: 12, color: C.g300, lineHeight: 1.55, margin: "8px 0 0", paddingTop: 8, borderTop: "1px solid rgba(255,255,255,.06)" }}>{n.detail}</p>
-                  </div>
-                </div>
-              </div>
-            </Fade>
-          );
-        })}
-      </div>
-
-      {/* Callout: each step has a branch: paid? → conciliated */}
-      <Fade delay={.3}>
-        <div style={{ marginTop: 28, padding: "16px 20px", borderRadius: 12, background: "rgba(99,102,241,.06)", border: "1px solid rgba(99,102,241,.08)" }}>
-          <p style={{ fontSize: 13, color: C.g300, margin: 0, lineHeight: 1.5 }}>
-            <strong style={{ color: "#fff" }}>{t.callout[0]}</strong>{t.callout[1]}<strong style={{ color: C.a400 }}>{t.callout[2]}</strong>{t.callout[3]}
-          </p>
-        </div>
-      </Fade>
-
-      {/* Dashboard mockup - OnePay style */}
-      <Fade delay={.4}>
-        <DashboardCobranza />
-      </Fade>
-    </Box>
-  );
-}
-
 function Reconciliation() {
   const lang = useContext(LangCtx);
   const t = i18n[lang].reconciliation;
   const [tab, sTab] = useState(0);
   const [balFilter, setBalFilter] = useState(0);
   return (
-    <Box white id="conciliacion">
+    <Box white pipe="left" id="conciliacion">
       <Fade>
         <Tag>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
@@ -1621,9 +1795,214 @@ function Reconciliation() {
           </div>
         </div>
       </Fade>}
+
+      {/* Bre-B callout */}
+      <Fade delay={.25}>
+        <div style={{ marginTop: 24, padding: "18px 24px", borderRadius: 14, background: "rgba(34,197,94,.06)", border: "1px solid rgba(34,197,94,.12)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <Icon.arrowPath size={20} color={C.s400} />
+            <h4 style={{ fontSize: 14, fontWeight: 700, color: C.s400, margin: 0 }}>{t.brebCallout.title}</h4>
+          </div>
+          <p style={{ fontSize: 13, color: C.g500, margin: 0, lineHeight: 1.55 }}>
+            {t.brebCallout.desc}
+          </p>
+        </div>
+      </Fade>
     </Box>
   );
 }
+
+function DashboardCobranza() {
+  const lang = useContext(LangCtx);
+  const td = i18n[lang].dashboard;
+  const [size, setSize] = useState(0); // 0 = 2K, 1 = 40K
+  const barDataSets = [[1800, 400, 200, 80, 40, 20], [18000, 1200, 800, 300, 120, 60]];
+  const data = td.data.map((dd, i) => ({ ...dd, barData: barDataSets[i] }));
+  const d = data[size];
+  const barLabels = td.barLabels;
+  const barMax = Math.max(...d.barData);
+
+  return (
+    <div style={{ marginTop: 36 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+        <div>
+          <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>{td.title}</h3>
+          <p style={{ fontSize: 11, color: C.g400, margin: "2px 0 0" }}>{td.sub}</p>
+        </div>
+        <div style={{ display: "flex", gap: 3, padding: 3, background: "rgba(255,255,255,.06)", borderRadius: 9 }}>
+          {td.toggles.map((l, i) => (
+            <button key={i} onClick={() => setSize(i)} style={{
+              padding: "6px 14px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 600, transition: "all .3s",
+              background: size === i ? "rgba(99,102,241,.15)" : "transparent",
+              color: size === i ? C.a300 : C.g500
+            }}>{l}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 10, marginBottom: 16 }}>
+        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.totalLabel}</div>
+          <div style={{ fontSize: 26, fontWeight: 800 }}>{d.total}</div>
+          <div style={{ fontSize: 10, color: C.g500 }}>{td.totalSub}</div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.tasaLabel}</div>
+          <div style={{ fontSize: 26, fontWeight: 800 }}>{d.tasa}</div>
+          <div style={{ fontSize: 10, color: C.s400 }}>{d.tasaSub}</div>
+        </div>
+        {size === 0 && (
+          <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 18, border: "1px solid rgba(255,255,255,.06)" }}>
+            <div style={{ fontSize: 10, color: C.g500, marginBottom: 2 }}>{td.llamadasLabel}</div>
+            <div style={{ fontSize: 26, fontWeight: 800 }}>{d.llamadas}</div>
+            <div style={{ fontSize: 10, color: C.b400 }}>{td.llamadasSub}</div>
+          </div>
+        )}
+      </div>
+
+      {/* Charts row */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
+        {/* Tendencia semanal - simplified */}
+        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,.06)" }}>
+          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{td.tendencia}</div>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>{td.tendenciaSub}</div>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 60 }}>
+            {(size === 0 ? [20, 35, 50, 40, 60, 75, 55, 80, 70, 90, 85, 95] : [10, 15, 20, 25, 30, 40, 45, 55, 70, 85, 95, 100]).map((h, i) => (
+              <div key={i} style={{ flex: 1, height: h + "%", background: "linear-gradient(180deg," + C.a500 + "," + C.b500 + ")", borderRadius: "3px 3px 0 0", opacity: .7 + (i / 24) }} />
+            ))}
+          </div>
+        </div>
+        {/* Recordatorios hasta el pago */}
+        <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,.06)" }}>
+          <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{td.recordatoriosHastaPago}</div>
+          <div style={{ fontSize: 10, color: C.g500, marginBottom: 12 }}>{td.recordatoriosHastaPagoSub}</div>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 60 }}>
+            {d.barData.map((v, i) => (
+              <div key={i} style={{ flex: 1, textAlign: "center" }}>
+                <div style={{ height: Math.max(4, (v / barMax) * 60), background: C.g600, borderRadius: "3px 3px 0 0", marginBottom: 3 }} />
+                <div style={{ fontSize: 8, color: C.g500 }}>{barLabels[i]}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div style={{ background: "rgba(255,255,255,.03)", borderRadius: 12, padding: 14, border: "1px solid rgba(255,255,255,.06)", overflowX: "auto" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10, gap: 8 }}>
+          <div style={{ padding: "5px 12px", borderRadius: 6, background: "rgba(255,255,255,.05)", fontSize: 10, color: C.g400, display: "flex", alignItems: "center", gap: 4 }}><Icon.search size={12} color={C.g400} /> {td.buscar}</div>
+        </div>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+          <thead>
+            <tr style={{ borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+              {td.tableHeaders.map((h, i) => (
+                <th key={i} style={{ padding: "6px 8px", textAlign: "left", color: C.g500, fontWeight: 600, fontSize: 10, whiteSpace: "nowrap" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {d.tabla.map((r, i) => (
+              <tr key={i} style={{ borderBottom: "1px solid rgba(255,255,255,.03)" }}>
+                <td style={{ padding: "6px 8px", color: C.g400, fontSize: 10, fontFamily: "monospace" }}>{r.id}</td>
+                <td style={{ padding: "6px 8px", color: C.g300, fontSize: 10, maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.cobro}</td>
+                <td style={{ padding: "6px 8px" }}><span style={{ padding: "2px 6px", borderRadius: 4, background: r.canal === "WhatsApp" ? "rgba(37,211,102,.1)" : "rgba(99,102,241,.1)", color: r.canal === "WhatsApp" ? "#25d366" : C.a400, fontSize: 9, fontWeight: 600 }}>{r.canal}</span></td>
+                <td style={{ padding: "6px 8px", color: C.g400, fontSize: 10 }}>{r.cobranza}</td>
+                <td style={{ padding: "6px 8px" }}><span style={{ padding: "2px 6px", borderRadius: 4, background: "rgba(255,255,255,.04)", color: C.g500, fontSize: 9 }}>{r.regla}</span></td>
+                <td style={{ padding: "6px 8px" }}><span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 9, color: C.s400 }}><span style={{ width: 5, height: 5, borderRadius: "50%", background: C.s400 }} />{r.estado}</span></td>
+                <td style={{ padding: "6px 8px", color: C.g500, fontSize: 10, whiteSpace: "nowrap" }}>{r.creado}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function InvoiceLifecycle() {
+  const lang = useContext(LangCtx);
+  const t = i18n[lang].invoiceLifecycle;
+  const [activeNode, setAN] = useState(null);
+  const [r, v] = useVis();
+  const [step, setStep] = useState(-1);
+  useEffect(() => { if (!v) return; const ti = [0,1,2,3,4,5,6,7,8].map(i => setTimeout(() => setStep(i), 300 + i * 300)); return () => ti.forEach(clearTimeout); }, [v]);
+
+  const nodeIcons = [<Icon.bell size={16} color="#fff" />, <Icon.calendar size={16} color="#fff" />, <Icon.clock size={16} color="#fff" />, <Icon.warning size={16} color="#fff" />, <Icon.phoneCall size={16} color="#fff" />, <Icon.noSymbol size={16} color="#fff" />, <Icon.heart size={16} color="#fff" />, <Icon.arrowPath size={16} color="#fff" />, <Icon.banknotes size={16} color="#fff" />];
+  const nodeColors = [C.b500, C.a500, C.w500, "#F97316", C.e500, C.g600, C.s500, C.s500, C.a500];
+  const extraNodes = [
+    { day: "Automático", label: "Conciliación automática", desc: "Cada pago se concilia en tiempo real contra tu sistema de gestión. Sin intervención manual.", detail: "PSE, Nequi, Daviplata, tarjetas, transferencias Bre-B — todo se concilia automáticamente. Cero comprobantes falsos, cero ir al banco." },
+    { day: "Cuando quieras", label: "Plata en tu cuenta", desc: "Desembolso a tu cuenta propia a $0 costo. Turbo, Bre-B o ACH estándar.", detail: "Elige cuándo y cómo recibir tu dinero. Sin costos de dispersión a tu propia cuenta. Ahorra la mitad del 4x1000 cuando pagues proveedores." },
+  ];
+  const nodes = [...t.nodes, ...extraNodes].map((n, i) => ({ ...n, id: i, icon: nodeIcons[i], color: nodeColors[i] }));
+
+  return (
+    <Box dark pipe="left" id="cobranza">
+      <Fade>
+        <Tag dark>{t.tag}</Tag>
+        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>
+          {t.h2[0]}<br /><span style={{ color: C.a400 }}>{t.h2[1]}</span>
+        </h2>
+        <p style={{ fontSize: 16, color: C.g400, maxWidth: 600, lineHeight: 1.6, marginBottom: 12 }}>
+          {t.sub}
+        </p>
+        <p style={{ fontSize: 13, color: C.g500, maxWidth: 560, lineHeight: 1.5, marginBottom: 36 }}>
+          {t.subDetail}
+        </p>
+      </Fade>
+
+      {/* Flow nodes */}
+      <div ref={r} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        {nodes.map((n, i) => {
+          const act = step >= i;
+          const open = activeNode === i;
+          return (
+            <Fade key={i} delay={.03 * i}>
+              <div onClick={() => setAN(open ? null : i)} style={{ display: "flex", gap: 14, alignItems: "flex-start", opacity: act ? 1 : .2, transition: "all .5s cubic-bezier(.16,1,.3,1)", cursor: "pointer" }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: act ? n.color : "rgba(255,255,255,.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, transition: "all .4s", boxShadow: act ? "0 0 16px " + n.color + "25" : "none" }}>{n.icon}</div>
+                  {i < nodes.length - 1 && <div style={{ width: 2, height: 20, background: act ? n.color + "40" : "rgba(255,255,255,.04)", transition: "background .4s" }} />}
+                </div>
+                <div style={{ background: open ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)", borderRadius: 12, padding: "14px 18px", flex: 1, border: "1px solid " + (open ? "rgba(255,255,255,.1)" : "rgba(255,255,255,.03)"), transition: "all .4s" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                        <span style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".05em", color: n.color }}>{n.day}</span>
+                        <span style={{ fontSize: 10, color: C.g500 }}>{"\u2022"}</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{n.label}</span>
+                      </div>
+                      <p style={{ fontSize: 12, color: C.g400, margin: "3px 0 0", lineHeight: 1.4 }}>{n.desc}</p>
+                    </div>
+                    <span style={{ fontSize: 12, color: C.g500, transition: "transform .3s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>{"\u25BE"}</span>
+                  </div>
+                  <div style={{ maxHeight: open ? 120 : 0, overflow: "hidden", transition: "max-height .4s cubic-bezier(.16,1,.3,1), opacity .3s", opacity: open ? 1 : 0 }}>
+                    <p style={{ fontSize: 12, color: C.g300, lineHeight: 1.55, margin: "8px 0 0", paddingTop: 8, borderTop: "1px solid rgba(255,255,255,.06)" }}>{n.detail}</p>
+                  </div>
+                </div>
+              </div>
+            </Fade>
+          );
+        })}
+      </div>
+
+      {/* Callout: each step has a branch: paid? → conciliated */}
+      <Fade delay={.3}>
+        <div style={{ marginTop: 28, padding: "16px 20px", borderRadius: 12, background: "rgba(99,102,241,.06)", border: "1px solid rgba(99,102,241,.08)" }}>
+          <p style={{ fontSize: 13, color: C.g300, margin: 0, lineHeight: 1.5 }}>
+            <strong style={{ color: "#fff" }}>{t.callout[0]}</strong>{t.callout[1]}<strong style={{ color: C.a400 }}>{t.callout[2]}</strong>{t.callout[3]}
+          </p>
+        </div>
+      </Fade>
+
+      {/* Dashboard mockup - OnePay style */}
+      <Fade delay={.4}>
+        <DashboardCobranza />
+      </Fade>
+    </Box>
+  );
+}
+
+
 
 function Pricing() {
   const lang = useContext(LangCtx);
@@ -1686,7 +2065,7 @@ function Pricing() {
   const plans = t.plans;
 
   return (
-    <Box id="precios">
+    <Box pipe="right" id="precios">
       <Fade>
         <Tag>{t.tag}</Tag>
         <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2}</h2>
@@ -1843,37 +2222,11 @@ function Pricing() {
   );
 }
 
-function Seguridad() {
-  const lang = useContext(LangCtx);
-  const t = i18n[lang].seguridad;
-  const certIcons = [<Icon.lock size={22} color={C.a500} />, <Icon.shield size={22} color={C.s500} />, <Icon.creditCard size={22} color={C.b500} />, <Icon.docText size={22} color={C.w500} />];
-  return (
-    <Box>
-      <Fade>
-        <Tag>{t.tag}</Tag>
-        <h2 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, letterSpacing: "-.03em", margin: "14px 0 10px", lineHeight: 1.08 }}>{t.h2[0]}<br /><span style={{ color: C.g400 }}>{t.h2[1]}</span></h2>
-        <p style={{ fontSize: 16, color: C.g500, maxWidth: 560, lineHeight: 1.6, marginBottom: 28 }}>{t.sub}</p>
-      </Fade>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 9 }}>
-        {t.certs.map((s, i) => ({ ...s, i: certIcons[i] })).map((s, i) => (
-          <Fade key={i} delay={.04 * i}>
-            <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid " + C.g200, textAlign: "center" }}>
-              <span>{s.i}</span>
-              <div style={{ fontSize: 13, fontWeight: 700, margin: "7px 0 2px" }}>{s.l}</div>
-              <div style={{ fontSize: 11, color: C.g500 }}>{s.d}</div>
-            </div>
-          </Fade>
-        ))}
-      </div>
-    </Box>
-  );
-}
-
 function Closing() {
   const lang = useContext(LangCtx);
   const t = i18n[lang].closing;
   return (
-    <Box dark style={{ textAlign: "center", paddingBottom: 70 }}>
+    <Box dark alt pipe={false} style={{ textAlign: "center", paddingBottom: 70 }}>
       <Fade>
         <div style={{ maxWidth: 720, margin: "0 auto", background: "linear-gradient(135deg," + C.p800 + "," + C.p900 + ")", borderRadius: 24, padding: "clamp(36px,5vw,64px)", position: "relative", overflow: "hidden", border: "1px solid rgba(99,102,241,.06)" }}>
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle,rgba(99,102,241,.08) 0%,transparent 55%)", filter: "blur(40px)" }} />
@@ -1908,21 +2261,20 @@ export default function App() {
     <LangCtx.Provider value={lang}>
       <div style={{ fontFamily: "'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", WebkitFontSmoothing: "antialiased" }}>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-        <style>{`*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}::selection{background:rgba(99,102,241,.2)}body{overflow-x:hidden}`}</style>
+        <style>{`*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}::selection{background:rgba(99,102,241,.2)}body{overflow-x:hidden}@keyframes pulse{0%,100%{box-shadow:0 0 8px rgba(34,197,94,.3)}50%{box-shadow:0 0 20px rgba(34,197,94,.6)}}@keyframes fadeUser{0%{opacity:0;transform:translateY(10px)}15%{opacity:1;transform:translateY(0)}85%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}`}</style>
         <NavBar setLang={setLang} />
         <Hero />
+        <CuatroPreguntas />
         <Problema />
-        <Insight />
-        <Producto />
         <InvoiceLifecycle />
-        <Timeline />
-        <Data />
+        <Intelligence />
+        <Producto />
+        <ResultadosData />
         <Reconciliation />
-        <Integraciones />
-        <Resultados />
-        <CicloFinanciero />
+        <OperacionFinanciera />
+        <VsPasarela />
         <Pricing />
-        <Seguridad />
+        <Integraciones />
         <Closing />
       </div>
     </LangCtx.Provider>
