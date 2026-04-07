@@ -22,41 +22,420 @@
     <meta name="twitter:description" content="Tus usuarios te pagan en 5 días, no en 25. OnePay cobra por WhatsApp, concilia en tiempo real." />
   </head>
   <body>
-    <div id="root"></div>
+    <!-- React mounts here and replaces all static content below -->
+    <div id="root">
+
+      <!-- ============================================================
+           STATIC CONTENT FOR CRAWLERS / BOTS / LLMs
+           React will replace this entire div's innerHTML on mount.
+           ============================================================ -->
+
+      <!-- HERO -->
+      <article>
+        <h1>OnePay — Recaudo Inteligente para ISPs</h1>
+        <p><strong>Tus usuarios te pagan en 5 días, no en 25.</strong></p>
+        <p>OnePay cobra por WhatsApp, concilia en tiempo real y te muestra cuánta plata te va a entrar esta semana.</p>
+        <ul>
+          <li><strong>+100 ISPs activas</strong> con recaudo inteligente</li>
+          <li><strong>5.8 días promedio</strong> para recibir pago (vs. 18 días del mercado)</li>
+          <li><strong>93% pagos exitosos</strong> sin fricción</li>
+          <li><strong>~15 segundos para pagar</strong> — 4 clicks</li>
+        </ul>
+      </article>
+
+      <!-- ISPs QUE CONFÍAN EN ONEPAY -->
+      <article>
+        <h2>ISPs que confían en OnePay</h2>
+        <ul>
+          <li><img src="/logos/isp/linage.png" alt="Linage Comunicaciones" /> Linage Comunicaciones</li>
+          <li><img src="/logos/isp/tunortetv.jpg" alt="Tu Norte TV" /> Tu Norte TV</li>
+          <li><img src="/logos/isp/velonet.svg" alt="Velonet" /> Velonet</li>
+          <li><img src="/logos/isp/wifimax.jpg" alt="Wifimax" /> Wifimax</li>
+          <li><img src="/logos/isp/supercable.png" alt="Supercable" /> Supercable</li>
+          <li><img src="/logos/isp/legon.png" alt="Legon Telecomunicaciones" /> Legon Telecomunicaciones</li>
+          <li><img src="/logos/isp/fiesta.svg" alt="Fiesta Telecomunicaciones" /> Conéctate - Fiesta Telecomunicaciones</li>
+          <li><img src="/logos/isp/cableexito.png" alt="Cable Éxito" /> Cable Éxito</li>
+          <li><img src="/logos/isp/ultranet.png" alt="Ultranet Colombia" /> Ultranet Colombia</li>
+          <li><img src="/logos/isp/wisp.webp" alt="WISP Telecomunicaciones" /> WISP Telecomunicaciones</li>
+          <li><img src="/logos/isp/asonet.png" alt="Asonet Colombia" /> Asonet Colombia</li>
+          <li><img src="/logos/isp/holainternet.svg" alt="Hola Internet" /> Hola Internet</li>
+          <li><img src="/logos/isp/clickhd.png" alt="Click HD" /> Click HD</li>
+          <li><img src="/logos/isp/puntored.png" alt="Puntored Telecomunicaciones" /> Puntored Telecomunicaciones</li>
+          <li><img src="/logos/isp/intv.webp" alt="INTV Internet y Televisión" /> INTV Internet y Televisión</li>
+          <li><img src="/logos/isp/conectic.png" alt="Conectic" /> Conectic</li>
+          <li><img src="/logos/isp/one.png" alt="One Telecomunicaciones" /> One Telecomunicaciones</li>
+          <li><img src="/logos/isp/siinternet.png" alt="Siinternet" /> Siinternet</li>
+          <li><img src="/logos/isp/vivetel.svg" alt="Vivetel" /> Vivetel</li>
+        </ul>
+        <h3>Corporativos que confían en OnePay</h3>
+        <ul>
+          <li><img src="/logos/epm.webp" alt="EPM" /> EPM</li>
+          <li><img src="/logos/movistar.png" alt="Movistar" /> Movistar</li>
+          <li><img src="/logos/gdo2.png" alt="GdO" /> GdO</li>
+          <li><img src="/logos/surtigas.png" alt="Surtigas" /> Surtigas</li>
+          <li><img src="/logos/cobelen.png" alt="Cobelen" /> Cobelen</li>
+          <li><img src="/logos/ceo.png" alt="CEO" /> CEO</li>
+        </ul>
+      </article>
+
+      <!-- EL PROBLEMA -->
+      <article>
+        <h2>El problema: No estás perdiendo pagos. Estás perdiendo clientes.</h2>
+        <p>Cuando pagar es difícil, el usuario no insiste — se rinde. Eso genera tres problemas que impactan tanto a tu operación como a la experiencia de tu usuario.</p>
+
+        <h3>1. Flujo de caja — Ingreso facturado que nunca llega</h3>
+        <p><strong>Tu operación:</strong> Cada día sin pago es flujo de caja que no tienes. Tu equipo persigue pagos en vez de vender, retener o crecer — y el costo operativo de cobrar consume lo que deberías estar invirtiendo.</p>
+        <p><strong>Tu usuario:</strong> El usuario quiere pagar, pero el proceso es complicado — o simplemente se le olvida. El día que tiene plata no tiene tiempo; cuando tiene tiempo, ya no tiene plata. Lo deja para después, y "después" se convierte en nunca.</p>
+        <p><strong>Dato:</strong> Día 18 promedio para recibir un pago — 18 días de caja que financia la operación de otros.</p>
+
+        <h3>2. Fuga de clientes — Se van sin decirte por qué</h3>
+        <p><strong>Tu operación:</strong> Tú lo lees como cartera vencida. En realidad es fuga de clientes disfrazada. El 25-35% de esa cartera nunca se va a recuperar — porque el usuario ya se fue.</p>
+        <p><strong>Tu usuario:</strong> No llama a cancelar. No se queja. Se frustra, deja de pagar, espera el corte y se va con otro ISP. El corte fue la excusa que necesitaba.</p>
+        <p><strong>Dato:</strong> 25–35% de cartera vencida que en realidad es deserción silenciosa.</p>
+
+        <h3>3. Experiencia rota — Cada fricción te aleja del usuario</h3>
+        <p><strong>Tu operación:</strong> Cada ticket de soporte por pago fallido es costo. Cada llamada de cobranza es desgaste. Tu operación se dedica a resolver problemas de pago en vez de dar un mejor servicio.</p>
+        <p><strong>Tu usuario:</strong> Cada intento fallido de pago es frustración. El usuario no recuerda que el problema fue PSE — recuerda que fue contigo. Y eso es reputación que no se recupera fácil.</p>
+        <p><strong>Dato:</strong> 3+ intentos de pago fallidos antes de rendirse — cada uno daña la relación.</p>
+
+        <p><em>Los tres nacen del mismo origen: pagar es difícil. El corte no soluciona ninguno de los tres. Solo los aplaza — y se lleva al cliente.</em></p>
+      </article>
+
+      <!-- QUÉ RESUELVE ONEPAY -->
+      <article>
+        <h2>Cuatro preguntas que nadie le resolvió a tu ISP</h2>
+        <p>La industria optimiza el cobro. Nadie optimiza el pago. OnePay hace las dos.</p>
+        <table>
+          <tr><th>Pregunta</th><th>Quién lo resuelve</th><th>Cómo</th></tr>
+          <tr><td>¿Con qué pagar?</td><td>Pasarelas</td><td>Visa, MC, Nequi, Daviplata, PSE, Bre-B</td></tr>
+          <tr><td>¿Cómo pagar?</td><td>Checkouts</td><td>4 clicks, sin fricción, sin apps</td></tr>
+          <tr><td>¿Dónde pagar?</td><td>OnePay</td><td>WhatsApp — donde ya está el 98%</td></tr>
+          <tr><td>¿Cómo hacer que pague?</td><td>OnePay</td><td>Behavioral intelligence + timing</td></tr>
+        </table>
+      </article>
+
+      <!-- ONEPAY INTELLIGENCE -->
+      <article>
+        <h2>OnePay Intelligence — Más del 65% de los que no te pagan, sí te quieren pagar.</h2>
+        <p>Tener una forma de pago fácil es el paso cero. OnePay observa cada interacción de tus usuarios durante 2-3 meses para construir modelos predictivos únicos por persona.</p>
+
+        <h3>¿Por qué no te pagan a tiempo?</h3>
+        <ul>
+          <li><strong>Día 5:</strong> Tiene dinero, pero no tiene tiempo.</li>
+          <li><strong>Día 12:</strong> Tiene tiempo, pero ya no tiene plata.</li>
+          <li><strong>Día 20:</strong> Tiene tiempo y dinero, pero se le olvidó.</li>
+        </ul>
+        <p><strong>OnePay entra justo cuando es más probable que pague — y el pago queda completado.</strong></p>
+
+        <h3>Ejemplo: Evolución de María López en 3 meses</h3>
+        <h4>Mes 1 — Primeros resultados (8 días para cobrar)</h4>
+        <ul>
+          <li>Día 1: Cobro automático enviado por WhatsApp → Abierto, vio la factura</li>
+          <li>Día 3: Recordatorio por email → No abierto</li>
+          <li>Día 5: Recordatorio WhatsApp → Abierto, inició flujo de pago, abandonó</li>
+          <li>Día 7: Llamada IA → Contestó, dijo que paga el viernes</li>
+          <li>Día 8, 6:20 PM: Recordatorio post-llamada → ✓ Pagó — Nequi, 6:22 PM</li>
+        </ul>
+        <p>Scorecard Mes 1: Canal preferido: Aprendiendo... | Hora óptima: ~6:00 PM | Día de pago: ~Día 8 | Método: Nequi</p>
+
+        <h4>Mes 2 — Aprendiendo (5 días para cobrar)</h4>
+        <ul>
+          <li>Día 1: Cobro automático → Abierto</li>
+          <li>Día 5, 6:00 PM: Recordatorio en hora óptima → Abierto, inició flujo</li>
+          <li>Día 5, 6:08 PM: Push de pago → ✓ Pagó — Nequi, 6:10 PM</li>
+        </ul>
+        <p>Scorecard Mes 2: Canal: WhatsApp (75%) | Hora: 6:00-6:30 PM (70%) | Día: 5-6 (78%) | Método: Nequi (85%) | Predicción: Día 5, ~6 PM (65%)</p>
+
+        <h4>Mes 3 — Prediciendo (3 minutos para cobrar)</h4>
+        <ul>
+          <li>Día 1: Cobro automático → Abierto</li>
+          <li>Día 4, 5:55 PM: Mensaje predictivo en momento exacto → ✓ Pagó — Nequi, 5:58 PM</li>
+        </ul>
+        <p>Scorecard Mes 3: Canal: WhatsApp (95%) | Hora: 5:50-6:10 PM (92%) | Día: 4-5 (94%) | Método: Nequi (97%) | Predicción: Día 4, 5:55 PM → 3 min (95% confianza)</p>
+
+        <h3>La ecuación predictiva</h3>
+        <ul>
+          <li><strong>Xh — Historial de pagos:</strong> Cuándo pagó los últimos 3 meses</li>
+          <li><strong>Xc — Comportamiento digital:</strong> Aperturas, clicks, intentos, abandonos</li>
+          <li><strong>Xd — Variable temporal:</strong> Hora, día de la semana, quincena</li>
+          <li><strong>Xm — Momento post-comunicación:</strong> Tiempo desde el último mensaje enviado</li>
+        </ul>
+        <p><strong>Resultado:</strong> María López → Día 4, 5:55 PM, WhatsApp + Nequi — 95% probabilidad</p>
+        <p><em>Cualquiera te manda un WhatsApp. Nadie más predice cuándo va a pagar cada persona.</em></p>
+      </article>
+
+      <!-- LA EXPERIENCIA DE PAGO -->
+      <article>
+        <h2>De la factura al dinero en tu cuenta</h2>
+        <p>Tres canales, una plataforma. El usuario elige. Tú no tocas nada.</p>
+
+        <h3>Canal 1: Pago por WhatsApp</h3>
+        <p>El usuario recibe su factura en WhatsApp. Toca "Iniciar pago" y se abre un WhatsApp Flow nativo — sin salir de la app. Elige método, paga, listo.</p>
+        <ul>
+          <li>WhatsApp Flows nativo — sin salir de la app</li>
+          <li>98% apertura vs 20% email</li>
+          <li>~15 segundos para completar</li>
+          <li>Todos los métodos de pago: Visa, PSE, Nequi, Daviplata</li>
+          <li>Recordatorios por comportamiento</li>
+        </ul>
+        <p><strong>Flujo WhatsApp:</strong> El usuario recibe mensaje con factura PDF → Toca "Iniciar pago" → Selecciona método (Visa •0193, PSE Bancolombia, Nequi •6819, Daviplata) → Confirma → Pago acreditado ✅</p>
+
+        <h3>Canal 2: Portal de Pagos</h3>
+        <p>Portal web donde el usuario consulta su deuda por referencia, selecciona las facturas que quiere pagar y completa el pago en un solo lugar.</p>
+        <ul>
+          <li>Consulta por referencia de pago</li>
+          <li>Selecciona una, varias o todas las deudas</li>
+          <li>Múltiples métodos de pago: Mastercard, Visa, Nequi, PSE</li>
+          <li>Historial completo sin contraseña</li>
+        </ul>
+        <p><strong>Ejemplo deudas:</strong> Internet Hogar 100Mbps - Febrero ($85.000, Ref: FAC-2026-0218) | Internet Hogar 100Mbps - Marzo ($65.000, Ref: FAC-2026-0305) | Cargo reconexión ($15.000) | Upgrade velocidad Dic ($25.000, Ref: FAC-2025-1201)</p>
+
+        <h3>Canal 3: Llamada con IA</h3>
+        <p>Para cartera vencida. Cada empresa crea su propio agente de voz IA que llama como si fuera parte de su equipo. Contextualiza la deuda, maneja objeciones y envía link de pago por WhatsApp.</p>
+        <ul>
+          <li>Gestión de cartera vencida</li>
+          <li>Cada empresa crea su propio agente IA</li>
+          <li>Voz natural — indistinguible de una persona</li>
+          <li>Manejo de objeciones en tiempo real</li>
+          <li>Envía link de pago durante la llamada</li>
+          <li>Parámetros de entrenamiento automáticos</li>
+        </ul>
+        <p><strong>Ejemplo transcripción de llamada IA:</strong></p>
+        <blockquote>
+          <p><strong>IA (Ana, FibraNet):</strong> "Hola, buenas tardes. Soy Ana, de FibraNet. ¿Hablo con el señor Carlos Martínez?"</p>
+          <p><strong>Carlos:</strong> "Sí, con él. ¿Qué necesita?"</p>
+          <p><strong>IA:</strong> "Don Carlos, lo llamo porque tiene una factura de $85.000 de su plan de Internet Hogar que está vencida desde el 18 de febrero. Queríamos ayudarle a ponerse al día antes de que se genere algún inconveniente con el servicio."</p>
+          <p><strong>Carlos:</strong> "Ay sí, ya sé... es que este mes ha estado muy duro. La verdad no he podido pagar."</p>
+          <p><strong>IA:</strong> "Lo entiendo, don Carlos, y por eso lo llamo. ¿Sabía que puede hacer un abono parcial para evitar el corte? Así no pierde la conexión y completa el resto cuando pueda."</p>
+          <p><strong>Carlos:</strong> "¿Y cuánto sería lo mínimo? Porque de verdad ando muy justo..."</p>
+          <p><strong>IA:</strong> "Con que abone al menos la mitad, que serían $42.500, ya le cubriría para que no le corten. Y lo más fácil es que le mando un link a su WhatsApp ahora mismo y paga desde ahí, sin filas ni nada."</p>
+          <p><strong>Carlos:</strong> "¿Pero me queda debiendo el resto? ¿No me van a cobrar más?"</p>
+          <p><strong>IA:</strong> "No señor, el saldo queda registrado y lo puede pagar cuando quiera. No se genera ningún cobro adicional. ¿Le envío el link entonces?"</p>
+          <p><strong>Carlos:</strong> "Bueno, mándelo. Voy a ver si pago ahorita por Nequi."</p>
+          <p><strong>IA:</strong> "Perfecto don Carlos, ya le envié el link al WhatsApp. Ahí puede elegir Nequi o el medio que prefiera. ¡Que esté muy bien!"</p>
+        </blockquote>
+        <p><strong>Resumen IA:</strong> El usuario aceptó recibir link de pago por WhatsApp. Pagará parcialmente hoy ($42.500) y el saldo cuando pueda. Sentimiento: cooperativo después de objeciones por liquidez. Método preferido: Nequi.</p>
+        <p><strong>Parámetros aprendidos:</strong> Objeción principal: Falta de liquidez | Detonante: Pago parcial | Canal preferido: WhatsApp + Nequi | Horario: Tarde | Tono efectivo: Empático, sin presión.</p>
+      </article>
+
+      <!-- CÓMO FUNCIONA - TIMELINE -->
+      <article>
+        <h2>Recaudo en piloto automático</h2>
+        <p>Secuencias inteligentes que se adaptan al comportamiento de cada pagador.</p>
+        <ol>
+          <li><strong>Día facturación — Creación automática de cobros:</strong> Tu sistema de gestión genera la factura → OnePay la recibe al instante vía API. Se crean links de pago únicos y se prepara la secuencia de cobro personalizada.</li>
+          <li><strong>Cobro inicial — WhatsApp + Email + Portal:</strong> El usuario recibe su factura por WhatsApp con link directo (98% apertura). Simultáneamente email y portal. Botón de pago en un click.</li>
+          <li><strong>Día 3 — Recordatorio inteligente:</strong> Solo a quienes no han pagado. El sistema analiza hora, día y canal donde cada usuario tiene mayor probabilidad de responder.</li>
+          <li><strong>Día 6-9 — Escalamiento adaptativo:</strong> Behavioral intelligence cambia canal, hora y mensaje automáticamente. Si no abrió WhatsApp → email. Cada interacción mejora el siguiente intento.</li>
+          <li><strong>Día 12-15 — Llamada con IA:</strong> Agente de voz IA para quienes no respondieron a digital. Voz natural, contexto de factura, envía link durante la llamada.</li>
+          <li><strong>Pago exitoso — Conciliación instantánea:</strong> El pago se aplica automáticamente en tu sistema de gestión. Sin reconciliar manualmente. Dashboard predice el flujo de la semana.</li>
+        </ol>
+        <p><strong>61.3% de los pagos se completan en las primeras 53 horas.</strong></p>
+      </article>
+
+      <!-- MOTOR DE COBRANZA -->
+      <article>
+        <h2>El ciclo de vida completo de cada factura</h2>
+        <p>Tú pones las reglas de negocio. OnePay ejecuta con IA. Configura una vez: fecha de vencimiento, etapas, canales y plantillas. La IA decide cuándo, por dónde y qué mensaje enviar según el comportamiento de cada usuario.</p>
+        <ol>
+          <li><strong>Recordatorio (Antes de vencer):</strong> Aviso previo para que el usuario se prepare y pague a tiempo. Los usuarios que reciben recordatorio previo pagan 2.3x más rápido.</li>
+          <li><strong>Vence hoy (Día 0):</strong> Mensaje con link de pago directo + PDF adjunto. 60%+ de los pagos ocurren aquí.</li>
+          <li><strong>Vencido (Día 1-5):</strong> Recordatorio inteligente en hora y canal óptimo. La IA elige el mejor momento: Juan paga viernes 6pm → mensaje viernes 5pm.</li>
+          <li><strong>Pre-corte (Día 6-9):</strong> Escalamiento: cambia canal, tono del mensaje. Urgencia alta.</li>
+          <li><strong>Llamada IA (Día 10-15):</strong> Agente de voz IA llama, contextualiza la deuda, envía link en la llamada.</li>
+          <li><strong>Cortado (Post-corte):</strong> Notificación de corte + última oportunidad de pago para reconexión automática.</li>
+          <li><strong>Recuperación (Re-activación):</strong> Secuencia de re-activación para usuarios que cancelaron o fueron cortados.</li>
+        </ol>
+        <p><em>En cada etapa: si el usuario paga, se concilia automáticamente y la secuencia se detiene. Sin intervención manual. La mayoría paga sin necesitar más de 1 recordatorio.</em></p>
+      </article>
+
+      <!-- DATOS REALES -->
+      <article>
+        <h2>Datos reales · Febrero 2026 — OnePay cobra más rápido. Los números lo prueban.</h2>
+        <p>255.487 facturas procesadas. Comparamos velocidad de cobro OnePay vs. canales tradicionales.</p>
+        <p><strong>Top Performers (top 25% ISPs):</strong> Cobran 65% antes de día 5 con OnePay — vs. 55% por otros canales. La diferencia se amplía desde el día 1.</p>
+        <p><strong>Promedio:</strong> Incluso las ISPs promedio superan a sus propios canales tradicionales — 4x más rápido en primeras 24h (18% vs. 4.4%). Día 5: 52% vs. 33%.</p>
+      </article>
+
+      <!-- INTEGRACIONES -->
+      <article>
+        <h2>Se conecta con tu sistema. Sin cambiar nada.</h2>
+        <p>Integración directa con los principales sistemas de gestión ISP. API abierta para cualquier otro.</p>
+        <p><strong>Sistemas con integración directa:</strong> ISPCube, Wisphub, MikroTik, y más.</p>
+        <p><strong>Medios de pago:</strong></p>
+        <ul>
+          <li><img src="/logos/payment/nequi.svg" alt="Nequi" /> Nequi</li>
+          <li><img src="/logos/payment/daviplata.svg" alt="Daviplata" /> Daviplata</li>
+          <li><img src="/logos/payment/breb.svg" alt="Bre-B" /> Bre-B (Banco de la República)</li>
+          <li><img src="/logos/payment/visa.svg" alt="Visa" /> Visa</li>
+          <li><img src="/logos/payment/mastercard.svg" alt="Mastercard" /> Mastercard</li>
+          <li><img src="/logos/payment/amex.svg" alt="American Express" /> American Express</li>
+          <li><img src="/logos/payment/pse.svg" alt="PSE" /> PSE</li>
+          <li><img src="/logos/payment/efecty.svg" alt="Efecty" /> Efecty</li>
+        </ul>
+      </article>
+
+      <!-- RESULTADOS -->
+      <article>
+        <h2>Lo que obtienes con OnePay — Resultados en 90 días</h2>
+        <table>
+          <tr><th>Métrica</th><th>Antes</th><th>Con OnePay</th><th>Mejora</th></tr>
+          <tr><td>Cobra 3x más rápido</td><td>Día 18</td><td>Día 5.8</td><td>+15-25pp pagos antes de día 10</td></tr>
+          <tr><td>50% por WhatsApp</td><td>0% digital</td><td>30-50%</td><td>del total cobrado por canal digital</td></tr>
+          <tr><td>Menos tickets</td><td>500+ llamadas</td><td>Automático</td><td>-20-30% en tickets operativos</td></tr>
+          <tr><td>Flujo predecible</td><td>No sé cuánto</td><td>Dashboard</td><td>Tiempo real conciliación y predicción</td></tr>
+        </table>
+      </article>
+
+      <!-- OPERACIÓN FINANCIERA COMPLETA -->
+      <article>
+        <h2>No solo cobramos. Toda tu operación financiera funciona mejor.</h2>
+        <p>Desde que entra la plata hasta que se dispersa. Todo rastreado. Todo conciliado.</p>
+
+        <h3>Conciliación inteligente (Activo)</h3>
+        <p>Todos los métodos de pago conciliados automáticamente en tu sistema de gestión. En tiempo real. PSE, Nequi, Daviplata, tarjetas — todo se concilia solo. Transferencias bancarias vía Bre-B: el usuario sigue pagando como siempre, pero se concilia automáticamente. Cero comprobantes falsos. Cero conciliación manual.</p>
+
+        <h3>Tesorería en tiempo real (Activo)</h3>
+        <p>Dashboard con el flujo completo de tu dinero. Cuánto entró, cuánto salió, cuánto se dispersó. Reportes por canal, fecha y estado. Predicción de flujo de caja. Sin descargar extractos bancarios.</p>
+
+        <h3>Dispersiones optimizadas (Activo)</h3>
+        <p>Paga proveedores y nómina desde OnePay. Ahórrate la mitad del 4x1000.</p>
+        <ul>
+          <li><strong>Turbo:</strong> 5 min – 2 horas. Intrabancario Host-to-Host. Bancolombia &lt;30 min, Davivienda &lt;20 min, Nequi &lt;5 min. 24/7.</li>
+          <li><strong>Bre-B:</strong> &lt;5 minutos. Pagos instantáneos vía Banco de la República. Todas las entidades, 24/7.</li>
+          <li><strong>ACH estándar:</strong> 6 – 30 horas. Menor costo por transacción.</li>
+        </ul>
+
+        <h3>Tarjetas corporativas (Activo)</h3>
+        <p>Control de gastos empresariales integrado. Tarjetas físicas y virtuales con límites por persona y categoría. Todo visible en un dashboard unificado.</p>
+
+        <h3>Servicios públicos (Activo)</h3>
+        <p>Recaudo de utilities. Gas, energía, agua, telecomunicaciones. Ya operamos con EPM Gas, Surtigas, Movistar y Grupo Promigas.</p>
+
+        <h4>Transferencias bancarias — sin cambiar el hábito del usuario</h4>
+        <p>Muchos usuarios prefieren pagar con transferencia. Antes eso significaba recibir comprobantes, ir al banco a validar y conciliar manual. Con la integración Bre-B de OnePay, la transferencia se concilia automáticamente. El usuario no cambia nada. Tú no haces nada.</p>
+      </article>
+
+      <!-- CONCILIACIÓN -->
+      <article>
+        <h2>Cada peso rastreado. Cada movimiento conciliado.</h2>
+        <p>Conciliación operativa para el día a día. Contable para tu equipo financiero. Descargable en Excel y PDF.</p>
+
+        <h3>Conciliación operativa</h3>
+        <p>Cada factura tiene trazabilidad completa: con qué pagó, si abrió el mensaje, si abandonó el pago, cuántos recordatorios recibió, por qué canal, y cuándo se concilió.</p>
+        <p>Ejemplo: Factura-101207 | Proveedor: wisphub | Monto: $65.000 | Estado: Conciliada | Pagado con: NEQUI ****0005 | Tipo: Depósito electrónico</p>
+
+        <h3>Conciliación contable</h3>
+        <p>Cada nodo agrupa créditos y débitos relacionados. Tu equipo financiero ve todo cuadrado. Exportable a Excel y PDF.</p>
+        <p>Ejemplo movimientos: Pago aprobado +$87.677,50 | Retención en la fuente -$1.315,16 | Descuento por cargo extra -$2.677,50</p>
+        <p>Descarga en Excel y PDF cuando quieras. Cada movimiento ya está categorizado. Tu equipo financiero cuadra en minutos, no en días.</p>
+      </article>
+
+      <!-- ¿POR QUÉ ONEPAY? vs PASARELA -->
+      <article>
+        <h2>¿Por qué OnePay? La pasarela procesa el pago. OnePay resuelve el cobro.</h2>
+        <p>La pregunta no es qué herramienta usas para cobrar. Es qué le pasa a tu operación cuando no te pagan a tiempo.</p>
+
+        <h3>Cuando solo procesas pagos (con una pasarela)</h3>
+        <ul>
+          <li><strong>Tu equipo sigue persiguiendo pagos</strong> — La pasarela no cobra, espera a que el usuario llegue solo.</li>
+          <li><strong>Conciliar cada pago toma horas</strong> — No se conecta con tu sistema de gestión.</li>
+          <li><strong>Todos tus usuarios reciben el mismo trato</strong> — No hay inteligencia.</li>
+          <li><strong>No sabes cuánto vas a recaudar esta semana</strong> — No hay predicción.</li>
+          <li><strong>El corte sigue siendo tu única herramienta</strong> — Sin cobranza proactiva.</li>
+        </ul>
+        <p><em>Resultado: Persigues pagos, pierdes clientes, y tu flujo de caja es impredecible.</em></p>
+
+        <h3>Cuando resuelves el problema de fondo (con OnePay)</h3>
+        <ul>
+          <li><strong>Tu equipo deja de perseguir pagos</strong> — Se dedica a vender, retener y crecer.</li>
+          <li><strong>Cada pago se concilia solo, en tiempo real</strong> — Incluso transferencias bancarias.</li>
+          <li><strong>Cada usuario recibe cobro personalizado</strong> — Pagan antes porque les cobras cuando pueden pagar.</li>
+          <li><strong>Predices tu flujo de caja semana a semana</strong> — Decisiones con información real.</li>
+          <li><strong>El corte deja de ser necesario</strong> — Porque la mayoría paga antes de llegar ahí.</li>
+        </ul>
+        <p><em>Resultado: Tus usuarios te pagan en 5 días. Tu flujo de caja es predecible. Tu equipo crece el negocio.</em></p>
+
+        <p>OnePay cobra más por transacción que una pasarela convencional. Ese diferencial financia la inteligencia, la automatización y la operación que hace que tu ISP recaude más, más rápido, y con menos esfuerzo.</p>
+        <p><strong>Más de 100 ISPs ya lo usan. El resultado: el dinero llega en 5 días — no en 25.</strong></p>
+      </article>
+
+      <!-- DASHBOARD DE COBRANZA -->
+      <article>
+        <h2>Dashboard — Recordatorios de cobranza</h2>
+        <p>Historial de notificaciones y llamadas enviadas por reglas de cobranza.</p>
+
+        <h3>ISP pequeña (~2.000 suscriptores)</h3>
+        <p>Total de recordatorios: 19.608 | Tasa de entrega: 78.1% (15.320 enviados, 4.288 fallidos) | Llamadas AI: 500/500</p>
+
+        <h3>ISP grande (~40.000 suscriptores)</h3>
+        <p>Total de recordatorios: 89.290 | Tasa de entrega: 100% (89.290 enviados, 0 fallidos) | Llamadas AI: 1.250/1.250</p>
+      </article>
+
+      <!-- PRECIOS -->
+      <article>
+        <h2>Precios — Transparente. Sin letra chica.</h2>
+        <p>Tarifa transaccional + SaaS mensual. Sin permanencia. Resultado desde el primer mes.</p>
+
+        <h3>Plan Essential — $600.000 COP/mes</h3>
+        <ul>
+          <li>Tarjetas: 2.5% + $800</li>
+          <li>PSE/billeteras: $2.200</li>
+          <li>Dispersión ACH: $1.500 + 0.2%</li>
+          <li>Dispersión Turbo: $2.500 + 0.2%</li>
+          <li>Sin llamadas IA</li>
+          <li>Incluye: Recaudo + suscripciones, Procesamiento local, Tesorería básica, 2 recordatorios/usuario/mes</li>
+        </ul>
+
+        <h3>Plan Pro (RECOMENDADO) — $1.800.000 COP/mes</h3>
+        <ul>
+          <li>Tarjetas: 2% + $500</li>
+          <li>PSE/billeteras: $1.680</li>
+          <li>Dispersión ACH: $1.000 + 0.2%</li>
+          <li>Dispersión Turbo: $2.000 + 0.2%</li>
+          <li>500 llamadas IA/mes (Numeración USA por defecto. Colombia: +$590.000/mes)</li>
+          <li>Incluye: Todo Essential + WhatsApp personalizado, Plantillas de cobranza, 3 recordatorios/usuario/mes</li>
+        </ul>
+
+        <h3>Plan Growth — $5.500.000 COP/mes</h3>
+        <ul>
+          <li>Tarjetas: 1.85% + $300</li>
+          <li>PSE/billeteras: $1.000</li>
+          <li>Dispersión ACH: $800 + 0.2%</li>
+          <li>Dispersión Turbo: $1.500 + 0.2%</li>
+          <li>1.250 llamadas IA/mes (Numeración USA por defecto. Colombia: +$1.350.000/mes)</li>
+          <li>Incluye: Todo Pro + Tesorería corporativa, Plantillas personalizadas, Soporte prioritario 8x5, Recordatorios ilimitados</li>
+        </ul>
+
+        <p><strong>Calculadora de ROI:</strong> Ajusta suscriptores activos, ticket promedio, tasa de recaudo actual, personas en cobranza y dispersiones mensuales para ver el impacto estimado.</p>
+        <p><em>Estimación basada en data real de +100 ISPs activas (Feb 2026). Mejora de +12pp en tasa de recaudo. Mix de pago: 95% PSE/billeteras, 5% tarjetas. Ahorro GMF: el módulo de tesorería permite pagar ahorrando la mitad del 4x1000.</em></p>
+      </article>
+
+      <!-- SEGURIDAD -->
+      <article>
+        <h2>Tu plata está segura. La de tus usuarios, también.</h2>
+        <p>Cumplimos los estándares más exigentes de la industria de pagos. Cada transacción está protegida de extremo a extremo.</p>
+        <ul>
+          <li><strong>PCI DSS Level 1</strong> — Máximo estándar en pagos</li>
+          <li><strong>ISO 27001</strong> — Seguridad de información</li>
+          <li><strong>Adquirente directo</strong> — Visa &amp; Mastercard</li>
+          <li><strong>Póliza cyber</strong> — Cobertura integral</li>
+        </ul>
+      </article>
+
+      <!-- CTA / CIERRE -->
+      <article>
+        <h2>Cobre en 5 días lo que hoy te toma 25.</h2>
+        <p>Sin contratar más gente. Sin cambiar tu sistema. Resultados desde la primera semana.</p>
+        <ul>
+          <li>✓ Sin permanencia</li>
+          <li>✓ Piloto controlado</li>
+          <li>✓ Soporte total</li>
+        </ul>
+        <p><strong>OnePay — Recaudo inteligente · PCI DSS Level 1</strong></p>
+      </article>
+
+    </div>
     <script type="module" src="/src/main.jsx"></script>
-
-    <!-- Contenido estático para crawlers y bots que no ejecutan JavaScript -->
-    <noscript>
-      <h1>OnePay — Recaudo Inteligente para ISPs</h1>
-      <p>Tus usuarios te pagan en 5 días, no en 25. OnePay cobra por WhatsApp, concilia en tiempo real y te muestra cuánta plata te va a entrar esta semana.</p>
-
-      <h2>Métricas clave</h2>
-      <ul>
-        <li><strong>+100 ISPs activas</strong> con recaudo inteligente</li>
-        <li><strong>5.8 días promedio</strong> para recibir pago (vs. 18 del mercado)</li>
-        <li><strong>93% pagos exitosos</strong> sin fricción</li>
-        <li><strong>~15 segundos para pagar</strong> — 4 clicks</li>
-      </ul>
-
-      <h2>El problema que resolvemos</h2>
-      <p>No estás perdiendo pagos. Estás perdiendo clientes. Cuando pagar es difícil, el usuario no insiste — se rinde.</p>
-      <ul>
-        <li><strong>Flujo de caja:</strong> Día 18 promedio para recibir un pago — 18 días de caja que financian la operación de otros.</li>
-        <li><strong>Fuga de clientes:</strong> 25–35% de cartera vencida que en realidad es deserción silenciosa.</li>
-        <li><strong>Experiencia rota:</strong> 3+ intentos de pago fallidos antes de rendirse — cada uno daña la relación.</li>
-      </ul>
-
-      <h2>Cómo funciona OnePay</h2>
-      <p>OnePay se conecta a tu sistema de gestión (ISPCube, Wisphub, MikroTik, etc.), detecta facturas pendientes y envía links de pago personalizados por WhatsApp. El usuario paga en 15 segundos con Nequi, Daviplata, tarjeta, PSE o Efecty. La conciliación es automática y en tiempo real.</p>
-
-      <h2>Seguridad</h2>
-      <p>Certificación PCI DSS Nivel 1 — el mismo nivel de seguridad que usan los bancos.</p>
-
-      <h2>ISPs que confían en OnePay</h2>
-      <p>Linage Comunicaciones, Tu Norte TV, Velonet, Wifimax, Supercable, Legon Telecomunicaciones, Fiesta Telecomunicaciones, Cable Éxito, Ultranet Colombia, WISP Telecomunicaciones, Asonet Colombia, Hola Internet, Click HD, Puntored Telecomunicaciones, INTV, Conectic, One Telecomunicaciones, Siinternet, Vivetel, y más.</p>
-
-      <h2>Métodos de pago</h2>
-      <p>Nequi, Daviplata, Bancolombia, Visa, Mastercard, American Express, PSE, Efecty.</p>
-    </noscript>
   </body>
 </html>
