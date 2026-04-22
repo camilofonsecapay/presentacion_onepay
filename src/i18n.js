@@ -575,7 +575,7 @@ export const i18n = {
           dispTurbo: "$2.000 + 0.2%",
           calls: "500/mes",
           callNote: "Numeración USA por defecto. Colombia: +$590.000/mes",
-          feats: ["Todo Essential +", "WhatsApp personalizado", "Plantillas de cobranza", "3 recordatorios/usuario/mes"],
+          feats: ["Todo Essential +", "Linea de WhatsApp personalizada", "Plantillas de cobranza", "3 recordatorios/usuario/mes"],
           star: true,
         },
         {
@@ -587,7 +587,7 @@ export const i18n = {
           dispTurbo: "$1.500 + 0.2%",
           calls: "1.250/mes",
           callNote: "Numeración USA por defecto. Colombia: +$1.350.000/mes",
-          feats: ["Todo Pro +", "Tesorería corporativa", "Plantillas personalizadas", "Soporte prioritario 8x5", "Recordatorios ilimitados"],
+          feats: ["Todo Pro +", "Tesorería corporativa", "Plantillas personalizadas", "Soporte prioritario 8x5", "5 recordatorios/usuario/mes"],
         },
       ],
       /* ROI Calculator */
